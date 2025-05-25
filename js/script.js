@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Inicialización de Dexie (base de datos local.)
+    // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
     db.version(1).stores({
         contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
@@ -1551,4 +1551,154 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Fallback si no hay ninguna pestaña marcada como activa en HTML
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
     }
+
+    // --- Slider y Resumen General Dinámico ---
+    async function renderContractsSlider() {
+        const sliderInner = document.getElementById('contracts-slider-inner');
+        const contracts = await db.contracts.toArray();
+        sliderInner.innerHTML = '';
+        contracts.forEach((contract, idx) => {
+            const isActive = idx === 0 ? 'active' : '';
+            const card = document.createElement('div');
+            card.className = `carousel-item ${isActive}`;
+            card.innerHTML = `
+                <div class="card">
+                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                </div>
+            `;
+            sliderInner.appendChild(card);
+        });
+        // Actualizar los recuadros con el primer contrato
+        if (contracts.length > 0) {
+            updateSummaryByContract(contracts[0]);
+        }
+    }
+
+    function formatMonto(monto) {
+        if (!monto) return '0,00';
+        return monto.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function calcularDiasVencimiento(fechaTerminacion) {
+        if (!fechaTerminacion) return '-';
+        const hoy = new Date();
+        const fin = new Date(fechaTerminacion);
+        const diff = Math.ceil((fin - hoy) / (1000 * 60 * 60 * 24));
+        return diff >= 0 ? diff : 0;
+    }
+
+    async function updateSummaryByContract(contract) {
+        document.getElementById('total-contract-amount').textContent = `USD ${formatMonto(contract.montoTotalContrato)}`;
+        const expiryList = document.getElementById('contracts-expiry-list');
+        expiryList.innerHTML = `<li><strong>Fecha Terminación:</strong> ${contract.fechaTerminacion || '-'}<br><strong>Días restantes:</strong> ${calcularDiasVencimiento(contract.fechaTerminacion)}</li>`;
+        let avanceFinanciero = 0;
+        let avanceFisico = 0;
+        if (typeof calculateContractAdvances === 'function') {
+            const avances = await calculateContractAdvances(contract.id);
+            avanceFinanciero = avances.financialAdvancePercentage || 0;
+            avanceFisico = avances.physicalAdvancePercentage || 0;
+        }
+        document.getElementById('financial-progress-bar').style.width = avanceFinanciero + '%';
+        document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', avanceFinanciero);
+        document.getElementById('financial-progress-label').textContent = avanceFinanciero.toFixed(1) + '%';
+        document.getElementById('physical-progress-bar').style.width = avanceFisico + '%';
+        document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', avanceFisico);
+        document.getElementById('physical-progress-label').textContent = avanceFisico.toFixed(1) + '%';
+    }
+
+    // Evento para cambiar de contrato en el slider
+    const contractsSlider = document.getElementById('contracts-slider');
+    if (contractsSlider) {
+        contractsSlider.addEventListener('slid.bs.carousel', async function (e) {
+            const idx = e.to;
+            const contracts = await db.contracts.toArray();
+            if (contracts[idx]) {
+                updateSummaryByContract(contracts[idx]);
+            }
+        });
+    }
+
+    // Llamar al renderizado del slider al cargar la pestaña de resumen general
+    const resumenTabBtn = document.querySelector('[data-target="general-summary"]');
+    if (resumenTabBtn) {
+        resumenTabBtn.addEventListener('click', async () => {
+            await renderContractsSlider();
+        });
+    }
+    // Si la pestaña está activa al cargar, renderizar
+    if (document.getElementById('general-summary').classList.contains('active')) {
+        renderContractsSlider();
+    }
+
+    // --- Modalidades de Contratación Dinámicas ---
+    const modalidadSelect = document.getElementById('modalidad-contratacion');
+    const nuevaModalidadInput = document.getElementById('nueva-modalidad');
+    const agregarModalidadBtn = document.getElementById('agregar-modalidad');
+    const eliminarModalidadBtn = document.getElementById('eliminar-modalidad');
+
+    const MODALIDADES_KEY = 'modalidades_contratacion';
+    const MODALIDADES_DEFAULT = ['Obra', 'Servicio', 'Suministro'];
+
+    function getModalidades() {
+        const data = localStorage.getItem(MODALIDADES_KEY);
+        if (data) {
+            try {
+                const arr = JSON.parse(data);
+                if (Array.isArray(arr) && arr.length > 0) return arr;
+            } catch {}
+        }
+        return [...MODALIDADES_DEFAULT];
+    }
+
+    function setModalidades(arr) {
+        localStorage.setItem(MODALIDADES_KEY, JSON.stringify(arr));
+    }
+
+    function renderModalidadesSelect() {
+        const modalidades = getModalidades();
+        modalidadSelect.innerHTML = '';
+        modalidades.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.textContent = m;
+            modalidadSelect.appendChild(opt);
+        });
+    }
+
+    agregarModalidadBtn.addEventListener('click', () => {
+        const nueva = nuevaModalidadInput.value.trim();
+        if (!nueva) return;
+        let modalidades = getModalidades();
+        if (!modalidades.includes(nueva)) {
+            modalidades.push(nueva);
+            setModalidades(modalidades);
+            renderModalidadesSelect();
+            modalidadSelect.value = nueva;
+            nuevaModalidadInput.value = '';
+            showToast('Modalidad agregada.', 'success');
+        } else {
+            showToast('La modalidad ya existe.', 'warning');
+        }
+    });
+
+    eliminarModalidadBtn.addEventListener('click', () => {
+        const actual = modalidadSelect.value;
+        let modalidades = getModalidades();
+        if (MODALIDADES_DEFAULT.includes(actual)) {
+            showToast('No puedes eliminar una modalidad predeterminada.', 'warning');
+            return;
+        }
+        modalidades = modalidades.filter(m => m !== actual);
+        setModalidades(modalidades);
+        renderModalidadesSelect();
+        showToast('Modalidad eliminada.', 'info');
+    });
+
+    // Inicializar el select al cargar
+    renderModalidadesSelect();
 });

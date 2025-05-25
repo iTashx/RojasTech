@@ -432,3 +432,58 @@ h2 i {
     height: 1.5em; /* Ajuste para el switch */
     margin-right: 0.5rem;
 }
+
+/* Estilo para el grupo de modalidad de contratación editable */
+.form-group.modalidad-dinamica {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+.form-group.modalidad-dinamica label {
+    min-width: 170px;
+    margin-bottom: 0;
+    font-weight: 500;
+    color: #444;
+}
+.form-group.modalidad-dinamica select {
+    min-width: 120px;
+    max-width: 180px;
+}
+.form-group.modalidad-dinamica input[type="text"] {
+    min-width: 110px;
+    max-width: 150px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+}
+.form-group.modalidad-dinamica .btn {
+    padding: 6px 10px;
+    font-size: 1rem;
+    margin: 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+.form-group.modalidad-dinamica .btn i {
+    margin: 0;
+}
+@media (max-width: 768px) {
+    .form-group.modalidad-dinamica {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .form-group.modalidad-dinamica label {
+        min-width: unset;
+    }
+    .form-group.modalidad-dinamica select,
+    .form-group.modalidad-dinamica input[type="text"] {
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+    }
+    .form-group.modalidad-dinamica .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
