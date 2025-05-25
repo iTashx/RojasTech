@@ -10,7 +10,8 @@
     --text-color: #343a40;
     --light-text-color: #6c757d;
     --border-color: #dee2e6;
-    --header-bg: #343a40;
+    --header-bg: #343a40; /* Fondo del encabezado y sidebar */
+    --sidebar-width: 250px;
 
     --spacing-xs: 5px;
     --spacing-sm: 10px;
@@ -49,13 +50,23 @@ body {
     margin: 0;
 }
 
+.main-container {
+    display: flex;
+    flex: 1; /* Permite que el contenedor principal ocupe el espacio restante */
+}
+
 .sidebar {
-    width: 250px;
-    height: 100vh;
+    width: var(--sidebar-width);
     background-color: var(--header-bg);
     color: white;
     padding: var(--spacing-md);
     overflow-y: auto;
+    flex-shrink: 0; /* Evita que la sidebar se encoja */
+}
+
+.sidebar .nav {
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar .tab-btn {
@@ -69,6 +80,8 @@ body {
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+    text-align: left; /* Alinea el texto a la izquierda */
 }
 
 .sidebar .tab-btn.active,
@@ -79,23 +92,249 @@ body {
 .content {
     flex-grow: 1;
     padding: var(--spacing-md);
-    max-width: 1200px;
+    max-width: calc(100% - var(--sidebar-width)); /* Ajusta el ancho máximo del contenido */
     margin: 0 auto;
+    overflow-y: auto; /* Para permitir el scroll en el contenido si es necesario */
 }
 
 .content-section {
     display: none;
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
 }
 
 .content-section.active {
     display: block;
 }
 
+h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+}
+
+h2 .fas {
+    margin-right: var(--spacing-sm);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-sm);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: bold;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center; /* Centrar los botones */
+    gap: var(--spacing-sm); /* Espacio entre botones */
+    margin-top: var(--spacing-md);
+}
+
+.btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: 1px solid var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #117a8b; /* un poco más oscuro */
+    border-color: #117a8b;
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+    border: 1px solid var(--success-color);
+}
+
+.btn-success:hover {
+    background-color: #1e7e34; /* un poco más oscuro */
+    border-color: #1e7e34;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+    border: 1px solid var(--danger-color);
+}
+
+.btn-danger:hover {
+    background-color: #bd2130; /* un poco más oscuro */
+    border-color: #bd2130;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+    border: 1px solid var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background-color: #545b62; /* un poco más oscuro */
+    border-color: #545b62;
+}
+
+.btn-info {
+    background-color: #17a2b8; /* Bootstrap info */
+    color: white;
+    border: 1px solid #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496; /* un poco más oscuro */
+    border-color: #138496;
+}
+
+.help-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+}
+
+.help-btn:hover {
+    background-color: #117a8b; /* un poco más oscuro */
+}
+
+.table {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Permite el scroll horizontal en tablas */
+}
+
+/* Custom Grid for Contract Form */
+.contract-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
+    gap: var(--spacing-md);
+}
+
+.col-span-2 {
+    grid-column: span 2;
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.summary-cards .card {
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.summary-cards .card h3 {
+    color: var(--primary-color);
+    font-size: 1.2em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.summary-cards .card p {
+    font-size: 2em;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+/* Filter and Export Sections */
+.filter-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.filter-group label {
+    font-weight: bold;
+    margin-bottom: var(--spacing-xs);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: flex-end; /* Alinea los botones al final de la celda del grid */
+}
+
+.export-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+}
+
+
+/* Footer */
 .footer {
     background-color: var(--header-bg);
     color: white;
     padding: var(--spacing-md);
     font-size: 0.9em;
+    text-align: center;
+    flex-shrink: 0; /* Evita que el footer se encoja */
 }
 
 .footer a {
@@ -107,10 +346,86 @@ body {
     text-decoration: underline;
 }
 
+/* Toast Messages */
+#toast-container {
+    position: fixed;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    z-index: 1000;
+}
+
+.toast {
+    background-color: #333;
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.9;
+    animation: fadeInOut 3s forwards;
+    box-shadow: var(--box-shadow);
+}
+
+.toast.success {
+    background-color: var(--success-color);
+}
+
+.toast.error {
+    background-color: var(--danger-color);
+}
+
+.toast.warning {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10% { opacity: 0.9; transform: translateY(0); }
+    90% { opacity: 0.9; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+
     .sidebar {
         width: 100%;
         height: auto;
+        padding: var(--spacing-sm); /* Reduce el padding en móviles */
+    }
+
+    .sidebar .tab-btn {
+        padding: var(--spacing-xs) var(--spacing-sm); /* Reduce el padding del botón */
+    }
+
+    .content {
+        max-width: 100%; /* El contenido ocupa todo el ancho disponible */
+        padding: var(--spacing-sm); /* Reduce el padding del contenido */
+    }
+
+    .contract-form-grid,
+    .filter-container {
+        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+    }
+
+    .col-span-2 {
+        grid-column: span 1; /* Vuelve a una columna en móviles */
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column; /* Apila los botones en columnas */
+    }
+
+    .btn {
+        width: 100%; /* Botones de ancho completo */
+        margin-bottom: var(--spacing-sm); /* Espacio entre botones apilados */
     }
 }
