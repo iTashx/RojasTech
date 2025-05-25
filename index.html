@@ -12,61 +12,6 @@
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <style>
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast-message {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            opacity: 0.9;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .toast-message.success {
-            background-color: #28a745; /* Verde */
-        }
-
-        .toast-message.error {
-            background-color: #dc3545; /* Rojo */
-        }
-
-        .toast-message.warning {
-            background-color: #ffc107; /* Amarillo */
-            color: #333;
-        }
-
-        .toast-message.info {
-            background-color: #17a2b8; /* Azul claro */
-        }
-
-        /* Estilos para el modal de confirmación */
-        .modal-backdrop.fade {
-            opacity: 0;
-            transition: opacity 0.15s linear;
-        }
-        .modal-backdrop.show {
-            opacity: 0.5;
-        }
-        .modal.fade .modal-dialog {
-            transition: transform 0.3s ease-out;
-            transform: translate(0, -50px);
-        }
-        .modal.show .modal-dialog {
-            transform: none;
-        }
-    </style>
-
     <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
@@ -229,6 +174,16 @@
                         <div class="form-group col-span-2">
                             <label for="objeto-contractual">Objeto Contractual / Descripción:</label>
                             <textarea id="objeto-contractual" class="form-control" rows="3"></textarea>
+                            <button type="button" class="btn btn-info mt-2" id="generate-summary-btn">
+                                <i class="fas fa-magic me-2"></i> Generar Resumen/Cláusulas Clave ✨
+                            </button>
+                        </div>
+                        <div class="form-group col-span-2">
+                            <label for="generated-summary">Resumen/Cláusulas Clave Generadas por IA:</label>
+                            <textarea id="generated-summary" class="form-control" rows="5" readonly placeholder="El resumen y las cláusulas clave generadas por IA aparecerán aquí..."></textarea>
+                            <div id="summary-loading-indicator" class="spinner-border spinner-border-sm text-primary mt-2" role="status" style="display:none;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="fecha-cambio-alcance">Fecha Cambio Alcance:</label>
@@ -686,8 +641,8 @@
                     </table>
                 </div>
                 <div class="text-end mb-4">
-                    <button class="btn btn-success me-2" id="restore-selected-btn"><i class="fas fa-undo me-2"></i> Restaurar Seleccionados</button>
-                    <button class="btn btn-danger" id="delete-selected-permanent-btn"><i class="fas fa-fire me-2"></i> Eliminar Seleccionados Permanentemente</button>
+                    <button class="btn btn-success me-2" id="restore-selected-btn" data-type="contract"><i class="fas fa-undo me-2"></i> Restaurar Seleccionados</button>
+                    <button class="btn btn-danger" id="delete-selected-permanent-btn" data-type="contract"><i class="fas fa-fire me-2"></i> Eliminar Seleccionados Permanentemente</button>
                 </div>
 
                 <h3 class="mt-4">HES Eliminadas</h3>
