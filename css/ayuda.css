@@ -1,0 +1,267 @@
+/* Importación de fuentes de Google Fonts (opcional, si las usas) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+/* Variables CSS para colores y espaciado (para mantener coherencia con el main.css) */
+:root {
+    --primary-color: #4CAF50; /* Verde vibrante */
+    --secondary-color: #2196F3; /* Azul */
+    --accent-color: #FFC107; /* Amarillo/Ámbar */
+    --danger-color: #F44336; /* Rojo */
+    --success-color: #4CAF50; /* Verde */
+    --info-color: #03A9F4; /* Azul claro */
+    --background-color: #f0f2f5; /* Gris claro de fondo */
+    --card-background: #ffffff; /* Blanco para tarjetas */
+    --text-color: #333; /* Texto oscuro */
+    --light-text-color: #666; /* Texto gris */
+    --border-color: #ddd; /* Color de borde ligero */
+    --header-bg: #3f51b5; /* Azul oscuro para el header */
+
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+
+    --border-radius: 8px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos Generales y Reseteo para ayuda.html */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header (replicado del estilo principal) */
+header {
+    background-color: var(--header-bg);
+    color: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+    flex-wrap: wrap;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+}
+
+header h1 .fas {
+    margin-right: var(--spacing-sm);
+}
+
+.header-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+/* Main Content Area (replicado del estilo principal) */
+main {
+    flex-grow: 1;
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-width: 900px; /* Un poco más estrecho para contenido de ayuda */
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tarjetas (Secciones de Ayuda) */
+.card {
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
+}
+
+.card h2 {
+    color: var(--header-bg);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+}
+
+.card h2 .fas {
+    margin-right: var(--spacing-sm);
+}
+
+.card h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2em;
+    display: flex; /* Para alinear el icono en h3 */
+    align-items: center; /* Para alinear el icono en h3 */
+}
+
+.card h3 .fas {
+    margin-right: var(--spacing-xs);
+    font-size: 0.9em; /* Ícono más pequeño que el título h3 */
+    color: var(--text-color); /* Color de texto para el icono */
+}
+
+
+/* Estilos para listas en la documentación */
+.card ul, .card ol {
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+}
+
+.card ul li, .card ol li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--light-text-color);
+}
+
+.card ul li strong, .card ol li strong {
+    color: var(--text-color);
+}
+
+
+/* Botones (replicados del estilo principal) */
+.primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    text-decoration: none;
+    white-space: nowrap; /* Evita que el texto del botón se envuelva */
+}
+
+.primary-btn { background-color: var(--secondary-color); }
+.primary-btn:hover { background-color: #1976D2; transform: translateY(-1px); }
+
+.success-btn { background-color: var(--success-color); }
+.success-btn:hover { background-color: #388E3C; transform: translateY(-1px); }
+
+.danger-btn { background-color: var(--danger-color); }
+.danger-btn:hover { background-color: #D32F2F; transform: translateY(-1px); }
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+}
+.secondary-btn:hover { background-color: #5a6268; transform: translateY(-1px); }
+
+.excel-btn { background-color: #28a745; }
+.excel-btn:hover { background-color: #218838; transform: translateY(-1px); }
+
+.pdf-btn { background-color: #dc3545; }
+.pdf-btn:hover { background-color: #c82333; transform: translateY(-1px); }
+
+.small-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85em; /* Un poco más pequeño para los ejemplos inline */
+    vertical-align: middle; /* Alinea con el texto circundante */
+    line-height: 1; /* Ajusta la altura de línea */
+}
+
+/* Estilo para la notificación toast dentro de la documentación */
+.toast {
+    display: inline-block; /* Para que se comporte como un elemento de texto */
+    background-color: var(--header-bg);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+    box-shadow: var(--box-shadow);
+    vertical-align: middle;
+    margin: 0 var(--spacing-xs); /* Pequeño margen para separarlo del texto */
+}
+
+/* Footer (replicado del estilo principal) */
+footer {
+    background-color: var(--header-bg);
+    color: white;
+    text-align: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.9em;
+    margin-top: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-text {
+    margin-top: 5px;
+    display: block;
+}
+
+
+/* Media Queries para Responsiveness (replicadas y ajustadas) */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .header-buttons {
+        margin-top: var(--spacing-sm);
+    }
+
+    main {
+        padding: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+
+    .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
+        justify-content: center;
+    }
+
+    .small-btn {
+        font-size: 0.75em; /* Ajuste para botones pequeños en móvil */
+        display: inline-block; /* Para que no ocupe todo el ancho si está inline */
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .card h2 {
+        font-size: 1.3em;
+    }
+
+    .card h3 {
+        font-size: 1.1em;
+    }
+
+    .card ul, .card ol {
+        padding-left: var(--spacing-md); /* Mantener sangría */
+    }
+}
