@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGESCON - Gestión de Contratos Empresariales</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js"></script>
+    
+    <!-- Ruta actualizada a CSS -->
+    <link rel="stylesheet" href="/RojasTech/css/style.css">
+    
+    <!-- Estilos externos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
+    
+    <!-- Scripts externos -->
+    <script src="https://unpkg.com/dexie @3.2.0/dist/dexie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js "></script>
 </head>
 <body>
     <header class="header">
@@ -24,7 +30,6 @@
             </a>
         </div>
     </header>
-
     <div class="main-container">
         <nav class="sidebar">
             <button class="tab-btn active" data-target="general-summary">
@@ -49,10 +54,8 @@
                 <i class="fas fa-file-alt"></i> Informes
             </button>
         </nav>
-
         <main class="content">
             <div id="toast" class="toast"></div>
-
             <section id="general-summary" class="content-section active">
                 <h2><i class="fas fa-tachometer-alt"></i> Resumen General</h2>
                 <div class="dashboard-cards">
@@ -74,12 +77,10 @@
                     </div>
                 </div>
             </section>
-
             <section id="new-edit-contract" class="content-section">
                 <h2><i class="fas fa-file-contract"></i> Nuevo/Editar Contrato</h2>
                 <form id="contract-form" class="contract-form">
                     <input type="hidden" id="contract-id">
-
                     <div class="form-group">
                         <label for="numero-proveedor">Número de Proveedor:</label>
                         <input type="text" id="numero-proveedor" class="form-control" required>
@@ -195,7 +196,6 @@
                         <input type="file" id="adjuntar-archivos" class="form-control" multiple>
                         <div id="attached-files-list"></div>
                     </div>
-
                     <h3 class="mt-4">Partidas del Contrato</h3>
                     <button type="button" class="btn btn-success mb-3" id="add-partida-btn"><i class="fas fa-plus"></i> Añadir Partida</button>
                     <div class="table-responsive">
@@ -212,17 +212,15 @@
                                 </tr>
                             </thead>
                             <tbody id="partidas-table-body">
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
-
                     <div class="form-actions mt-4">
                         <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar/Actualizar Contrato</button>
                         <button type="button" class="btn btn-secondary" id="clear-form-btn"><i class="fas fa-eraser"></i> Limpiar Formulario</button>
                     </div>
                 </form>
             </section>
-
             <section id="list-contracts" class="content-section">
                 <h2><i class="fas fa-list"></i> Lista de Contratos</h2>
                 <div class="filters-container">
@@ -264,12 +262,10 @@
                         <button class="btn btn-secondary" id="clear-filters-btn"><i class="fas fa-eraser"></i> Limpiar Filtros</button>
                     </div>
                 </div>
-
                 <div class="export-buttons mt-3 mb-3">
                     <button class="btn btn-success" id="export-excel-btn"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
                     <button class="btn btn-danger" id="export-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar a PDF</button>
                 </div>
-
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -287,11 +283,10 @@
                             </tr>
                         </thead>
                         <tbody id="contract-list-body">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </section>
-
             <section id="hes-management" class="content-section">
                 <h2><i class="fas fa-clipboard-list"></i> Gestión de Hojas de Entrada de Servicios (HES)</h2>
                 <form id="hes-form" class="hes-form">
@@ -357,7 +352,6 @@
                         <input type="file" id="hes-anexos" class="form-control" multiple>
                         <div id="hes-attached-files-list"></div>
                     </div>
-
                     <h3 class="mt-4">Partidas Asociadas a esta HES (del Contrato)</h3>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped">
@@ -375,10 +369,9 @@
                                 </tr>
                             </thead>
                             <tbody id="hes-partidas-table-body">
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
-
                     <div class="form-group">
                         <label for="hes-sub-total">Sub Total HES:</label>
                         <input type="number" step="0.01" id="hes-sub-total" class="form-control" readonly value="0.00">
@@ -391,13 +384,11 @@
                         <label for="hes-total-hes">Total HES:</label>
                         <input type="number" step="0.01" id="hes-total-hes" class="form-control" readonly value="0.00">
                     </div>
-
                     <div class="form-actions mt-4">
                         <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar/Actualizar HES</button>
                         <button type="button" class="btn btn-secondary" id="clear-hes-form-btn"><i class="fas fa-eraser"></i> Limpiar Formulario HES</button>
                     </div>
                 </form>
-
                 <h3 class="mt-4">Lista de Hojas de Entrada de Servicios (HES)</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -416,11 +407,10 @@
                             </tr>
                         </thead>
                         <tbody id="hes-list-body">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </section>
-
             <section id="advance-physical" class="content-section">
                 <h2><i class="fas fa-chart-line"></i> Avance Físico (Registro Manual)</h2>
                 <p>Este módulo permite registrar avances físicos manuales para contratos. El avance financiero y físico total del contrato ahora se calcula automáticamente en la "Lista de Contratos" basándose en las HES ejecutadas/aprobadas.</p>
@@ -445,7 +435,6 @@
                         <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Registrar Avance</button>
                     </div>
                 </form>
-
                 <h3 class="mt-4">Historial de Avances Físicos</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -459,11 +448,10 @@
                             </tr>
                         </thead>
                         <tbody id="advance-history-body">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </section>
-
             <section id="graphic-summary" class="content-section">
                 <h2><i class="fas fa-chart-bar"></i> Resumen Gráfico</h2>
                 <div class="chart-controls">
@@ -485,17 +473,14 @@
                     <canvas id="modalityChart"></canvas>
                 </div>
             </section>
-
             <section id="reports-view" class="content-section">
                 <h2><i class="fas fa-file-alt"></i> Informes de Contratos y HES</h2>
                 <div class="form-group mb-4">
                     <label for="report-contract-select">Seleccione un Contrato para Generar Informe:</label>
                     <select id="report-contract-select" class="form-select"></select>
                 </div>
-
                 <div id="report-contract-details" class="card p-3 mb-4">
-                    </div>
-
+                </div>
                 <h3>Hojas de Entrada de Servicios (HES) del Contrato</h3>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
@@ -511,14 +496,12 @@
                             </tr>
                         </thead>
                         <tbody id="report-hes-list-body">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
             </section>
-
         </main>
     </div>
-
     <div class="modal fade" id="hesReportModal" tabindex="-1" aria-labelledby="hesReportModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -527,20 +510,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="hes-report-modal-body">
-                    </div>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
-
-
     <footer class="footer">
         <p>&copy; 2025 SIGESCON - Gestión de Contratos Empresariales. Todos los derechos reservados. | Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
+    <!-- Scripts al final -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script principal (ruta actualizada) -->
+    <script src="/RojasTech/js/script.js"></script>
 </body>
 </html>
