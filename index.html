@@ -111,9 +111,10 @@
                             <label for="fecha-terminacion">Fecha Terminación:</label>
                             <input type="date" id="fecha-terminacion" class="form-control" required>
                         </div>
-                        <div class="form-group">
-                            <label for="periodo-culminacion">Período de Culminación (Días):</label>
-                            <input type="number" id="periodo-culminacion" class="form-control" readonly> </div>
+                       <div class="form-group">
+    <label for="periodo-culminacion">Periodo Culminación (Días):</label>
+    <input type="number" id="periodo-culminacion" class="form-control" required>
+</div>
                         <div class="form-group">
                             <label for="numero-sicac">N° Contrato SICAC:</label>
                             <input type="text" id="numero-sicac" class="form-control">
@@ -142,14 +143,16 @@
                             <label for="no-peticion-oferta">No. Petición de Oferta:</label>
                             <input type="text" id="no-peticion-oferta" class="form-control">
                         </div>
-                        <div class="form-group">
-                            <label for="modalidad-contratacion">Modalidad de Contratación:</label>
-                            <select id="modalidad-contratacion" class="form-select">
-                                <option value="Obra">Obra</option>
-                                <option value="Servicio">Servicio</option>
-                                <option value="Suministro">Suministro</option>
-                            </select>
-                        </div>
+<div class="form-group">
+    <label for="modalidad-contratacion">Modalidad de Contratación:</label>
+    <div class="input-group">
+        <select id="modalidad-contratacion" class="form-select" required>
+            <option value="">Selecciona una modalidad</option>
+        </select>
+        <button type="button" class="btn btn-primary" id="add-modalidad-btn"><i class="fas fa-plus"></i></button>
+        <button type="button" class="btn btn-danger" id="remove-modalidad-btn"><i class="fas fa-minus"></i></button>
+    </div>
+</div>
                         <div class="form-group">
                             <label for="regimen-laboral">Régimen Laboral:</label>
                             <input type="text" id="regimen-laboral" class="form-control">

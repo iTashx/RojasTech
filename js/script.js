@@ -1551,4 +1551,107 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Fallback si no hay ninguna pestaña marcada como activa en HTML
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
     }
+
+// Botón para agregar modalidad
+document.getElementById('add-modalidad-btn').addEventListener('click', async () => {
+    const newModalityName = prompt('Ingrese el nombre de la nueva modalidad:');
+    if (newModalityName && newModalityName.trim() !== '') {
+        try {
+            await db.modalities.add({ name: newModalityName.trim() });
+            showToast('Modalidad agregada exitosamente.', 'success');
+            loadModalities();
+        } catch (error) {
+            console.error("Error al agregar modalidad:", error);
+            showToast('Error al agregar modalidad.', 'error');
+        }
+    }
+});
+
+// Botón para eliminar modalidad
+document.getElementById('remove-modalidad-btn').addEventListener('click', async () => {
+    const selectedModality = document.getElementById('modalidad-contratacion').value;
+    if (selectedModality) {
+        if (confirm(`¿Estás seguro de eliminar la modalidad "${selectedModality}"?`)) {
+            try {
+                await db.modalities.where({ name: selectedModality }).delete();
+                showToast('Modalidad eliminada exitosamente.', 'success');
+                loadModalities();
+            } catch (error) {
+                console.error("Error al eliminar modalidad:", error);
+                showToast('Error al eliminar modalidad.', 'error');
+            }
+        }
+    } else {
+        showToast('Selecciona una modalidad para eliminar.', 'warning');
+    }
+});
+
+document.getElementById('contract-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const numeroContratoSICAC = document.getElementById('numero-contrato-sicac').value;
+
+    // Validación de número SICAC único
+    const existingContract = await db.contracts.where({ numeroContratoSICAC }).first();
+    if (existingContract) {
+        showToast("El número de contrato SICAC ya existe. Seleccione el contrato para agregar partidas.", "warning");
+        return;
+    }
+
+    // Guardar contrato
+    try {
+        await db.contracts.add({
+            numeroContratoSICAC,
+            periodoCulminacion: parseInt(document.getElementById('periodo-culminacion').value),
+            modalidadContratacion: document.getElementById('modalidad-contratacion').value
+        });
+        showToast("Contrato guardado exitosamente.", "success");
+        loadContractList();
+    } catch (error) {
+        console.error("Error al guardar el contrato:", error);
+        showToast("Error al guardar el contrato.", "error");
+    }
+});
+
+
+// Exportar contratos a Excel
+document.getElementById('export-excel-btn').addEventListener('click', async () => {
+    try {
+        const contracts = await db.contracts.toArray();
+        if (contracts.length === 0) {
+            showToast("No hay datos para exportar a Excel.", "warning");
+            return;
+        }
+        const dataToExport = contracts.map(contract => ({
+            'N° Contrato SICAC': contract.numeroContratoSICAC,
+            'Fecha Inicio': contract.fechaInicio,
+            'Fecha Terminación': contract.fechaTerminacion,
+            'Monto Total': contract.montoTotalContrato.toFixed(2)
+        }));
+        const ws = XLSX.utils.json_to_sheet(dataToExport);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Contratos");
+        XLSX.writeFile(wb, "Contratos.xlsx");
+        showToast("Datos exportados a Excel.", "success");
+    } catch (error) {
+        console.error("Error al exportar a Excel:", error);
+        showToast("Error al exportar a Excel: " + error.message, "error");
+    }
+});
+
+// Exportar gráficos como imágenes
+document.getElementById('export-graph-btn').addEventListener('click', () => {
+    const canvas = document.getElementById('avance-grafico');
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'grafico.png';
+    link.click();
+    showToast('Gráfico exportado como imagen.', 'success');
+});
+
+
+
+
+
+
 });
