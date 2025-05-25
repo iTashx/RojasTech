@@ -1,5 +1,6 @@
 /* css/style.css */
 
+/* Variables CSS para un manejo fácil de los colores y espaciados */
 :root {
     --primary-color: #007bff; /* Azul vibrante */
     --secondary-color: #28a745; /* Verde para acciones positivas */
@@ -8,7 +9,7 @@
     --warning-color: #ffc107; /* Amarillo para advertencias */
     --background-color: #f8f9fa; /* Fondo claro */
     --card-background: #ffffff; /* Fondo de tarjetas */
-    --header-bg: #343a40; /* Fondo oscuro para encabezado */
+    --header-bg: #343339; /* Fondo oscuro para encabezado y sidebar (más cercano a tus imágenes) */
     --text-color: #333; /* Color de texto general */
     --light-text-color: #f8f9fa; /* Color de texto claro */
     --border-color: #dee2e6; /* Color de borde */
@@ -20,6 +21,7 @@
     --spacing-lg: 1.5rem;
 }
 
+/* Estilos globales para el cuerpo */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -28,9 +30,10 @@ body {
     color: var(--text-color);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; /* Asegura que el cuerpo ocupe al menos toda la altura de la ventana */
 }
 
+/* Encabezado */
 .header {
     background-color: var(--header-bg);
     color: var(--light-text-color);
@@ -56,20 +59,22 @@ body {
     gap: var(--spacing-sm);
 }
 
+/* Contenedor principal para la barra lateral y el contenido */
 .main-container {
     display: flex;
-    flex: 1;
+    flex: 1; /* Permite que este contenedor se expanda para llenar el espacio restante */
 }
 
+/* Barra lateral de navegación */
 .sidebar {
     width: 250px;
-    background-color: var(--header-bg); /* Barra lateral más oscura */
+    background-color: var(--header-bg);
     padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     box-shadow: var(--box-shadow);
-    flex-shrink: 0;
+    flex-shrink: 0; /* Evita que la barra lateral se encoja */
 }
 
 .sidebar .tab-btn {
@@ -97,26 +102,28 @@ body {
     font-weight: bold;
 }
 
+/* Contenido principal (área de las pestañas) */
 .content {
-    flex-grow: 1;
+    flex-grow: 1; /* Permite que el contenido ocupe todo el espacio disponible */
     padding: var(--spacing-lg);
     background-color: var(--background-color);
-    overflow-y: auto; /* Habilitar desplazamiento para el contenido */
+    overflow-y: auto; /* Habilita desplazamiento vertical si el contenido es muy largo */
 }
 
 .content-section {
-    display: none;
+    display: none; /* Oculta todas las secciones por defecto */
     background-color: var(--card-background);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg); /* Espacio entre secciones si hubiera más de una visible */
 }
 
 .content-section.active {
-    display: block;
+    display: block; /* Muestra la sección activa */
 }
 
+/* Estilos de títulos */
 h2 {
     color: var(--header-bg);
     margin-bottom: var(--spacing-lg);
@@ -133,24 +140,29 @@ h3 {
     font-size: 1.5em;
 }
 
+/* Estilos de tarjetas de Dashboard y contenedores de gráficos en Reportes */
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Min-width ajustado */
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
 }
 
 .dashboard-cards .card {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color); /* Por defecto para dashboard cards */
     color: white;
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
     text-align: center;
     box-shadow: var(--box-shadow);
+    display: flex; /* Para centrar contenido */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .dashboard-cards .card h3 {
-    color: white;
+    color: inherit; /* Hereda el color del texto de la tarjeta */
     font-size: 1.2em;
     margin-bottom: var(--spacing-sm);
 }
@@ -161,23 +173,33 @@ h3 {
     margin: 0;
 }
 
-/* Estilos de formulario */
-.contract-form, .advance-form, .hes-form {
+/* Estilos específicos para las tarjetas de gráficos en la sección de Reportes */
+#reports-section .dashboard-cards .card {
+    background-color: var(--card-background); /* Fondo blanco para las tarjetas de gráficos */
+    color: var(--text-color); /* Texto oscuro */
+    text-align: left; /* Alineación de texto a la izquierda para los títulos de gráfico */
+    padding: var(--spacing-md);
+    display: block; /* Vuelve a bloque para que el h3 y chart-container fluyan normalmente */
+}
+
+
+/* Estilos de formularios */
+.contract-form, .advance-form, .hes-form, .physical-advance-form { /* Añadido .physical-advance-form */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
     gap: var(--spacing-md);
 }
 
-.contract-form .form-group, .advance-form .form-group, .hes-form .form-group {
+.contract-form .form-group, .advance-form .form-group, .hes-form .form-group, .physical-advance-form .form-group {
     display: flex;
     flex-direction: column;
 }
 
-.contract-form .form-group.full-width, .hes-form .form-group.full-width {
-    grid-column: 1 / -1; /* Ocupar todas las columnas */
+.contract-form .form-group.full-width, .hes-form .form-group.full-width, .physical-advance-form .form-group.full-width {
+    grid-column: 1 / -1; /* Ocupar todas las columnas disponibles en el grid */
 }
 
-.contract-form label, .advance-form label, .hes-form label {
+.contract-form label, .advance-form label, .hes-form label, .physical-advance-form label {
     font-weight: bold;
     margin-bottom: var(--spacing-xs);
     color: var(--text-color);
@@ -188,6 +210,8 @@ h3 {
     padding: var(--spacing-sm);
     border-radius: var(--border-radius);
     font-size: 1em;
+    width: 100%; /* Asegura que ocupen todo el ancho de su contenedor */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho */
 }
 
 .form-control:focus, .form-select:focus {
@@ -196,23 +220,35 @@ h3 {
     outline: none;
 }
 
+/* Estilos para grupos de input con botones (si se usan, como un buscador) */
+.input-group {
+    display: flex;
+    width: 100%;
+}
+
+.input-group .form-control {
+    flex-grow: 1;
+    border-right: none; /* Elimina el borde entre el input y el botón */
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .input-group .btn {
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
-    margin-left: -1px; /* Superponer borde */
+    /* margin-left: -1px; Quitado para evitar solapamiento visual, el flexbox lo maneja */
 }
 
-.input-group .form-select {
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
-}
-
+/* Acciones de formulario (botones de guardar, limpiar, etc.) */
 .form-actions {
-    grid-column: 1 / -1;
+    grid-column: 1 / -1; /* Ocupa todas las columnas del grid */
     display: flex;
     gap: var(--spacing-md);
-    justify-content: flex-end;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
     margin-top: var(--spacing-lg);
+    flex-wrap: wrap; /* Permite que los botones salten de línea en pantallas pequeñas */
 }
 
+/* Estilos generales de botones */
 .btn {
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius);
@@ -220,10 +256,13 @@ h3 {
     font-size: 1em;
     display: inline-flex;
     align-items: center;
+    justify-content: center; /* Centra el icono y texto en el botón */
     gap: var(--spacing-sm);
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    text-decoration: none; /* Para botones usados como enlaces */
 }
 
+/* Variantes de color para botones */
 .btn-primary { background-color: var(--primary-color); color: white; border: 1px solid var(--primary-color); }
 .btn-primary:hover { background-color: #0056b3; border-color: #004085; }
 
@@ -245,7 +284,7 @@ h3 {
 
 /* Estilos de tabla */
 .table-responsive {
-    overflow-x: auto;
+    overflow-x: auto; /* Permite desplazamiento horizontal en tablas grandes */
     margin-top: var(--spacing-md);
 }
 
@@ -260,7 +299,7 @@ h3 {
     padding: var(--spacing-sm);
     border: 1px solid var(--border-color);
     text-align: left;
-    white-space: nowrap; /* Evita el salto de línea en las celdas de la tabla */
+    white-space: normal; /* Permitir que el texto se ajuste en las celdas de la tabla */
 }
 
 .table thead th {
@@ -285,7 +324,7 @@ h3 {
     margin-right: 0;
 }
 
-/* Filtros */
+/* Filtros en tablas */
 .filters-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -303,10 +342,11 @@ h3 {
     gap: var(--spacing-sm);
     justify-content: flex-end;
     align-items: flex-end; /* Alinear botones en la parte inferior si los inputs son más altos */
+    flex-wrap: wrap; /* Permitir que los botones salten de línea */
 }
 
 /* Notificaciones Toast */
-.toast {
+#toast { /* Usar ID para el toast, ya que es un elemento único */
     visibility: hidden;
     min-width: 250px;
     background-color: #333;
@@ -324,32 +364,32 @@ h3 {
     transition: opacity 0.5s, visibility 0.5s;
 }
 
-.toast.show {
+#toast.show {
     visibility: visible;
     opacity: 1;
 }
 
-.toast.success { background-color: var(--secondary-color); }
-.toast.error { background-color: var(--danger-color); }
-.toast.info { background-color: var(--info-color); }
-.toast.warning { background-color: var(--warning-color); color: #333;}
+#toast.success { background-color: var(--secondary-color); }
+#toast.error { background-color: var(--danger-color); }
+#toast.info { background-color: var(--info-color); }
+#toast.warning { background-color: var(--warning-color); color: #333;}
 
 
 /* Contenedor de gráficos */
 .chart-container {
     width: 100%;
-    height: 400px; /* Altura fija para el gráfico */
-    background-color: var(--card-background);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    height: 350px; /* Altura fija para el gráfico, ajustado para el layout de 2x2 */
+    /* background-color: var(--card-background); se aplica en el .card padre */
+    /* padding: var(--spacing-md); se aplica en el .card padre */
+    /* border-radius: var(--border-radius); se aplica en el .card padre */
+    /* box-shadow: var(--box-shadow); se aplica en el .card padre */
     margin-top: var(--spacing-md);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.chart-controls {
+.chart-controls { /* Usado anteriormente, ahora la sección de Reportes usa dashboard-cards para layout */
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -367,6 +407,7 @@ h3 {
     display: flex;
     gap: var(--spacing-sm);
     flex-wrap: wrap;
+    align-items: center;
 }
 
 /* Pie de página */
@@ -393,8 +434,14 @@ h3 {
     .sidebar {
         width: 200px;
     }
-    .contract-form, .hes-form, .filters-container {
+    .contract-form, .hes-form, .filters-container, .advance-form, .physical-advance-form {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .dashboard-cards {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Ajuste para tablets */
+    }
+    .chart-container {
+        height: 300px; /* Ajuste para tablets */
     }
 }
 
@@ -405,10 +452,11 @@ h3 {
     .sidebar {
         width: 100%;
         flex-direction: row;
-        overflow-x: auto;
+        overflow-x: auto; /* Permite el desplazamiento horizontal de los botones de la barra lateral */
         padding: var(--spacing-sm);
         border-radius: 0;
         box-shadow: none;
+        justify-content: flex-start; /* Alinea los botones al inicio */
     }
     .sidebar .tab-btn {
         flex-shrink: 0;
@@ -431,9 +479,10 @@ h3 {
         margin-top: var(--spacing-sm);
         width: auto;
         padding: var(--spacing-sm) var(--spacing-md);
+        align-self: flex-end; /* Alinea el botón de ayuda a la derecha en pantallas pequeñas */
     }
     .dashboard-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Una columna para móviles */
     }
     .form-actions {
         flex-direction: column;
@@ -445,6 +494,9 @@ h3 {
     }
     .table th, .table td {
         white-space: normal; /* Permitir que el texto se ajuste en pantallas más pequeñas */
+    }
+    .chart-container {
+        height: 250px; /* Ajuste para móviles */
     }
 }
 
@@ -458,7 +510,7 @@ h3 {
     h3 {
         font-size: 1.2em;
     }
-    .contract-form, .hes-form, .filters-container {
+    .contract-form, .hes-form, .filters-container, .advance-form, .physical-advance-form {
         grid-template-columns: 1fr;
     }
     .export-buttons {
