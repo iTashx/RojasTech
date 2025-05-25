@@ -1,128 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ayuda y Documentación - Control de Partidas</title>
-    <link rel="stylesheet" href="/css/ayuda.css"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ayuda - SIGESCON</title>
+
+    <!-- Ruta absoluta a CSS -->
+    <link rel="stylesheet" href="/RojasTech/css/style.css">
+
+    <!-- Estilos externos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-question-circle"></i> Ayuda y Documentación</h1>
-        <div class="header-buttons">
-            <a href="index.html" class="primary-btn"><i class="fas fa-home"></i> Volver al Inicio</a>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-question-circle"></i> Ayuda - SIGESCON
+            </div>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver al Inicio
+            </a>
         </div>
     </header>
 
-    <main>
-        <div class="card">
-            <h2><i class="fas fa-info-circle"></i> Introducción al Sistema de Control de Partidas</h2>
-            <p>Bienvenido a la sección de ayuda de nuestro sistema. Aquí encontrarás información detallada sobre cómo utilizar las diferentes funcionalidades y módulos para gestionar tus partidas presupuestarias de manera eficiente.</p>
-            <p>Este sistema está diseñado para simplificar el seguimiento, la asignación y el control de los recursos económicos, asegurando una gestión transparente y organizada.</p>
-        </div>
+    <main class="content help-content">
+        <section class="help-section">
+            <h2><i class="fas fa-info-circle"></i> Bienvenido a la Guía de Ayuda</h2>
+            <p>Esta aplicación está diseñada para gestionar contratos empresariales, incluyendo Hojas de Entrada de Servicios (HES), avances físicos, informes y más.</p>
+        </section>
 
-        <div class="card">
-            <h2><i class="fas fa-money-check-alt"></i> Gestión de Partidas Presupuestarias</h2>
-            <p>Este módulo te permite crear, visualizar, editar y eliminar las partidas presupuestarias de tu organización.</p>
+        <section class="help-section">
+            <h3><i class="fas fa-file-contract"></i> Nuevo/Editar Contrato</h3>
+            <p>Rellena todos los campos del formulario para crear o actualizar un contrato. Asegúrate de guardar antes de continuar.</p>
+        </section>
 
-            <h3><i class="fas fa-plus-circle"></i> Crear una Nueva Partida</h3>
-            <p>Para añadir una nueva partida al sistema:</p>
-            <ol>
-                <li>Navega a la pestaña "Partidas" o "Gestión Presupuestaria" en el menú principal.</li>
-                <li>Haz clic en el botón <span class="success-btn small-btn"><i class="fas fa-plus"></i> Añadir Nueva Partida</span>.</li>
-                <li>Se abrirá un formulario. Rellena los siguientes campos:
-                    <ul>
-                        <li><strong>Nombre de la Partida:</strong> Un título claro y conciso para la partida (ej. "Gastos de Oficina", "Salarios", "Inversión en Tecnología").</li>
-                        <li><strong>Código de Identificación:</strong> Un código único para identificar la partida (opcional, si aplica a tu sistema).</li>
-                        <li><strong>Monto Asignado:</strong> El valor presupuestado para esta partida. Utiliza solo números y el separador decimal adecuado.</li>
-                        <li><strong>Fecha de Inicio:</strong> La fecha en que la partida entra en vigor.</li>
-                        <li><strong>Fecha de Finalización:</strong> La fecha en que se espera finalizar el uso de esta partida.</li>
-                        <li><strong>Descripción:</strong> Una breve explicación del propósito o uso de la partida.</li>
-                        <li><strong>Estado:</strong> Selecciona el estado actual de la partida (ej. "Activa", "Inactiva", "Cerrada").</li>
-                    </ul>
-                </li>
-                <li>Una vez completados los campos, haz clic en el botón <span class="primary-btn small-btn"><i class="fas fa-save"></i> Guardar Partida</span>.</li>
-                <li>Recibirás una notificación <span class="toast">¡Partida guardada exitosamente!</span> si la operación fue correcta.</li>
-            </ol>
+        <section class="help-section">
+            <h3><i class="fas fa-list"></i> Lista de Contratos</h3>
+            <p>Consulta, filtra y exporta tus contratos usando los filtros disponibles. Puedes aplicar múltiples criterios de búsqueda.</p>
+        </section>
 
-            <h3><i class="fas fa-edit"></i> Editar una Partida Existente</h3>
-            <p>Para modificar la información de una partida ya creada:</p>
-            <ol>
-                <li>En la tabla de listado de partidas, localiza la partida que deseas editar.</li>
-                <li>En la columna "Acciones", haz clic en el icono <i class="fas fa-edit"></i> (Editar).</li>
-                <li>El formulario de la partida se precargará con los datos actuales. Realiza los cambios necesarios.</li>
-                <li>Haz clic en el botón <span class="primary-btn small-btn"><i class="fas fa-sync-alt"></i> Actualizar Partida</span> para guardar los cambios.</li>
-            </ol>
+        <section class="help-section">
+            <h3><i class="fas fa-chart-line"></i> Avance Físico (Manual)</h3>
+            <p>Registra manualmente el avance físico de un contrato. Esto afectará automáticamente el porcentaje global del contrato.</p>
+        </section>
 
-            <h3><i class="fas fa-trash-alt"></i> Eliminar una Partida</h3>
-            <p>Para eliminar una partida de forma permanente:</p>
-            <ol>
-                <li>En la tabla de listado de partidas, localiza la partida que deseas eliminar.</li>
-                <li>En la columna "Acciones", haz clic en el icono <i class="fas fa-trash-alt"></i> (Eliminar).</li>
-                <li>Se te pedirá confirmación antes de eliminar. Asegúrate de que es la partida correcta, ya que esta acción es irreversible.</li>
-                <li>Confirma la eliminación.</li>
-            </ol>
-        </div>
-
-        <div class="card">
-            <h2><i class="fas fa-users-cog"></i> Gestión de Usuarios y Roles</h2>
-            <p>Este módulo permite administrar los usuarios que tienen acceso al sistema y asignarles roles para definir sus permisos.</p>
-
-            <h3><i class="fas fa-user-plus"></i> Añadir un Nuevo Usuario</h3>
-            <ol>
-                <li>Dirígete a la pestaña "Administración" y luego a la subsección "Gestión de Usuarios".</li>
-                <li>Haz clic en el botón <span class="success-btn small-btn"><i class="fas fa-user-plus"></i> Añadir Usuario</span>.</li>
-                <li>Completa el formulario con la información del nuevo usuario:
-                    <ul>
-                        <li><strong>Nombre Completo:</strong> El nombre y apellido del usuario.</li>
-                        <li><strong>Correo Electrónico:</strong> Será el nombre de usuario para iniciar sesión.</li>
-                        <li><strong>Contraseña:</strong> Establece una contraseña segura para el usuario.</li>
-                        <li><strong>Confirmar Contraseña:</strong> Repite la contraseña para verificar.</li>
-                        <li><strong>Rol:</strong> Selecciona el rol que tendrá el usuario (ej. "Administrador", "Contador", "Visualizador").</li>
-                    </ul>
-                </li>
-                <li>Haz clic en <span class="primary-btn small-btn"><i class="fas fa-user-check"></i> Crear Usuario</span>.</li>
-            </ol>
-
-            <h3><i class="fas fa-user-tag"></i> Gestionar Roles y Permisos</h3>
-            <p>Los roles determinan qué acciones puede realizar un usuario en el sistema.</p>
-            <ol>
-                <li>En la pestaña "Administración", selecciona la subsección "Gestión de Roles".</li>
-                <li>Para añadir un nuevo rol, escribe su nombre (ej. "Editor de Partidas", "Auditor") en el campo de texto y haz clic en el botón <span class="primary-btn small-btn"><i class="fas fa-plus-circle"></i> Añadir Rol</span>.</li>
-                <li>La tabla de roles mostrará todos los roles existentes. Desde aquí, puedes <span class="danger-btn small-btn"><i class="fas fa-times-circle"></i> Eliminar</span> roles que ya no sean necesarios.</li>
-            </ol>
-        </div>
-
-        <div class="card">
-            <h2><i class="fas fa-chart-line"></i> Reportes y Análisis</h2>
-            <p>El módulo de reportes te ofrece una visión general y detallada del estado de tus partidas presupuestarias mediante gráficos interactivos.</p>
-            <h3><i class="fas fa-filter"></i> Filtrar y Visualizar Datos</h3>
-            <p>En la sección de "Reportes", encontrarás opciones para filtrar los datos por:</p>
-            <ul>
-                <li><strong>Rango de Fechas:</strong> Para ver el desempeño en un periodo específico.</li>
-                <li><strong>Tipo de Partida:</strong> Si las partidas están categorizadas.</li>
-                <li><strong>Estado:</strong> Para analizar partidas activas, cerradas, etc.</li>
-            </ul>
-            <p>Los gráficos se actualizarán dinámicamente con los filtros aplicados. Puedes cambiar el tipo de gráfico (barras, líneas, pastel) si la funcionalidad está disponible.</p>
-
-            <h3><i class="fas fa-file-export"></i> Exportar Informes</h3>
-            <p>Puedes exportar los datos visualizados en los reportes a diferentes formatos:</p>
-            <ul>
-                <li><span class="excel-btn small-btn"><i class="fas fa-file-excel"></i> Exportar a Excel:</span> Genera un archivo `.xlsx` con los datos de la tabla o del reporte.</li>
-                <li><span class="pdf-btn small-btn"><i class="fas fa-file-pdf"></i> Exportar a PDF:</span> Crea un documento PDF imprimible del reporte actual.</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2><i class="fas fa-info-circle"></i> Preguntas Frecuentes (FAQ)</h2>
-            <p>Esta sección se actualizará con las preguntas más comunes de nuestros usuarios.</p>
-            </div>
+        <section class="help-section">
+            <h3><i class="fas fa-file-alt"></i> Informes</h3>
+            <p>Genera informes detallados sobre cualquier contrato y sus respectivas HES. Puedes exportarlos a PDF o Excel.</p>
+        </section>
     </main>
 
-   <footer class="footer">
-        <p>&copy; 2025 SIGESCON - Gestión de Contratos Empresariales. Todos los derechos reservados. | Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
+    <footer class="footer">
+        <p>&copy; 2025 SIGESCON - Gestión de Contratos Empresariales. Todos los derechos reservados.</p>
     </footer>
 
-    </body>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script principal con ruta absoluta -->
+    <script src="/RojasTech/js/script.js"></script>
+</body>
 </html>
