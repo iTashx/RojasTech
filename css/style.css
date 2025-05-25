@@ -91,6 +91,9 @@ body {
     margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex; /* Para alinear el título y el botón de menú */
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sidebar-header h3 {
@@ -537,6 +540,16 @@ textarea.form-control {
     border-color: var(--btn-info-hover-border);
 }
 
+.btn-warning {
+    background-color: var(--btn-warning-bg);
+    color: white;
+    border: 1px solid var(--btn-warning-border);
+}
+.btn-warning:hover {
+    background-color: var(--btn-warning-hover-bg);
+    border-color: var(--btn-warning-hover-border);
+}
+
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.85em;
@@ -826,17 +839,19 @@ canvas {
     .sidebar {
         width: 100%;
         height: auto;
-        padding: 15px;
+        padding: 15px; /* Ajustar padding */
         flex-direction: row; /* Sidebar horizontal */
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative; /* Para que el menú expandible se posicione correctamente */
     }
 
     .sidebar-header {
         margin-bottom: 0;
         padding-bottom: 0;
         border-bottom: none;
+        width: auto; /* Dejar que el contenido defina el ancho */
     }
 
     .nav-links-container {
@@ -844,35 +859,46 @@ canvas {
         flex-direction: column;
         width: 100%;
         position: absolute;
-        top: 60px; /* Altura de la barra lateral */
+        top: 100%; /* Colocar debajo de la cabecera del sidebar */
         left: 0;
         background-color: var(--primary-color);
         padding: 10px 0;
         box-shadow: var(--shadow-medium);
     }
+    .nav-links-container .nav-link {
+        padding-left: 20px; /* Indentar enlaces */
+    }
 
     .sidebar-footer {
         display: none; /* Ocultar pie de página del sidebar por defecto */
+        width: 100%;
+        padding: 10px 0;
+        background-color: var(--primary-color);
+        box-shadow: var(--shadow-medium); /* Mismo estilo que nav-links-container */
+        position: absolute;
+        top: calc(100% + var(--nav-links-height, 0px)); /* Debajo del nav-links-container */
+        left: 0;
+    }
+    .sidebar-footer .nav-link {
+        padding-left: 20px; /* Indentar enlaces */
     }
 
-    /* Implementar un botón de menú "hamburguesa" para mostrar/ocultar el sidebar */
-    .menu-toggle {
-        display: block;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5em;
-        cursor: pointer;
-        margin-left: 15px;
-    }
-    
     /* Mostrar nav y footer al activar el menú */
     .sidebar.active .nav-links-container,
     .sidebar.active .sidebar-footer {
         display: flex;
     }
 
-
+    .menu-toggle {
+        display: block; /* Mostrar botón de menú hamburguesa */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.8em;
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+    
     .main-container {
         width: 100%;
         padding-top: 0; /* Sin espacio para el sidebar flotante */
@@ -934,72 +960,6 @@ canvas {
     .summary-cards {
         grid-template-columns: 1fr; /* Una columna por tarjeta en móviles */
     }
-}
-
-/* Añadir un botón de menú hamburguesa para móviles */
-.menu-toggle {
-    display: none; /* Oculto en escritorio */
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0; /* Eliminar padding para que el contenido se ajuste */
-        height: auto;
-        position: relative; /* Para que el menú se expanda abajo */
-    }
-
-    .sidebar-header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .nav-links-container,
-    .sidebar-footer {
-        display: none; /* Oculto por defecto */
-        width: 100%;
-        padding: 10px 0;
-        background-color: var(--primary-color);
-        box-shadow: var(--shadow-medium);
-    }
-
-    .nav-links-container .nav-link,
-    .sidebar-footer .nav-link {
-        padding-left: 20px; /* Indentar enlaces */
-    }
-
-    .sidebar.active .nav-links-container,
-    .sidebar.active .sidebar-footer {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .menu-toggle {
-        display: block; /* Mostrar botón de menú hamburguesa */
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.8em;
-        cursor: pointer;
-        padding: 5px 10px;
-    }
-
-    .main-container {
-        width: 100%;
-    }
-
-    .topbar {
-        padding: 15px;
-    }
-
-    .content {
-        padding: 15px;
-    }
 
     /* Ajustar tamaño de fuente para mejor lectura en móviles */
     body {
@@ -1018,6 +978,7 @@ canvas {
         font-size: 2.5em;
     }
 }
+
 
 /* Impresión */
 @media print {
