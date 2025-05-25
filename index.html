@@ -20,8 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js"></script>
 </head>
 <body>
-    <header class="header">
-        <div class="container-fluid">
+    <header class="header bg-light-blue"> <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center py-3">
                 <div class="logo d-flex align-items-center">
                     <i class="fas fa-file-contract me-2"></i>
@@ -35,8 +34,7 @@
     </header>
 
     <div class="main-container">
-        <aside class="sidebar">
-            <nav class="nav flex-column">
+        <aside class="sidebar bg-dark-blue"> <nav class="nav flex-column">
                 <button class="nav-link tab-btn active" data-target="general-summary">
                     <i class="fas fa-tachometer-alt me-2"></i> Resumen General
                 </button>
@@ -60,6 +58,8 @@
                 </button>
                 <button class="nav-link tab-btn" data-target="reports">
                     <i class="fas fa-file-alt me-2"></i> Informes
+                </button>
+                <button class="nav-link tab-btn" data-target="trash-can"> <i class="fas fa-trash-alt me-2"></i> Papelera de Reciclaje
                 </button>
             </nav>
         </aside>
@@ -93,28 +93,27 @@
                     <div class="contract-form-grid">
                         <div class="form-group">
                             <label for="numero-proveedor">Número de Proveedor:</label>
-                            <input type="text" id="numero-proveedor" class="form-control">
+                            <input type="text" id="numero-proveedor" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="fecha-firma-contrato">Fecha Firma del Contrato:</label>
-                            <input type="date" id="fecha-firma-contrato" class="form-control">
+                            <input type="date" id="fecha-firma-contrato" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="fecha-creado">Fecha Creado:</label>
-                            <input type="date" id="fecha-creado" class="form-control" disabled>
+                            <input type="date" id="fecha-creado" class="form-control">
                         </div>
                         <div class="form-group">
                             <label for="fecha-inicio">Fecha Inicio:</label>
-                            <input type="date" id="fecha-inicio" class="form-control">
+                            <input type="date" id="fecha-inicio" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="fecha-terminacion">Fecha Terminación:</label>
-                            <input type="date" id="fecha-terminacion" class="form-control">
+                            <input type="date" id="fecha-terminacion" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="periodo-culminacion">Período de Culminación (Días):</label>
-                            <input type="number" id="periodo-culminacion" class="form-control">
-                        </div>
+                            <input type="number" id="periodo-culminacion" class="form-control" readonly> </div>
                         <div class="form-group">
                             <label for="numero-sicac">N° Contrato SICAC:</label>
                             <input type="text" id="numero-sicac" class="form-control">
@@ -145,11 +144,11 @@
                         </div>
                         <div class="form-group">
                             <label for="modalidad-contratacion">Modalidad de Contratación:</label>
-                            <div class="d-flex">
-                                <input type="text" id="modalidad-contratacion" class="form-control">
-                                <button type="button" class="btn btn-success ms-2 add-modalidad-btn">+</button>
-                                <button type="button" class="btn btn-danger ms-1 remove-modalidad-btn">-</button>
-                            </div>
+                            <select id="modalidad-contratacion" class="form-select">
+                                <option value="Obra">Obra</option>
+                                <option value="Servicio">Servicio</option>
+                                <option value="Suministro">Suministro</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="regimen-laboral">Régimen Laboral:</label>
@@ -165,16 +164,14 @@
                         </div>
                         <div class="form-group">
                             <label for="monto-original">Monto Original:</label>
-                            <input type="number" id="monto-original" class="form-control" step="0.01" value="0.00">
-                        </div>
+                            <input type="number" id="monto-original" class="form-control" step="0.01" value="0.00" readonly> </div>
                         <div class="form-group">
                             <label for="monto-modificado">Monto Modificado:</label>
                             <input type="number" id="monto-modificado" class="form-control" step="0.01" value="0.00">
                         </div>
                         <div class="form-group">
                             <label for="monto-total-contrato">Monto Total del Contrato:</label>
-                            <input type="number" id="monto-total-contrato" class="form-control" step="0.01" value="0.00">
-                        </div>
+                            <input type="number" id="monto-total-contrato" class="form-control" step="0.01" value="0.00" readonly> </div>
                         <div class="form-group">
                             <label for="numero-contrato-interno">No. Contrato (Interno):</label>
                             <input type="text" id="numero-contrato-interno" class="form-control">
@@ -189,6 +186,7 @@
                                 <option value="Activo">Activo</option>
                                 <option value="Inactivo">Inactivo</option>
                                 <option value="Cerrado">Cerrado</option>
+                                <option value="Suspendido">Suspendido</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -201,7 +199,7 @@
                         </div>
                         <div class="form-group col-span-2">
                             <label for="adjuntar-archivos">Adjuntar Archivos:</label>
-                            <input type="file" id="adjuntar-archivos" class="form-control">
+                            <input type="file" id="adjuntar-archivos" class="form-control" multiple>
                             <small class="text-muted" id="adjuntar-archivos-info">Ningún archivo seleccionado</small>
                         </div>
                     </div>
@@ -270,7 +268,7 @@
                                 <th>N° SICAC</th>
                                 <th>Fecha Inicio</th>
                                 <th>Monto Total</th>
-                                <th>Estatus</th>
+                                <th>Avance Físico</th> <th>Avance Financiero</th> <th>Estatus</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -282,28 +280,364 @@
 
             <section id="hes-management" class="content-section">
                 <h2><i class="fas fa-clipboard-list me-2"></i> Gestión de HES</h2>
-                <p>Gestiona las Hojas de Entrada de Servicios asociadas a los contratos.</p>
-                </section>
+                <form id="hes-form" class="g-3">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="hes-contract-select" class="form-label">Contrato Asociado:</label>
+                            <select id="hes-contract-select" class="form-select" required>
+                                <option value="">Seleccione un Contrato</option>
+                                </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hes-no-hes" class="form-label">No. HES:</label>
+                            <input type="text" id="hes-no-hes" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="hes-fecha-inicio" class="form-label">Fecha Inicio HES:</label>
+                            <input type="date" id="hes-fecha-inicio" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-fecha-final" class="form-label">Fecha Final HES:</label>
+                            <input type="date" id="hes-fecha-final" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-fecha-creado" class="form-label">Fecha de Creado HES:</label>
+                            <input type="date" id="hes-fecha-creado" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="hes-aprobado" class="form-label">Aprobado:</label>
+                            <select id="hes-aprobado" class="form-select">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aprobado">Aprobado</option>
+                                <option value="Rechazado">Rechazado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hes-fecha-aprobado" class="form-label">Fecha Aprobado:</label>
+                            <input type="date" id="hes-fecha-aprobado" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="hes-texto-hes" class="form-label">Texto HES / Descripción:</label>
+                        <textarea id="hes-texto-hes" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="hes-texto-breve" class="form-label">Texto Breve:</label>
+                        <input type="text" id="hes-texto-breve" class="form-control">
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="hes-valuacion" class="form-label">Valuación:</label>
+                            <input type="number" id="hes-valuacion" class="form-control" step="0.01" value="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-lugar-prestacion-servicio" class="form-label">Lugar de Prestación del Servicio:</label>
+                            <input type="text" id="hes-lugar-prestacion-servicio" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-responsable-sdo" class="form-label">Responsable SDO:</label>
+                            <input type="text" id="hes-responsable-sdo" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="hes-anexos" class="form-label">Anexos:</label>
+                        <input type="file" id="hes-anexos" class="form-control" multiple>
+                        <small class="text-muted" id="hes-anexos-info">Ningún archivo seleccionado</small>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4 form-check form-switch d-flex align-items-center mb-3">
+                            <input class="form-check-input me-2" type="checkbox" id="hes-ejecutada">
+                            <label class="form-check-label" for="hes-ejecutada">Ejecutada</label>
+                        </div>
+                        <div class="col-md-4 form-check form-switch d-flex align-items-center mb-3">
+                            <input class="form-check-input me-2" type="checkbox" id="hes-valuado">
+                            <label class="form-check-label" for="hes-valuado">Valuado</label>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Partidas de la HES (del Contrato Seleccionado)</h3>
+                    <div class="alert alert-info" id="hes-partidas-info" role="alert">
+                        Seleccione un contrato para cargar sus partidas.
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="hes-partidas-table">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Descripción de Contrato</th>
+                                    <th>UMD</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Cantidad Original Contrato</th>
+                                    <th>Cantidad Ejecutada en otras HES</th>
+                                    <th>Cantidad Disponible</th>
+                                    <th>Cantidad a Ejecutar en esta HES</th>
+                                    <th>Total Partida HES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hes-partidas-table-body">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row g-3 mt-4">
+                        <div class="col-md-4">
+                            <label for="hes-subtotal" class="form-label">Sub Total HES:</label>
+                            <input type="number" id="hes-subtotal" class="form-control" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-gastos-administrativos" class="form-label">5% Gastos Administrativos:</label>
+                            <input type="number" id="hes-gastos-administrativos" class="form-control" step="0.01" value="0.00" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="hes-total" class="form-label">Total HES:</label>
+                            <input type="number" id="hes-total" class="form-control" step="0.01" value="0.00" readonly>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4 button-group">
+                        <button type="submit" class="btn btn-primary" id="save-hes-btn">
+                            <i class="fas fa-save me-2"></i> Guardar/Actualizar HES
+                        </button>
+                        <button type="button" class="btn btn-secondary ms-2" id="clear-hes-form-btn">
+                            <i class="fas fa-eraser me-2"></i> Limpiar Formulario HES
+                        </button>
+                    </div>
+                </form>
+
+                <h3 class="mt-4">Lista de HES</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="hes-list-table">
+                        <thead>
+                            <tr>
+                                <th>Contrato</th>
+                                <th>No. HES</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Final</th>
+                                <th>Total HES</th>
+                                <th>Estatus</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hes-list-body">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
 
             <section id="physical-advance" class="content-section">
                 <h2><i class="fas fa-chart-line me-2"></i> Avance Físico</h2>
                 <p>Registra y sigue el progreso físico de tus contratos.</p>
-                </section>
+                <div class="container mt-4">
+                    <h3>Avance Físico por Contrato</h3>
+                    <select id="physical-advance-contract-select" class="form-select mb-3">
+                        <option value="">Seleccione un Contrato</option>
+                    </select>
+                    <div id="physical-advance-details" class="card p-3" style="display:none;">
+                        <h5>Detalles del Contrato: <span id="pa-contract-sicac"></span></h5>
+                        <p>Monto Total Contrato: <span id="pa-contract-total"></span></p>
+                        <p>Avance Físico Global: <span id="pa-physical-global-percentage">0%</span></p>
+                        <div class="progress mb-3">
+                            <div id="pa-physical-global-progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h6 class="mt-4">Avance por Partida:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Cantidad Contrato</th>
+                                        <th>Cantidad Ejecutada</th>
+                                        <th>Avance (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pa-partidas-body">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section id="financial-advance" class="content-section">
                 <h2><i class="fas fa-dollar-sign me-2"></i> Avance Financiero</h2>
                 <p>Registra y sigue el progreso financiero de tus contratos.</p>
-                </section>
+                <div class="container mt-4">
+                    <h3>Avance Financiero por Contrato</h3>
+                    <select id="financial-advance-contract-select" class="form-select mb-3">
+                        <option value="">Seleccione un Contrato</option>
+                    </select>
+                    <div id="financial-advance-details" class="card p-3" style="display:none;">
+                        <h5>Detalles del Contrato: <span id="fa-contract-sicac"></span></h5>
+                        <p>Monto Total Contrato: <span id="fa-contract-total"></span></p>
+                        <p>Monto Ejecutado en HES: <span id="fa-executed-amount"></span></p>
+                        <p>Avance Financiero Global: <span id="fa-financial-global-percentage">0%</span></p>
+                        <div class="progress mb-3">
+                            <div id="fa-financial-global-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <h6 class="mt-4">Detalle de HES Asociadas:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No. HES</th>
+                                        <th>Fecha Inicio HES</th>
+                                        <th>Fecha Final HES</th>
+                                        <th>Total HES</th>
+                                        <th>Estatus HES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fa-hes-list-body">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section id="graphic-summary" class="content-section">
                 <h2><i class="fas fa-chart-bar me-2"></i> Resumen Gráfico</h2>
                 <p>Obtén visualizaciones claras del estado y distribución de tus contratos.</p>
-                </section>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card p-3 mb-3">
+                            <h5>Contratos por Estatus</h5>
+                            <canvas id="contractStatusChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-3 mb-3">
+                            <h5>Contratos por Modalidad</h5>
+                            <canvas id="contractModalityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section id="reports" class="content-section">
                 <h2><i class="fas fa-file-alt me-2"></i> Informes</h2>
                 <p>Genera reportes personalizados para diferentes necesidades.</p>
-                </section>
+                <div class="container mt-4">
+                    <h3>Informe de Contrato Individual</h3>
+                    <select id="report-contract-select" class="form-select mb-3">
+                        <option value="">Seleccione un Contrato</option>
+                    </select>
+                    <div id="report-details" class="card p-3" style="display:none;">
+                        <h5>Contrato: <span id="report-contract-sicac"></span></h5>
+                        <p>Monto Total Contrato: <span id="report-contract-total"></span></p>
+                        <p>Monto Consumido por HES: <span id="report-consumed-amount"></span></p>
+                        <p>Monto Restante del Contrato: <span id="report-remaining-amount"></span></p>
+
+                        <h6 class="mt-4">Partidas del Contrato y Consumo:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Cantidad Original</th>
+                                        <th>Cantidad Consumida</th>
+                                        <th>Cantidad Restante</th>
+                                        <th>Monto Consumido</th>
+                                        <th>Monto Restante</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-partidas-consumo-body">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <h6 class="mt-4">HES Asociadas a este Contrato:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>No. HES</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Final</th>
+                                        <th>Total HES</th>
+                                        <th>Estatus</th>
+                                        <th>Acciones</th> </tr>
+                                </thead>
+                                <tbody id="report-hes-list-body">
+                                    </tbody>
+                            </table>
+                        </div>
+
+                        <div id="report-hes-detail-view" class="card p-3 mt-4" style="display:none;">
+                            <h6>Detalle de HES: <span id="report-hes-detail-no"></span></h6>
+                            <p>Avance Físico HES: <span id="report-hes-physical-percentage">0%</span></p>
+                            <div class="progress mb-3">
+                                <div id="report-hes-physical-progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <p>Avance Financiero HES: <span id="report-hes-financial-percentage">0%</span></p>
+                            <div class="progress mb-3">
+                                <div id="report-hes-financial-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <h6 class="mt-3">Partidas de esta HES:</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Descripción</th>
+                                            <th>Cantidad Ejecutada</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Total Partida</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="report-hes-partidas-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="trash-can" class="content-section"> <h2><i class="fas fa-trash-alt me-2"></i> Papelera de Reciclaje</h2>
+                <p>Aquí se encuentran los elementos eliminados, que pueden ser restaurados o eliminados permanentemente.</p>
+
+                <h3 class="mt-4">Contratos Eliminados</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="deleted-contracts-table">
+                        <thead>
+                            <tr>
+                                <th>N° Proveedor</th>
+                                <th>N° SICAC</th>
+                                <th>Fecha Eliminación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deleted-contracts-body">
+                            </tbody>
+                    </table>
+                </div>
+
+                <h3 class="mt-5">HES Eliminadas</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="deleted-hes-table">
+                        <thead>
+                            <tr>
+                                <th>No. HES</th>
+                                <th>Contrato Asociado</th>
+                                <th>Fecha Eliminación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deleted-hes-body">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
         </main>
     </div>
 
