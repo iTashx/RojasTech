@@ -110,14 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const reportConsumedAmount = document.getElementById('report-consumed-amount');
     const reportRemainingAmount = document.getElementById('report-remaining-amount');
     const reportPartidasConsumoBody = document.getElementById('report-partidas-consumo-body');
-    // const reportHesListBody = document.getElementById('report-hes-list-body'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesDetailView = document.getElementById('report-hes-detail-view'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesDetailNo = document.getElementById('report-hes-detail-no'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesPhysicalPercentage = document.getElementById('report-hes-physical-percentage'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesPhysicalProgressBar = document.getElementById('report-hes-physical-progress-bar'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesFinancialPercentage = document.getElementById('report-hes-financial-percentage'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesFinancialProgressBar = document.getElementById('report-hes-financial-progress-bar'); // No está en el HTML actual, comentar o eliminar
-    // const reportHesPartidasBody = document.getElementById('report-hes-partidas-body'); // No está en el HTML actual, comentar o eliminar
+    const reportHesListBody = document.getElementById('report-hes-list-body'); 
 
     // Botones de exportación de informes
     const generateIndividualReportPdfBtn = document.getElementById('generate-individual-report-pdf-btn');
@@ -129,6 +122,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const newModalidadInput = document.getElementById('new-modalidad-input');
     const addModalidadToListBtn = document.getElementById('add-modalidad-to-list-btn');
     const modalidadesList = document.getElementById('modalidades-list');
+
+    // --- Elementos para la integración con Gemini API ---
+    const generateSummaryBtn = document.getElementById('generate-summary-btn');
+    const objetoContractualTextarea = document.getElementById('objeto-contractual');
+    const generatedSummaryTextarea = document.getElementById('generated-summary');
+    const summaryLoadingIndicator = document.getElementById('summary-loading-indicator');
 
     let currentContractId = null; // Para edición de contratos
     let currentHesId = null; // Para edición de HES
@@ -182,31 +181,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await updateSummaryCards();
             } else if (targetId === 'new-edit-contract') {
                 // Al entrar en la pestaña de Nuevo/Editar Contrato
-                await populateExistingContractsSelect(); // <--- NUEVA LLAMADA
+                await populateExistingContractsSelect(); 
                 if (!currentContractId) {
-                    // Si no estamos editando un contrato existente, limpiar el formulario
-                    clearContractFormBtn.click(); // Usa el click para resetear todo, incluyendo el nuevo select
+                    clearContractFormBtn.click(); 
                 }
             } else if (targetId === 'hes-management') {
                 await populateContractSelect(hesContractSelect);
                 await loadHesList();
-                if (!currentHesId) { // Solo setear fecha de creación si es nueva HES
+                if (!currentHesId) { 
                     hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
                 }
             } else if (targetId === 'trash-can') {
                 await loadTrashCan();
             } else if (targetId === 'physical-advance') {
                 await populateContractSelect(physicalAdvanceContractSelect);
-                physicalAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+                physicalAdvanceDetails.style.display = 'none'; 
             } else if (targetId === 'financial-advance') {
                 await populateContractSelect(financialAdvanceContractSelect);
-                financialAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+                financialAdvanceDetails.style.display = 'none'; 
             } else if (targetId === 'graphic-summary') {
                 await renderCharts();
             } else if (targetId === 'reports') {
                 await populateContractSelect(reportContractSelect);
                 reportDetails.style.display = 'none';
-                // reportHesDetailView.style.display = 'none'; // Comentado/eliminado si no está en HTML
             }
         });
     });
@@ -227,7 +224,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             ).length;
             document.getElementById('expiring-contracts').textContent = expiringContracts;
 
-            // Asegúrate de que las modalidades se almacenen en la base de datos de manera consistente
             const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
             document.getElementById('total-modalities').textContent = modalities.size;
 
@@ -245,7 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const fechaTerminacion = fechaTerminacionInput.value;
 
         if (fechaInicio && fechaTerminacion) {
-            const start = new Date(fechaInicio + 'T00:00:00'); // Añadir hora para evitar problemas de zona horaria
+            const start = new Date(fechaInicio + 'T00:00:00'); 
             const end = new Date(fechaTerminacion + 'T00:00:00');
             const diffTime = Math.abs(end.getTime() - start.getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -315,10 +311,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         partidasTableBody.innerHTML = '';
         document.getElementById('adjuntar-archivos-info').textContent = 'Ningún archivo seleccionado';
         currentContractId = null;
-        montoOriginalInput.value = '0.00'; // Resetear también
-        montoModificadoInput.value = '0.00'; // Resetear también
-        montoTotalContratoInput.value = '0.00'; // Resetear también
-        existingContractSelect.value = ''; // <--- NUEVO: Resetear el selector de contratos existentes
+        montoOriginalInput.value = '0.00'; 
+        montoModificadoInput.value = '0.00'; 
+        montoTotalContratoInput.value = '0.00'; 
+        existingContractSelect.value = ''; 
+        generatedSummaryTextarea.value = ''; // Limpiar el resumen generado por IA
         showToast("Formulario de contrato limpiado.", "info");
     });
 
@@ -340,9 +337,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             naturalezaContratacion: document.getElementById('naturaleza-contratacion').value,
             lineaServicio: document.getElementById('linea-servicio').value,
             noPeticionOferta: document.getElementById('no-peticion-oferta').value,
-            modalidadContratacion: modalidadContratacionSelect.value,
+            modalidadContratacion: modalityContratacionSelect.value,
             regimenLaboral: document.getElementById('regimen-laboral').value,
-            objetoContractual: document.getElementById('objeto-contractual').value,
+            objetoContractual: objetoContractualTextarea.value, // Usar la referencia correcta
+            generatedSummary: generatedSummaryTextarea.value, // Guardar el resumen generado por IA
             fechaCambioAlcance: document.getElementById('fecha-cambio-alcance').value,
             montoOriginal: parseFloat(montoOriginalInput.value) || 0,
             montoModificado: parseFloat(montoModificadoInput.value) || 0,
@@ -385,12 +383,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await db.partidas.add(partida);
             }
             
-            clearContractFormBtn.click(); // Limpia el formulario y resetea currentContractId
-            loadContractList(); // Recarga la lista de contratos
-            populateExistingContractsSelect(); // <--- NUEVO: Recarga el selector de contratos
+            clearContractFormBtn.click(); 
+            loadContractList(); 
+            populateExistingContractsSelect(); 
             tabButtons.forEach(btn => {
                 if (btn.getAttribute('data-target') === 'contract-list') {
-                    btn.click(); // Vuelve a la lista de contratos
+                    btn.click(); 
                 }
             });
 
@@ -434,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectedContractId = parseInt(existingContractSelect.value);
         if (!selectedContractId) {
             showToast("Por favor, seleccione un contrato de la lista.", "warning");
-            clearContractFormBtn.click(); // Limpia el formulario si no hay selección
+            clearContractFormBtn.click(); 
             return;
         }
 
@@ -442,7 +440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const contract = await db.contracts.get(selectedContractId);
             if (contract) {
                 fillContractForm(contract);
-                currentContractId = selectedContractId; // Establece el ID del contrato actual para edición
+                currentContractId = selectedContractId; 
                 showToast(`Contrato ${contract.numeroSICAC || contract.numeroProveedor} cargado para edición.`, "info");
             } else {
                 showToast("Contrato no encontrado.", "error");
@@ -469,9 +467,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('naturaleza-contratacion').value = contract.naturalezaContratacion || '';
         document.getElementById('linea-servicio').value = contract.lineaServicio || '';
         document.getElementById('no-peticion-oferta').value = contract.noPeticionOferta || '';
-        modalidadContratacionSelect.value = contract.modalidadContratacion || ''; // Asegúrate de que este valor exista en tus opciones
+        modalidadContratacionSelect.value = contract.modalidadContratacion || ''; 
         document.getElementById('regimen-laboral').value = contract.regimenLaboral || '';
-        document.getElementById('objeto-contractual').value = contract.objetoContractual || '';
+        objetoContractualTextarea.value = contract.objetoContractual || ''; // Usar la referencia correcta
+        generatedSummaryTextarea.value = contract.generatedSummary || ''; // Cargar el resumen generado por IA
         document.getElementById('fecha-cambio-alcance').value = contract.fechaCambioAlcance || '';
         montoOriginalInput.value = contract.montoOriginal !== undefined ? contract.montoOriginal.toFixed(2) : '0.00';
         montoModificadoInput.value = contract.montoModificado !== undefined ? contract.montoModificado.toFixed(2) : '0.00';
@@ -497,10 +496,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             partidasTableBody.appendChild(row);
         });
-        updateContractPartidaTotals(); // Recalcula los totales después de cargar las partidas
-        calculatePeriodoCulminacion(); // Recalcula el periodo de culminación
+        updateContractPartidaTotals(); 
+        calculatePeriodoCulminacion(); 
 
-        // <--- NUEVO: Seleccionar el contrato en el dropdown de edición
         existingContractSelect.value = contract.id;
     }
 
@@ -570,10 +568,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (targetBtn.classList.contains('edit-contract-btn')) {
             const contract = await db.contracts.get(contractId);
             if (contract) {
-                fillContractForm(contract); // Usa la nueva función para rellenar
+                fillContractForm(contract); 
                 currentContractId = contractId;
                 showToast("Contrato cargado para edición.", "info");
-                // Asegúrate de que la pestaña de edición esté activa
                 tabButtons.forEach(btn => {
                     if (btn.getAttribute('data-target') === 'new-edit-contract') {
                         btn.click();
@@ -581,11 +578,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         } else if (targetBtn.classList.contains('delete-contract-btn')) {
-            // Reemplazado confirm() con una función de modal personalizada
             showConfirmModal('¿Está seguro de que desea enviar este contrato a la papelera?', async () => {
                 try {
                     const contractToDelete = await db.contracts.get(contractId);
-                    // Mover a la papelera en lugar de eliminar directamente
                     await db.trash.add({
                         originalId: contractId,
                         type: 'contract',
@@ -594,7 +589,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
                     await db.contracts.delete(contractId);
                     
-                    // Para que las HES vinculadas también vayan a la papelera
                     const relatedHes = await db.hes.where({ contractId: contractId }).toArray();
                     for (const hes of relatedHes) {
                         await db.trash.add({
@@ -606,7 +600,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         await db.hes.delete(hes.id);
                         await db.hesPartidas.where({ hesId: hes.id }).delete();
                     }
-                    await db.partidas.where({ contractId: contractId }).delete(); // Eliminar partidas del contrato
+                    await db.partidas.where({ contractId: contractId }).delete(); 
 
                     showToast("Contrato enviado a la papelera exitosamente.", "success");
                     loadContractList();
@@ -642,7 +636,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hesContractSelect.addEventListener('change', async () => {
         const contractId = parseInt(hesContractSelect.value);
         hesPartidasTableBody.innerHTML = '';
-        hesPartidasInfo.style.display = 'block'; // Mostrar mensaje informativo por defecto
+        hesPartidasInfo.style.display = 'block'; 
 
         if (!contractId) {
             hesPartidasInfo.textContent = 'Seleccione un contrato para cargar sus partidas.';
@@ -657,7 +651,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Calcular avance físico y financiero del contrato para verificar si está al 100%
         const { physicalAdvancePercentage, financialAdvancePercentage } = await calculateContractAdvances(contractId);
 
         if (physicalAdvancePercentage >= 100 && financialAdvancePercentage >= 100) {
@@ -669,7 +662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             hesPartidasInfo.classList.remove('alert-warning');
             hesPartidasInfo.classList.add('alert-info');
-            hesPartidasInfo.style.display = 'none'; // Ocultar si hay partidas
+            hesPartidasInfo.style.display = 'none'; 
         }
 
         try {
@@ -681,7 +674,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Obtener HES existentes para este contrato y calcular cantidades ejecutadas
             const existingHesForContract = await db.hes.where({ contractId: contractId }).toArray();
             const hesPartidasForContract = await db.hesPartidas.filter(hp => 
                 existingHesForContract.some(hes => hes.id === hp.hesId)
@@ -697,7 +689,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const cantidadDisponible = partida.cantidad - cantidadEjecutadaEnOtrasHes;
 
                 const row = document.createElement('tr');
-                row.dataset.partidaId = partida.id; // Guardar el ID de la partida del contrato
+                row.dataset.partidaId = partida.id; 
                 row.innerHTML = `
                     <td>${partida.id}</td>
                     <td>${partida.descripcion}</td>
@@ -711,7 +703,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
                 hesPartidasTableBody.appendChild(row);
             });
-            updateHesPartidaTotals(); // Calcular totales iniciales
+            updateHesPartidaTotals(); 
         } catch (error) {
             console.error("Error al cargar partidas del contrato para HES:", error);
             showToast("Error al cargar partidas para HES.", "error");
@@ -731,7 +723,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         Array.from(rows).forEach(r => {
             const cantidadEjecutar = parseFloat(r.querySelector('.hes-cantidad-ejecutar').value) || 0;
-            const precioUnitario = parseFloat(r.children[3].textContent) || 0; // Precio Unitario de la partida del contrato
+            const precioUnitario = parseFloat(r.children[3].textContent) || 0; 
             const totalPartidaHes = cantidadEjecutar * precioUnitario;
             r.querySelector('.hes-total-partida').textContent = totalPartidaHes.toFixed(2);
             subtotalHes += totalPartidaHes;
@@ -760,8 +752,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         hesPartidasInfo.classList.remove('alert-warning');
         hesPartidasInfo.classList.add('alert-info');
         clearHesPartidaTotals();
-        populateContractSelect(hesContractSelect); // Reinicia el selector de contratos
-        hesFechaCreadoInput.value = new Date().toISOString().split('T')[0]; // Establece la fecha de creación por defecto
+        populateContractSelect(hesContractSelect); 
+        hesFechaCreadoInput.value = new Date().toISOString().split('T')[0]; 
         showToast("Formulario HES limpiado.", "info");
     });
 
@@ -787,7 +779,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             fechaAprobadoHes: hesFechaAprobadoInput.value,
             textoBreveHes: hesTextoBreveInput.value,
             valuacion: parseFloat(hesValuacionInput.value) || 0,
-            lugarPrestacionServicio: hesLugarPrestacionServicioInput.value,
+            lugarPrestacionService: hesLugarPrestacionServicioInput.value,
             responsableSdo: hesResponsableSdoInput.value,
             subTotalHes: parseFloat(hesSubtotalInput.value) || 0,
             gastosAdministrativosHes: parseFloat(hesGastosAdministrativosInput.value) || 0,
@@ -811,7 +803,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Guardar partidas de la HES
-            await db.hesPartidas.where({ hesId: hesId }).delete(); // Eliminar partidas HES antiguas
+            await db.hesPartidas.where({ hesId: hesId }).delete(); 
             const hesPartidaRows = hesPartidasTableBody.querySelectorAll('tr');
             for (const row of hesPartidaRows) {
                 const contractPartidaId = parseInt(row.dataset.partidaId);
@@ -821,8 +813,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const hesPartida = {
                     hesId: hesId,
                     contractPartidaId: contractPartidaId,
-                    descripcion: row.children[1].textContent, // Descripción de la partida del contrato
-                    cantidadOriginal: parseFloat(row.children[4].textContent) || 0, // Cantidad original del contrato
+                    descripcion: row.children[1].textContent, 
+                    cantidadOriginal: parseFloat(row.children[4].textContent) || 0, 
                     cantidadEjecutada: cantidadEjecutada,
                     umd: row.children[2].textContent,
                     precioUnitario: parseFloat(row.children[3].textContent) || 0,
@@ -833,8 +825,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             clearHesFormBtn.click();
             loadHesList();
-            updateSummaryCards(); // Actualiza el resumen si los avances cambian
-            // No cambiamos de pestaña automáticamente aquí, el usuario puede querer seguir en HES
+            updateSummaryCards(); 
         } catch (error) {
             console.error("Error al guardar/actualizar la HES:", error);
             showToast("Error al guardar/actualizar la HES: " + error.message, "error");
@@ -887,7 +878,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const hes = await db.hes.get(hesId);
             if (hes) {
                 hesContractSelect.value = hes.contractId;
-                // Disparar el evento change para cargar las partidas del contrato
                 hesContractSelect.dispatchEvent(new Event('change'));
 
                 hesNoHesInput.value = hes.noHes || '';
@@ -905,26 +895,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hesSubtotalInput.value = hes.subTotalHes !== undefined ? hes.subTotalHes.toFixed(2) : '0.00';
                 hesGastosAdministrativosInput.value = hes.gastosAdministrativosHes !== undefined ? hes.gastosAdministrativosHes.toFixed(2) : '0.00';
                 hesTotalInput.value = hes.totalHes !== undefined ? hes.totalHes.toFixed(2) : '0.00';
-                hesValuadoCheckbox.checked = hes.valuado || false; // Asumiendo que 'valuado' existe en el objeto HES
-
-                // Cargar las partidas de la HES específica
-                const hesPartidas = await db.hesPartidas.where({ hesId: hesId }).toArray();
-                // Esperar a que las partidas del contrato se carguen antes de rellenar las cantidades ejecutadas
-                // Esto es un poco complicado con la carga asíncrona. Una solución más robusta sería
-                // cargar primero el contrato y luego rellenar las cantidades de la HES.
-                // Por ahora, asumimos que populateContractSelect y el evento change ya han cargado las partidas del contrato.
-                // Lo ideal sería que fillHesForm fuera una función separada que maneje esto.
+                hesValuadoCheckbox.checked = hes.valuado || false; 
                 
-                // Un pequeño delay para asegurar que la tabla de partidas del contrato se ha renderizado
                 setTimeout(async () => {
+                    const hesPartidas = await db.hesPartidas.where({ hesId: hesId }).toArray();
                     hesPartidas.forEach(hp => {
                         const row = hesPartidasTableBody.querySelector(`tr[data-partida-id="${hp.contractPartidaId}"]`);
                         if (row) {
                             row.querySelector('.hes-cantidad-ejecutar').value = hp.cantidadEjecutada.toFixed(2);
                         }
                     });
-                    updateHesPartidaTotals(); // Recalcular totales después de cargar las cantidades
-                }, 100); // Pequeño retraso
+                    updateHesPartidaTotals(); 
+                }, 100); 
 
                 currentHesId = hesId;
                 showToast("HES cargada para edición.", "info");
@@ -945,7 +927,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         deletedAt: new Date().toISOString()
                     });
                     await db.hes.delete(hesId);
-                    await db.hesPartidas.where({ hesId: hesId }).delete(); // Eliminar partidas de la HES
+                    await db.hesPartidas.where({ hesId: hesId }).delete(); 
                     showToast("HES enviada a la papelera exitosamente.", "success");
                     loadHesList();
                     updateSummaryCards();
@@ -1215,7 +1197,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const contractId = parseInt(reportContractSelect.value);
         if (!contractId) {
             reportDetails.style.display = 'none';
-            // reportHesDetailView.style.display = 'none'; // Comentado/eliminado
             return;
         }
 
@@ -1224,7 +1205,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!contract) {
                 showToast("Contrato no encontrado para informe.", "error");
                 reportDetails.style.display = 'none';
-                // reportHesDetailView.style.display = 'none'; // Comentado/eliminado
                 return;
             }
 
@@ -1264,24 +1244,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             reportConsumedAmount.textContent = `${totalConsumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`;
             reportRemainingAmount.textContent = `${(contract.montoTotalContrato - totalConsumedAmount).toFixed(2)} ${contract.moneda || 'USD'}`;
 
-            // Opcional: Mostrar HES asociadas si el HTML lo permite
-            // reportHesListBody.innerHTML = '';
-            // if (hesList.length > 0) {
-            //     hesList.forEach(hes => {
-            //         const hesRow = document.createElement('tr');
-            //         hesRow.innerHTML = `
-            //             <td>${hes.noHes}</td>
-            //             <td>${hes.fechaInicioHes}</td>
-            //             <td>${hes.fechaFinalHes}</td>
-            //             <td>${hes.totalHes.toFixed(2)}</td>
-            //             <td>${hes.aprobado}</td>
-            //             <td><button class="btn btn-sm btn-info view-hes-detail-btn" data-id="${hes.id}">Ver Detalle</button></td>
-            //         `;
-            //         reportHesListBody.appendChild(hesRow);
-            //     });
-            // } else {
-            //     reportHesListBody.innerHTML = `<tr><td colspan="6" class="text-center">No hay HES asociadas a este contrato.</td></tr>`;
-            // }
+            // Mostrar HES asociadas
+            reportHesListBody.innerHTML = '';
+            if (hesList.length > 0) {
+                hesList.forEach(hes => {
+                    const hesRow = document.createElement('tr');
+                    hesRow.innerHTML = `
+                        <td>${hes.noHes}</td>
+                        <td>${hes.fechaInicioHes}</td>
+                        <td>${hes.fechaFinalHes}</td>
+                        <td>${hes.totalHes.toFixed(2)}</td>
+                        <td>${hes.aprobado}</td>
+                        <td><button class="btn btn-sm btn-info view-hes-detail-btn" data-id="${hes.id}">Ver Detalle</button></td>
+                    `;
+                    reportHesListBody.appendChild(hesRow);
+                });
+            } else {
+                reportHesListBody.innerHTML = `<tr><td colspan="6" class="text-center">No hay HES asociadas a este contrato.</td></tr>`;
+            }
 
             reportDetails.style.display = 'block';
 
@@ -1289,7 +1269,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error("Error al cargar informe individual:", error);
             showToast("Error al cargar informe individual.", "error");
             reportDetails.style.display = 'none';
-            // reportHesDetailView.style.display = 'none'; // Comentado/eliminado
         }
     });
 
@@ -1312,7 +1291,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Naturaleza Contratación', 'Línea de Servicio', 'No. Petición de Oferta',
                 'Modalidad Contratación', 'Régimen Laboral', 'Objeto Contractual', 'Fecha Cambio Alcance',
                 'Monto Original', 'Monto Modificado', 'Monto Total Contrato', 'N° Contrato Interno',
-                'Observaciones', 'Estatus', 'Moneda', 'Avance Físico (%)', 'Avance Financiero (%)'
+                'Observaciones', 'Estatus', 'Moneda', 'Avance Físico (%)', 'Avance Financiero (%)', 'Resumen Generado por IA'
             ]);
 
             for (const contract of contracts) {
@@ -1343,7 +1322,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     contract.estatusContrato || '',
                     contract.moneda || '',
                     physicalAdvancePercentage.toFixed(1),
-                    financialAdvancePercentage.toFixed(1)
+                    financialAdvancePercentage.toFixed(1),
+                    contract.generatedSummary || '' // Incluir el resumen generado por IA
                 ]);
             }
 
@@ -1369,7 +1349,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('landscape'); // 'landscape' para orientación horizontal
+            const doc = new jsPDF('landscape'); 
 
             const tableColumn = [
                 "N° Proveedor", "N° SICAC", "Fecha Inicio", "Monto Total",
@@ -1397,13 +1377,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
                 headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
                 columnStyles: {
-                    0: { cellWidth: 25 }, // N° Proveedor
-                    1: { cellWidth: 25 }, // N° SICAC
-                    2: { cellWidth: 25 }, // Fecha Inicio
-                    3: { cellWidth: 30 }, // Monto Total
-                    4: { cellWidth: 30 }, // Avance Físico
-                    5: { cellWidth: 35 }, // Avance Financiero
-                    6: { cellWidth: 25 }, // Estatus
+                    0: { cellWidth: 25 }, 
+                    1: { cellWidth: 25 }, 
+                    2: { cellWidth: 25 }, 
+                    3: { cellWidth: 30 }, 
+                    4: { cellWidth: 30 }, 
+                    5: { cellWidth: 35 }, 
+                    6: { cellWidth: 25 }, 
                 },
                 didDrawPage: function (data) {
                     doc.text("Lista de Contratos SIGESCON", data.settings.margin.left, 15);
@@ -1489,25 +1469,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (itemToRestore) {
                         if (itemToRestore.type === 'contract') {
                             await db.contracts.add(itemToRestore.data);
-                            // Restaurar partidas asociadas al contrato
                             const originalPartidas = await db.partidas.where({ contractId: itemToRestore.originalId }).toArray();
                             for (const p of originalPartidas) {
-                                await db.partidas.add({ ...p, contractId: itemToRestore.data.id }); // Asegurar que el contractId sea el nuevo
+                                await db.partidas.add({ ...p, contractId: itemToRestore.data.id }); 
                             }
-                            // Restaurar HES asociadas al contrato (si también estaban en la papelera)
                             const relatedHesInTrash = await db.trash.where({ type: 'hes', 'data.contractId': itemToRestore.originalId }).toArray();
                             for (const hesItem of relatedHesInTrash) {
                                 await db.hes.add(hesItem.data);
-                                // Restaurar partidas de la HES
                                 const originalHesPartidas = await db.hesPartidas.where({ hesId: hesItem.originalId }).toArray();
                                 for (const hp of originalHesPartidas) {
                                     await db.hesPartidas.add({ ...hp, hesId: hesItem.data.id });
                                 }
-                                await db.trash.delete(hesItem.id); // Eliminar HES de la papelera
+                                await db.trash.delete(hesItem.id); 
                             }
                         } else if (itemToRestore.type === 'hes') {
                             await db.hes.add(itemToRestore.data);
-                            // Restaurar partidas de la HES
                             const originalHesPartidas = await db.hesPartidas.where({ hesId: itemToRestore.originalId }).toArray();
                             for (const hp of originalHesPartidas) {
                                 await db.hesPartidas.add({ ...hp, hesId: itemToRestore.data.id });
@@ -1516,7 +1492,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         await db.trash.delete(itemId);
                         showToast(`${itemType === 'contract' ? 'Contrato' : 'HES'} restaurado exitosamente.`, "success");
                         loadTrashCan();
-                        loadContractList(); // Recargar listas principales
+                        loadContractList(); 
                         loadHesList();
                         updateSummaryCards();
                     }
@@ -1551,47 +1527,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Restaurar seleccionados
-    document.getElementById('restore-selected-btn').addEventListener('click', async () => {
+    document.getElementById('restore-selected-btn').addEventListener('click', async (e) => { 
         const selectedContractCheckboxes = deletedContractsBody.querySelectorAll('.delete-checkbox[data-type="contract"]:checked');
-        const selectedHesCheckboxes = deletedHesBody.querySelectorAll('.delete-checkbox[data-type="hes"]:checked');
+        const selectedHesCheckboxes = deletedHesBody.querySelectorAll('.delete-checkbox[data-type="hes']:checked');
 
-        if (selectedContractCheckboxes.length === 0 && selectedHesCheckboxes.length === 0) {
+        const clickedButtonType = e.target.closest('button').dataset.type;
+
+        let itemsToRestore = [];
+        if (clickedButtonType === 'contract') {
+            selectedContractCheckboxes.forEach(checkbox => itemsToRestore.push({ id: parseInt(checkbox.dataset.id), type: 'contract' }));
+        } else if (clickedButtonType === 'hes') {
+            selectedHesCheckboxes.forEach(checkbox => itemsToRestore.push({ id: parseInt(checkbox.dataset.id), type: 'hes' }));
+        }
+
+
+        if (itemsToRestore.length === 0) {
             showToast("No hay elementos seleccionados para restaurar.", "warning");
             return;
         }
 
         showConfirmModal('¿Está seguro de que desea restaurar los elementos seleccionados?', async () => {
             try {
-                for (const checkbox of selectedContractCheckboxes) {
-                    const itemId = parseInt(checkbox.dataset.id);
+                for (const item of itemsToRestore) {
+                    const itemId = item.id;
                     const itemToRestore = await db.trash.get(itemId);
-                    if (itemToRestore && itemToRestore.type === 'contract') {
-                        await db.contracts.add(itemToRestore.data);
-                        const originalPartidas = await db.partidas.where({ contractId: itemToRestore.originalId }).toArray();
-                        for (const p of originalPartidas) {
-                            await db.partidas.add({ ...p, contractId: itemToRestore.data.id });
-                        }
-                        const relatedHesInTrash = await db.trash.where({ type: 'hes', 'data.contractId': itemToRestore.originalId }).toArray();
-                        for (const hesItem of relatedHesInTrash) {
-                            await db.hes.add(hesItem.data);
-                            const originalHesPartidas = await db.hesPartidas.where({ hesId: hesItem.originalId }).toArray();
-                            for (const hp of originalHesPartidas) {
-                                await db.hesPartidas.add({ ...hp, hesId: hesItem.data.id });
+                    if (itemToRestore) {
+                        if (itemToRestore.type === 'contract') {
+                            await db.contracts.add(itemToRestore.data);
+                            const originalPartidas = await db.partidas.where({ contractId: itemToRestore.originalId }).toArray();
+                            for (const p of originalPartidas) {
+                                await db.partidas.add({ ...p, contractId: itemToRestore.data.id });
                             }
-                            await db.trash.delete(hesItem.id);
-                        }
-                        await db.trash.delete(itemId);
-                    }
-                }
-
-                for (const checkbox of selectedHesCheckboxes) {
-                    const itemId = parseInt(checkbox.dataset.id);
-                    const itemToRestore = await db.trash.get(itemId);
-                    if (itemToRestore && itemToRestore.type === 'hes') {
-                        await db.hes.add(itemToRestore.data);
-                        const originalHesPartidas = await db.hesPartidas.where({ hesId: itemToRestore.originalId }).toArray();
-                        for (const hp of originalHesPartidas) {
-                            await db.hesPartidas.add({ ...hp, hesId: itemToRestore.data.id });
+                            const relatedHesInTrash = await db.trash.where({ type: 'hes', 'data.contractId': itemToRestore.originalId }).toArray();
+                            for (const hesItem of relatedHesInTrash) {
+                                await db.hes.add(hesItem.data);
+                                const originalHesPartidas = await db.hesPartidas.where({ hesId: hesItem.originalId }).toArray();
+                                for (const hp of originalHesPartidas) {
+                                    await db.hesPartidas.add({ ...hp, hesId: hesItem.data.id });
+                                }
+                                await db.trash.delete(hesItem.id);
+                            }
+                        } else if (itemToRestore.type === 'hes') {
+                            await db.hes.add(itemToRestore.data);
+                            const originalHesPartidas = await db.hesPartidas.where({ hesId: itemToRestore.originalId }).toArray();
+                            for (const hp of originalHesPartidas) {
+                                await db.hesPartidas.add({ ...hp, hesId: itemToRestore.data.id });
+                            }
                         }
                         await db.trash.delete(itemId);
                     }
@@ -1609,23 +1590,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Eliminar permanentemente seleccionados
-    document.getElementById('delete-selected-permanent-btn').addEventListener('click', async () => {
+    document.getElementById('delete-selected-permanent-btn').addEventListener('click', async (e) => { 
         const selectedContractCheckboxes = deletedContractsBody.querySelectorAll('.delete-checkbox[data-type="contract"]:checked');
         const selectedHesCheckboxes = deletedHesBody.querySelectorAll('.delete-checkbox[data-type="hes"]:checked');
 
-        if (selectedContractCheckboxes.length === 0 && selectedHesCheckboxes.length === 0) {
+        const clickedButtonType = e.target.closest('button').dataset.type;
+
+        let itemsToDelete = [];
+        if (clickedButtonType === 'contract') {
+            selectedContractCheckboxes.forEach(checkbox => itemsToDelete.push({ id: parseInt(checkbox.dataset.id), type: 'contract' }));
+        } else if (clickedButtonType === 'hes') {
+            selectedHesCheckboxes.forEach(checkbox => itemsToDelete.push({ id: parseInt(checkbox.dataset.id), type: 'hes' }));
+        }
+
+        if (itemsToDelete.length === 0) {
             showToast("No hay elementos seleccionados para eliminar permanentemente.", "warning");
             return;
         }
 
         showConfirmModal('¿Está seguro de que desea ELIMINAR PERMANENTEMENTE los elementos seleccionados? Esta acción no se puede deshacer.', async () => {
             try {
-                for (const checkbox of selectedContractCheckboxes) {
-                    const itemId = parseInt(checkbox.dataset.id);
-                    await db.trash.delete(itemId);
-                }
-                for (const checkbox of selectedHesCheckboxes) {
-                    const itemId = parseInt(checkbox.dataset.id);
+                for (const item of itemsToDelete) {
+                    const itemId = item.id;
                     await db.trash.delete(itemId);
                 }
                 showToast("Elementos seleccionados eliminados permanentemente.", "success");
@@ -1652,18 +1638,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const existingModalidades = await db.contracts.orderBy('modalidadContratacion').uniqueKeys();
                 if (!existingModalidades.includes(newModalidad)) {
-                    // Dexie no tiene una tabla para "modalidades", las inferimos de los contratos.
-                    // Para añadir una nueva modalidad de forma persistente sin un contrato,
-                    // necesitaríamos una tabla 'modalidades' dedicada.
-                    // Por ahora, simulamos la adición a la lista del select y el modal.
-                    // Si se añade a la base de datos, sería al guardar un contrato con esa modalidad.
                     showToast(`Modalidad "${newModalidad}" añadida a la lista temporal. Guarde un contrato con ella para persistirla.`, "info");
-                    // Añadirla directamente al select para que esté disponible inmediatamente
                     const option = document.createElement('option');
                     option.value = newModalidad;
                     option.textContent = newModalidad;
                     modalidadContratacionSelect.appendChild(option);
-                    populateModalidadesList(); // Recarga la lista del modal
+                    populateModalidadesList(); 
                     newModalidadInput.value = '';
                 } else {
                     showToast("La modalidad ya existe.", "warning");
@@ -1682,19 +1662,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const modalidadToRemove = e.target.dataset.modalidad;
             showConfirmModal(`¿Está seguro de que desea eliminar la modalidad "${modalidadToRemove}"? Esto no eliminará contratos que la usen.`, async () => {
                 try {
-                    // Para eliminar una modalidad, si no tenemos una tabla dedicada,
-                    // la única forma es si ningún contrato la usa.
-                    // Si hay contratos usándola, no se puede "eliminar" de la lista de opciones.
                     const contractsUsingModality = await db.contracts.where('modalidadContratacion').equals(modalidadToRemove).count();
                     if (contractsUsingModality > 0) {
                         showToast(`No se puede eliminar la modalidad "${modalidadToRemove}" porque ${contractsUsingModality} contrato(s) la utilizan.`, "error");
                     } else {
-                        // Si no hay contratos usándola, la eliminamos del select y del modal
-                        const optionToRemove = modalidadContratacionSelect.querySelector(`option[value="${modalidadToRemove}"]`);
+                        const optionToRemove = modalityContratacionSelect.querySelector(`option[value="${modalidadToRemove}"]`);
                         if (optionToRemove) {
                             optionToRemove.remove();
                         }
-                        populateModalidadesList(); // Recarga la lista del modal
+                        populateModalidadesList(); 
                         showToast(`Modalidad "${modalidadToRemove}" eliminada.`, "success");
                     }
                 } catch (error) {
@@ -1708,7 +1684,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function populateModalidadesList() {
         modalidadesList.innerHTML = '';
         try {
-            // Obtener todas las modalidades únicas de los contratos existentes
             const allModalidades = await db.contracts.orderBy('modalidadContratacion').uniqueKeys();
             
             if (allModalidades.length === 0) {
@@ -1716,7 +1691,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            allModalidades.filter(Boolean).forEach(modalidad => { // Filtrar valores vacíos/nulos
+            allModalidades.filter(Boolean).forEach(modalidad => { 
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
                 listItem.innerHTML = `
@@ -1866,7 +1841,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('landscape'); // Orientación horizontal para más columnas
+            const doc = new jsPDF('landscape'); 
 
             const tableColumn = [
                 "N° Proveedor", "N° SICAC", "Fecha Inicio", "Fecha Fin", "Monto Total",
@@ -1922,12 +1897,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // --- Inicialización al cargar la página ---
-    // Activa la primera pestaña al cargar
-    tabButtons[0].click(); // Simula un clic en la primera pestaña para cargar el resumen general
+    tabButtons[0].click(); 
 
     // Función para manejar el modal de confirmación (reemplaza confirm nativo)
     function showConfirmModal(message, onConfirm) {
-        // Crea elementos del modal
         const modalDiv = document.createElement('div');
         modalDiv.className = 'modal fade';
         modalDiv.id = 'customConfirmModal';
@@ -1961,51 +1934,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         confirmActionBtn.onclick = () => {
             onConfirm();
             customConfirmModal.hide();
-            modalDiv.remove(); // Elimina el modal del DOM después de usarlo
+            modalDiv.remove(); 
         };
 
         modalDiv.addEventListener('hidden.bs.modal', () => {
-            modalDiv.remove(); // Asegura que se elimine si se cierra sin confirmar
+            modalDiv.remove(); 
         });
     }
+
+    // --- Funcionalidad de Gemini API ---
+    generateSummaryBtn.addEventListener('click', async () => {
+        const contractDescription = objetoContractualTextarea.value.trim();
+
+        if (!contractDescription) {
+            showToast("Por favor, ingrese una descripción del contrato para generar el resumen.", "warning");
+            return;
+        }
+
+        summaryLoadingIndicator.style.display = 'inline-block'; // Mostrar spinner
+        generateSummaryBtn.disabled = true; // Deshabilitar botón
+        generatedSummaryTextarea.value = 'Generando resumen y cláusulas clave...';
+
+        try {
+            const prompt = `Genera un resumen conciso y extrae las 5 cláusulas clave o puntos importantes del siguiente objeto contractual. Formatea la respuesta con un encabezado "Resumen:" seguido del resumen, y luego "Cláusulas Clave:" seguido de una lista numerada de las cláusulas.
+
+            Objeto Contractual:
+            ${contractDescription}`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // La clave API se inyecta automáticamente en el entorno de Canvas
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                const generatedText = result.candidates[0].content.parts[0].text;
+                generatedSummaryTextarea.value = generatedText;
+                showToast("Resumen y cláusulas clave generados exitosamente.", "success");
+            } else {
+                generatedSummaryTextarea.value = 'No se pudo generar el resumen. Intente de nuevo.';
+                showToast("Error al generar el resumen: Respuesta inesperada de la API.", "error");
+                console.error("Respuesta inesperada de la API de Gemini:", result);
+            }
+        } catch (error) {
+            console.error("Error al llamar a la API de Gemini:", error);
+            generatedSummaryTextarea.value = 'Error al generar el resumen. Verifique su conexión o intente más tarde.';
+            showToast("Error de conexión al generar el resumen. " + error.message, "error");
+        } finally {
+            summaryLoadingIndicator.style.display = 'none'; // Ocultar spinner
+            generateSummaryBtn.disabled = false; // Habilitar botón
+        }
+    });
+
 });
-
-// Estilos CSS para los toasts (añadir a tu style.css o un bloque <style> en el HTML)
-/*
-.toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1050;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.toast-message {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    opacity: 0.9;
-    transition: opacity 0.3s ease-in-out;
-}
-
-.toast-message.success {
-    background-color: #28a745; // Verde
-}
-
-.toast-message.error {
-    background-color: #dc3545; // Rojo
-}
-
-.toast-message.warning {
-    background-color: #ffc107; // Amarillo
-    color: #333;
-}
-
-.toast-message.info {
-    background-color: #17a2b8; // Azul claro
-}
-*/

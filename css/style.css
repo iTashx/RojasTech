@@ -234,23 +234,26 @@ h2 i {
     bottom: 20px;
     right: 20px;
     z-index: 1050; /* Por encima de la mayoría de los elementos */
+    display: flex; /* Asegura que los toasts se apilen verticalmente */
+    flex-direction: column;
+    gap: 10px; /* Espacio entre toasts */
 }
 
-.toast {
+.toast-message { /* Renombrado de .toast a .toast-message para evitar conflicto con Bootstrap */
     background-color: #333;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 0; /* Eliminado margin-bottom para usar gap en el contenedor */
     opacity: 0.9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     animation: fadeInOut 3s forwards;
 }
 
-.toast.success { background-color: #28a745; }
-.toast.error { background-color: #dc3545; }
-.toast.warning { background-color: #ffc107; color: #333; }
-.toast.info { background-color: #17a2b8; }
+.toast-message.success { background-color: #28a745; }
+.toast-message.error { background-color: #dc3545; }
+.toast-message.warning { background-color: #ffc107; color: #333; }
+.toast-message.info { background-color: #17a2b8; }
 
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translateY(20px); }
@@ -291,7 +294,7 @@ h2 i {
     justify-content: flex-end; /* Alinea a la derecha */
 }
 
-/* Footer */
+/* Footer (no presente en el HTML actual, pero mantenido por si acaso) */
 .footer {
     background-color: #343a40;
     color: white;
@@ -431,4 +434,58 @@ h2 i {
     min-width: 3em; /* Ajuste para el switch */
     height: 1.5em; /* Ajuste para el switch */
     margin-right: 0.5rem;
+}
+
+/* Estilos para los toasts */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1050; /* Z-index de Bootstrap modal es 1050 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast-message {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.toast-message.success {
+    background-color: #28a745; /* Verde */
+}
+
+.toast-message.error {
+    background-color: #dc3545; /* Rojo */
+}
+
+.toast-message.warning {
+    background-color: #ffc107; /* Amarillo */
+    color: #333;
+}
+
+.toast-message.info {
+    background-color: #17a2b8; /* Azul claro */
+}
+
+/* Estilos para el modal de confirmación (si no los tienes ya en Bootstrap) */
+.modal-backdrop.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translate(0, -50px);
+}
+.modal.show .modal-dialog {
+    transform: none;
 }
