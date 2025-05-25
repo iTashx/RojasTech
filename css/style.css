@@ -1,24 +1,30 @@
 /* Variables CSS (opcional, pero buena práctica) */
 :root {
-    --primary-color: #007bff; /* Azul Bootstrap por defecto */
+    --primary-color: #0d6efd; /* Azul Bootstrap más oscuro */
     --secondary-color: #6c757d;
-    --success-color: #28a745;
+    --success-color: #198754;
     --danger-color: #dc3545;
-    --info-color: #17a2b8;
+    --info-color: #0dcaf0;
     --warning-color: #ffc107;
 
-    /* Nuevos colores para la interfaz */
-    --light-blue-header: #91B8E5; /* Un azul claro */
-    --dark-blue-sidebar: #4682B4; /* Un tono de azul más oscuro para el sidebar */
+    /* Nuevos colores para la interfaz (más oscuros y definidos) */
+    --light-blue-header: #518bca; /* Un azul medio para el encabezado */
+    --dark-blue-sidebar: #2c4a7e; /* Un tono de azul oscuro para el sidebar */
     --sidebar-text-color: #ffffff; /* Texto blanco para el sidebar */
-    --sidebar-active-bg: #6BA8DB; /* Color de fondo para botón activo en sidebar */
+    --sidebar-active-bg: #466a9c; /* Color de fondo para botón activo en sidebar */
+
+    --border-color: #e0e0e0;
+    --text-color-dark: #333;
+    --text-color-medium: #555;
+    --bg-light: #f8f9fa;
+    --bg-dark-overlay: rgba(0, 0, 0, 0.6);
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f7f6; /* Fondo más claro */
+    background-color: #f0f2f5; /* Fondo más claro y moderno */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -28,12 +34,14 @@ body {
     background-color: var(--light-blue-header); /* Aplicando el nuevo color */
     color: white;
     padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .header .logo h1 {
     font-size: 1.8rem;
     font-weight: 600;
+    text-align: center; /* Centrar el título en el header */
+    margin: 0;
 }
 
 .main-container {
@@ -46,7 +54,7 @@ body {
     background-color: var(--dark-blue-sidebar); /* Aplicando el nuevo color */
     color: var(--sidebar-text-color); /* Color de texto para el sidebar */
     padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2);
     flex-shrink: 0; /* Evita que el sidebar se encoja */
 }
 
@@ -56,6 +64,7 @@ body {
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none; /* Asegurar que no tenga subrayado */
 }
 
 .sidebar .nav-link:hover,
@@ -75,7 +84,7 @@ body {
     flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
     padding: 20px;
     background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     margin: 20px; /* Margen alrededor del contenido principal */
     border-radius: 8px;
 }
@@ -89,12 +98,12 @@ body {
 }
 
 h2 {
-    color: #333;
+    color: var(--text-color-dark);
     margin-bottom: 25px;
     font-size: 1.8rem;
     display: flex;
     align-items: center;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 10px;
 }
 
@@ -114,14 +123,14 @@ h2 i {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     text-align: center;
     border-left: 5px solid var(--primary-color);
 }
 
 .summary-cards .card h3 {
     font-size: 1.2rem;
-    color: #555;
+    color: var(--text-color-medium);
     margin-bottom: 10px;
 }
 
@@ -139,18 +148,56 @@ h2 i {
 
 .form-group label {
     font-weight: 500;
-    color: #444;
+    color: var(--text-color-dark);
     margin-bottom: 5px;
     display: block;
 }
 
 .form-control, .form-select {
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     padding: 8px 12px;
     font-size: 0.95rem;
     width: 100%; /* Asegura que ocupen todo el ancho disponible */
+    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
 }
+
+/* Para los select con botones al lado (input-group) */
+.input-group {
+    display: flex;
+    width: 100%;
+}
+
+.input-group > .form-select {
+    flex-grow: 1; /* Permite que el select ocupe el espacio disponible */
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .btn {
+    border-radius: 0; /* Eliminar bordes redondeados por defecto */
+}
+
+.input-group .btn:first-of-type {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: -1px; /* Para que los bordes se toquen visualmente */
+}
+
+.input-group .btn:last-of-type {
+    border-top-right-radius: 5px; /* Si solo hay 2 botones, este es el último */
+    border-bottom-right-radius: 5px;
+}
+/* Ajuste si hay más de dos botones, el segundo debería tener el radio en la derecha */
+.input-group .btn:nth-child(2) { /* el segundo botón */
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.input-group .btn:last-child { /* el último botón del grupo */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
 
 .contract-form-grid {
     display: grid;
@@ -171,20 +218,20 @@ h2 i {
 
 .table th, .table td {
     padding: 10px 15px;
-    border: 1px solid #e9ecef;
+    border: 1px solid #dee2e6; /* Un gris más suave */
     text-align: left;
     vertical-align: middle;
 }
 
 .table thead th {
-    background-color: #f8f9fa;
+    background-color: #e9ecef; /* Un fondo ligeramente más oscuro para el encabezado */
     font-weight: 600;
     color: #495057;
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid #ced4da;
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #e2f2ff; /* Un azul claro al pasar el ratón */
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
@@ -195,11 +242,17 @@ h2 i {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
     font-size: 0.9rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none; /* Asegurar que no tenga subrayado */
+    border: 1px solid transparent; /* Base para el borde */
+}
+
+.btn:active {
+    transform: translateY(1px); /* Pequeño efecto de click */
 }
 
 .btn i {
@@ -207,25 +260,30 @@ h2 i {
 }
 
 .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
-.btn-primary:hover { background-color: #0056b3; border-color: #0056b3; }
+.btn-primary:hover { background-color: #0a58ca; border-color: #0a58ca; }
 .btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); color: white; }
 .btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
 .btn-success { background-color: var(--success-color); border-color: var(--success-color); color: white; }
-.btn-success:hover { background-color: #218838; border-color: #1e7e34; }
+.btn-success:hover { background-color: #157347; border-color: #146c43; }
 .btn-danger { background-color: var(--danger-color); border-color: var(--danger-color); color: white; }
-.btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
-.btn-info { background-color: var(--info-color); border-color: var(--info-color); color: white; }
-.btn-info:hover { background-color: #138496; border-color: #117a8b; }
+.btn-danger:hover { background-color: #bb2d3b; border-color: #b02a37; }
+.btn-info { background-color: var(--info-color); border-color: var(--info-color); color: #212529; } /* Color de texto oscuro para info */
+.btn-info:hover { background-color: #31d2f2; border-color: #25cff2; }
 .btn-warning { background-color: var(--warning-color); border-color: var(--warning-color); color: #212529; }
-.btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+.btn-warning:hover { background-color: #ffcd39; border-color: #ffc720; }
 
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.8rem;
 }
 
+.button-group {
+    display: flex; /* Para alinear botones */
+    gap: 10px; /* Espacio entre botones */
+}
+
 .button-group button {
-    min-width: 150px; /* Ancho mínimo para los botones de acción */
+    /* min-width: 150px; Ancho mínimo para los botones de acción - quizás solo para los principales */
 }
 
 /* Contenedor de Toast */
@@ -234,6 +292,9 @@ h2 i {
     bottom: 20px;
     right: 20px;
     z-index: 1050; /* Por encima de la mayoría de los elementos */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .toast {
@@ -242,20 +303,22 @@ h2 i {
     padding: 10px 20px;
     border-radius: 5px;
     margin-bottom: 10px;
-    opacity: 0.9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeInOut 3s forwards;
+    opacity: 0.95; /* Ligeramente más opaco */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+    animation: fadeInOut 3.5s forwards; /* Duración ajustada */
+    min-width: 250px;
+    text-align: center;
 }
 
-.toast.success { background-color: #28a745; }
-.toast.error { background-color: #dc3545; }
-.toast.warning { background-color: #ffc107; color: #333; }
-.toast.info { background-color: #17a2b8; }
+.toast.success { background-color: var(--success-color); }
+.toast.error { background-color: var(--danger-color); }
+.toast.warning { background-color: var(--warning-color); color: var(--text-color-dark); }
+.toast.info { background-color: var(--info-color); color: var(--text-color-dark); }
 
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translateY(20px); }
-    10% { opacity: 0.9; transform: translateY(0); }
-    90% { opacity: 0.9; transform: translateY(0); }
+    10% { opacity: 0.95; transform: translateY(0); }
+    90% { opacity: 0.95; transform: translateY(0); }
     100% { opacity: 0; transform: translateY(20px); }
 }
 
@@ -267,7 +330,7 @@ h2 i {
     gap: 15px;
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #f8f9fa;
+    background-color: var(--bg-light);
     border-radius: 8px;
     border: 1px solid #e9ecef;
     align-items: flex-end; /* Alinea los botones con los inputs */
@@ -286,6 +349,7 @@ h2 i {
 /* Exportación */
 .export-buttons {
     display: flex;
+    flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
     gap: 10px;
     margin-bottom: 20px;
     justify-content: flex-end; /* Alinea a la derecha */
@@ -299,10 +363,11 @@ h2 i {
     font-size: 0.9rem;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
     margin-top: auto; /* Empuja el footer hacia abajo */
+    text-align: center;
 }
 
 .footer a {
-    color: #17a2b8;
+    color: var(--info-color);
     text-decoration: none;
 }
 
@@ -326,7 +391,7 @@ h2 i {
         flex-direction: row;
         overflow-x: auto; /* Permite scroll horizontal para botones */
         white-space: nowrap;
-        justify-content: space-between;
+        justify-content: flex-start; /* Ajustar para que no se separen demasiado */
     }
 
     .sidebar .nav-link {
@@ -369,7 +434,7 @@ h2 i {
         grid-column: span 1;
     }
 
-    .filter-container {
+    .filter-container, .chart-controls {
         flex-direction: column;
         align-items: stretch;
     }
@@ -382,6 +447,13 @@ h2 i {
     .export-buttons {
         flex-direction: column;
         gap: 5px;
+        align-items: flex-start; /* Ajustar alineación en móvil */
+    }
+
+    .chart-export-btn {
+        position: static; /* Quitar posicionamiento absoluto en móvil */
+        margin-top: 15px;
+        width: 100%;
     }
 }
 
@@ -389,20 +461,51 @@ h2 i {
 .table-responsive {
     overflow-x: auto; /* Asegura el scroll horizontal si la tabla es muy ancha */
     margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .contract-list-table,
 #hes-list-table,
 #deleted-contracts-table,
-#deleted-hes-table {
+#deleted-hes-table,
+#partidas-table, /* También para la tabla de partidas en el formulario de contrato */
+#hes-partidas-table /* Y para las partidas de HES */
+{
     min-width: 800px; /* Ancho mínimo para que no se vea tan apretada */
+    border-collapse: separate; /* Necesario para border-radius en thead/tbody */
+    border-spacing: 0;
 }
+
+.contract-list-table thead th:first-child,
+#hes-list-table thead th:first-child,
+#deleted-contracts-table thead th:first-child,
+#deleted-hes-table thead th:first-child,
+#partidas-table thead th:first-child,
+#hes-partidas-table thead th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.contract-list-table thead th:last-child,
+#hes-list-table thead th:last-child,
+#deleted-contracts-table thead th:last-child,
+#deleted-hes-table thead th:last-child,
+#partidas-table thead th:last-child,
+#hes-partidas-table thead th:last-child {
+    border-top-right-radius: 8px;
+}
+
+/* Nota: Los border-radius para tbody solo funcionarán si las celdas directamente tienen el borde y el borde-collapse es separate, 
+   o si se usan pseudo-elementos o una estructura más compleja. Para simplicidad, los mantendremos en thead. */
+
 
 /* Estilos para barras de progreso (avance) */
 .progress {
     height: 20px; /* Altura de la barra de progreso */
     border-radius: 5px;
     background-color: #e9ecef;
+    overflow: hidden; /* Asegura que el progress-bar se ajuste */
 }
 
 .progress-bar {
@@ -411,6 +514,8 @@ h2 i {
     font-weight: bold;
     line-height: 20px; /* Centra el texto verticalmente */
     transition: width 0.6s ease;
+    white-space: nowrap; /* Evita que el texto se rompa */
+    padding: 0 5px; /* Pequeño padding para el texto si es muy corto */
 }
 
 /* Clases específicas para el color de las barras */
@@ -422,13 +527,237 @@ h2 i {
     background-color: var(--dark-blue-sidebar) !important;
 }
 
-/* Para los switches de checkbox */
+/* Para los switches de checkbox (no se usa directamente en este HTML, pero útil si se añade) */
 .form-check.form-switch {
     display: flex;
     align-items: center;
+    min-height: 1.5em; /* Asegura espacio suficiente */
+    padding-left: 0; /* Deshacer padding por defecto si existe */
 }
+
 .form-check-input {
-    min-width: 3em; /* Ajuste para el switch */
-    height: 1.5em; /* Ajuste para el switch */
-    margin-right: 0.5rem;
+    width: 3em; /* Ancho del switch */
+    height: 1.5em; /* Alto del switch */
+    margin-left: 0; /* Deshacer margin por defecto */
+    margin-right: 0.5rem; /* Espacio a la derecha del switch */
+    flex-shrink: 0; /* Evita que el input se encoja */
+    background-color: #ced4da;
+    border: 1px solid rgba(0,0,0,.25);
+    vertical-align: top;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: background-position .15s ease-in-out;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+/* Estilos para el modal personalizado */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-dark-overlay); /* Variable para el fondo oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1060;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custom-modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.custom-modal-overlay.show .custom-modal-content {
+    transform: translateY(0);
+}
+
+.custom-modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.custom-modal-content .form-group {
+    margin-bottom: 20px;
+}
+
+.custom-modal-content .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.custom-modal-content .close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.custom-modal-content .close-button:hover {
+    color: #666;
+}
+
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    max-height: 200px; /* Limitar altura para scroll */
+    overflow-y: auto;
+}
+
+.list-group-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para la sección de gráficos */
+.chart-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    position: relative; /* Para el botón de exportar */
+}
+
+.chart-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+
+.chart-controls .form-group {
+    margin-bottom: 0; /* Eliminar margen inferior si es parte del flex */
+}
+
+.chart-export-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10; /* Asegurarse de que esté por encima del canvas */
+}
+
+/* Estilos para el detalle de HES en informes */
+.hes-report-detail {
+    background-color: var(--bg-light);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.hes-report-detail h4 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.hes-report-detail p {
+    margin-bottom: 8px;
+    color: var(--text-color-medium);
+}
+
+.hes-report-detail p strong {
+    color: var(--text-color-dark);
+}
+
+.hes-report-detail .progress {
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Estilos para las sugerencias de SICAC (autocompletado) */
+#sicac-suggestions {
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute; /* O relative al form-group si es necesario */
+    width: 100%;
+    background-color: #fff;
+    z-index: 100; /* Asegura que esté por encima de otros elementos */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#sicac-suggestions .list-group-item {
+    cursor: pointer;
+    border-radius: 0;
+    transition: background-color 0.2s ease;
+}
+
+#sicac-suggestions .list-group-item:hover {
+    background-color: var(--bg-light);
+}
+
+/* Estilos para tablas de partidas dentro de formularios (contrato y HES) */
+#partidas-table .form-control,
+#hes-partidas-table .form-control,
+#partidas-table .form-select,
+#hes-partidas-table .form-select {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    height: auto; /* Autoajustar altura para evitar problemas con padding */
+}
+
+#partidas-table td,
+#hes-partidas-table td {
+    vertical-align: top; /* Alinear el contenido de las celdas a la parte superior */
+    padding: 5px; /* Reducir padding en celdas de tabla de partidas */
+}
+
+#partidas-table .btn-sm,
+#hes-partidas-table .btn-sm {
+    font-size: 0.75rem;
+    padding: 4px 8px;
 }
