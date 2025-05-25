@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar base de datos
     const db = new Dexie('SigesconDB');
     db.version(1).stores({
-        contracts: '++id,numeroProveedor,fechaInicio,fechaTerminacion,montoTotalContrato,estatusContrato',
-        hes: '++id,contractId,numeroHES,totalHES',
+        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,fechaInicio,fechaTerminacion,periodoCulminacion,numeroContratoSICAC,divisionArea,eemn,region,naturalezaContratacion,lineaServicio,numeroPeticionOferta,modalidadContratacion,regimenLaboral,descripcionContrato,fechaCambioAlcance,montoOriginal,montoModificado,montoTotalContrato,numeroContrato,observaciones,estatusContrato,archivosAdjuntos,partidas',
+        hes: '++id,contractId,numeroHES,fechaInicioHES,fechaFinalHES,aprobadoHES,textoHES,ejecutadaHES,fechaCreadoHES,fechaAprobadoHES,textoBreveHES,valuacionHES,lugarPrestacionServicioHES,responsableSDOHES,anexosHES,valuadoHES,subTotalHES,gastosAdministrativosHES,totalHES,partidasHES',
         modalities: '++id,name'
     });
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await db.open();
         console.log("Base de datos abierta correctamente.");
     } catch (err) {
-        console.error("Error al abrir la base de datos:", err);
+        console.error("Error al abrir la base de datos:", err.stack || err);
         showToast("Error al cargar la base de datos local.", "error");
     }
 
@@ -122,4 +122,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Mostrar mensaje inicial
     showToast("SIGESCON cargado correctamente", "success");
+
+    // Manejar botones principales
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', loadContractList);
+    }
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            filterProveedor.value = '';
+            filterSicac.value = '';
+            filterFechaInicio.value = '';
+            filterFechaFinal.value = '';
+        });
+    }
+
+    // Cargar lista inicial de contratos
+    if (document.getElementById('contract-list-body')) {
+        loadContractList();
+    }
+
+    // Manejar botones de avance físico
+    const advanceForm = document.getElementById('advance-form');
+    if (advanceForm) {
+        advanceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const contractId = parseInt(document.getElementById('advance-contract-select').value);
+            const date = document.getElementById('advance-date').value;
+            const percentage = parseFloat(document.getElementById('advance-percentage').value);
+            const description = document.getElementById('advance-description').value;
+
+            if (!contractId || isNaN(percentage)) {
+                showToast('Seleccione un contrato y un porcentaje válido.', 'warning');
+                return;
+            }
+
+            try {
+                await saveAdvance(contractId, date, percentage, description);
+                showToast('Avance guardado correctamente.', 'success');
+                loadAdvanceHistory(contractId);
+            } catch (error) {
+                console.error("Error al guardar avance:", error);
+                showToast('Error al guardar avance.', 'error');
+            }
+        });
+    }
+
+    // Otros manejadores de eventos aquí...
 });
