@@ -1,334 +1,233 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Show the 'Nuevo/Editar Contrato' section by default on page load
-    showSection('nuevo-editar-contrato');
+// script.js
 
-    // Attach event listeners for form actions
-    document.getElementById('guardarActualizarContrato').addEventListener('click', function() {
-        alert('Contrato guardado/actualizado (funcionalidad de backend no implementada en este ejemplo).');
-        // AQUI VA LA LOGICA PARA RECOLECTAR LOS DATOS DEL FORMULARIO Y ENVIARLOS A UN SERVIDOR
-        // Por ejemplo:
-        // const contractData = collectContractFormData();
-        // saveContract(contractData);
-    });
-
-    document.getElementById('limpiarFormulario').addEventListener('click', function() {
-        if (confirm('¿Estás seguro de que quieres limpiar todo el formulario?')) {
-            clearContractForm();
-        }
-    });
-
-    // Event listener for Avance Físico Save button
-    const guardarAvanceButton = document.getElementById('guardarAvance');
-    if (guardarAvanceButton) {
-        guardarAvanceButton.addEventListener('click', function() {
-            alert('Avance físico guardado (funcionalidad de backend no implementada en este ejemplo).');
-            // AQUI VA LA LOGICA PARA RECOLECTAR LOS DATOS DEL AVANCE FÍSICO Y ENVIARLOS A UN SERVIDOR
-            // Por ejemplo:
-            // const avanceData = collectAvanceFisicoData();
-            // saveAvanceFisico(avanceData);
-        });
-    }
-
-    // Initialize totals for existing rows on load (if any)
-    document.querySelectorAll('#partidasTableBody tr').forEach(row => {
-        calculateTotal(row.querySelector('.quantity-input') || row.querySelector('.unit-price-input'));
-    });
-
-    // Automatically calculate Monto Total del Contrato
-    const montoOriginalInput = document.getElementById('montoOriginal');
-    const montoModificadoInput = document.getElementById('montoModificado');
-    const montoTotalContratoInput = document.getElementById('montoTotalContrato');
-
-    function updateMontoTotalContrato() {
-        const original = parseFloat(montoOriginalInput.value) || 0;
-        const modificado = parseFloat(montoModificadoInput.value) || 0;
-        montoTotalContratoInput.value = (original + modificado).toFixed(2);
-    }
-
-    if (montoOriginalInput) {
-        montoOriginalInput.addEventListener('input', updateMontoTotalContrato);
-    }
-    if (montoModificadoInput) {
-        montoModificadoInput.addEventListener('input', updateMontoTotalContrato);
-    }
-    // Call on load to ensure initial calculation if values are pre-filled
-    updateMontoTotalContrato();
-});
-
-let partidaCounter = document.querySelectorAll('#partidasTableBody tr').length;
-
-/**
- * Adds a new row to the "Partidas del Contrato" table.
- */
-function addPartida() {
-    partidaCounter++;
-    const tableBody = document.getElementById('partidasTableBody');
-    const newRow = tableBody.insertRow();
-    newRow.innerHTML = `
-        <td>${partidaCounter}</td>
-        <td><input type="text" class="description-input" value=""></td>
-        <td><input type="number" min="0" value="0" class="quantity-input" oninput="calculateTotal(this)"></td>
-        <td><input type="text" class="umd-input" value=""></td>
-        <td><input type="number" min="0" step="0.01" value="0.00" class="unit-price-input" oninput="calculateTotal(this)"></td>
-        <td><input type="number" class="total-input" value="0.00" readonly></td>
-        <td><button class="delete-button" onclick="deletePartida(this)"><i class="material-icons">delete</i></button></td>
-    `;
-    // Set focus to the new description input for immediate entry
-    newRow.querySelector('.description-input').focus();
-}
-
-/**
- * Calculates the total for a specific partida row based on quantity and unit price.
- * @param {HTMLInputElement} inputElement - The input field that triggered the calculation (quantity or unit price).
- */
-function calculateTotal(inputElement) {
-    const row = inputElement.closest('tr');
-    if (!row) return; // Exit if row is not found
-
-    const quantityInput = row.querySelector('.quantity-input');
-    const unitPriceInput = row.querySelector('.unit-price-input');
-    const totalInput = row.querySelector('.total-input');
-
-    const quantity = parseFloat(quantityInput.value) || 0;
-    const unitPrice = parseFloat(unitPriceInput.value) || 0;
-    const total = quantity * unitPrice;
-
-    totalInput.value = total.toFixed(2);
-}
-
-/**
- * Deletes a partida row from the table.
- * @param {HTMLButtonElement} button - The delete button clicked.
- */
-function deletePartida(button) {
-    const row = button.closest('tr');
-    if (!row) return; // Exit if row is not found
-
-    if (confirm('¿Estás seguro de que quieres eliminar esta partida?')) {
-        row.remove();
-        // Re-number the remaining rows to maintain sequential numbering
-        const tableBody = document.getElementById('partidasTableBody');
-        Array.from(tableBody.rows).forEach((r, index) => {
-            r.cells[0].textContent = index + 1;
-        });
-        partidaCounter = tableBody.rows.length; // Update the global counter
-    }
-}
-
-/**
- * Adds a new option to the "Modalidad de Contratación" dropdown.
- */
-function addModalidad() {
-    const newModalidad = prompt("Introduce la nueva modalidad de contratación:");
-    if (newModalidad && newModalidad.trim() !== '') {
-        const selectElement = document.getElementById('modalidadContratacion');
-        const option = document.createElement('option');
-        option.value = newModalidad.toLowerCase().replace(/\s+/g, '-'); // slugify for value
-        option.textContent = newModalidad.trim();
-        selectElement.appendChild(option);
-        selectElement.value = option.value; // Select the newly added option
-    } else if (newModalidad !== null) { // User clicked OK but entered empty string
-        alert("La modalidad no puede estar vacía.");
-    }
-}
-
-/**
- * Adds a new option to the "Modalidad de Contratación" dropdown in Avance Físico section.
- */
-function addModalidadAvanceFisico() {
-    const newModalidad = prompt("Introduce la nueva modalidad de contratación para Avance Físico:");
-    if (newModalidad && newModalidad.trim() !== '') {
-        const selectElement = document.getElementById('avanceFisicoModalidad');
-        const option = document.createElement('option');
-        option.value = newModalidad.toLowerCase().replace(/\s+/g, '-'); // slugify for value
-        option.textContent = newModalidad.trim();
-        selectElement.appendChild(option);
-        selectElement.value = option.value; // Select the newly added option
-    } else if (newModalidad !== null) {
-        alert("La modalidad no puede estar vacía.");
-    }
-}
-
-/**
- * Toggles the visibility of different content sections.
- * @param {string} sectionId - The ID of the section to show.
- */
-function showSection(sectionId) {
-    // Hide all sections
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.add('hidden');
-    });
-
-    // Remove active class from all sidebar links
-    document.querySelectorAll('.sidebar .main-nav ul li a').forEach(link => {
-        link.classList.remove('active');
-    });
-
-    // Show the selected section
-    const activeSection = document.getElementById(sectionId);
-    if (activeSection) {
-        activeSection.classList.remove('hidden');
-    }
-
-    // Add active class to the clicked sidebar link
-    const clickedLink = document.querySelector(`.sidebar .main-nav ul li a[onclick="showSection('${sectionId}')"]`);
-    if (clickedLink) {
-        clickedLink.classList.add('active');
-    }
-}
-
-/**
- * Clears all input fields and textarea in the "Nuevo/Editar Contrato" form.
- */
-function clearContractForm() {
-    document.querySelectorAll('#nuevo-editar-contrato input, #nuevo-editar-contrato select, #nuevo-editar-contrato textarea').forEach(field => {
-        if (field.type === 'checkbox' || field.type === 'radio') {
-            field.checked = false;
-        } else if (field.tagName === 'SELECT') {
-            field.selectedIndex = 0; // Reset to the first option
-        } else if (field.readOnly) {
-            // Do not clear readonly fields that might hold calculated values,
-            // or reset them to 0.00 if they are numerical totals.
-            if (field.type === 'number') {
-                field.value = '0.00';
-            }
-        }
-         else {
-            field.value = '';
-        }
-    });
-    // Clear the "Partidas del Contrato" table except for the header
-    const partidasTableBody = document.getElementById('partidasTableBody');
-    partidasTableBody.innerHTML = ''; // Clears all rows
-    partidaCounter = 0; // Reset the counter for new rows
-}
-
-
-// --- Modal Functions ---
-
-/**
- * Displays the help modal.
- */
-function showHelpModal() {
-    document.getElementById('helpModal').style.display = 'flex';
-}
-
-/**
- * Hides the help modal.
- */
-function closeHelpModal() {
-    document.getElementById('helpModal').style.display = 'none';
-}
-
-/**
- * Displays the contract details modal with data from the clicked row.
- * @param {HTMLButtonElement} button - The "View" button clicked.
- */
-function showContractDetails(button) {
-    const row = button.closest('tr');
-    if (!row) {
-        console.error("Row not found for contract details.");
+document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar si Dexie está disponible
+    if (typeof Dexie === 'undefined') {
+        console.error("Dexie.js no se ha cargado correctamente.");
+        showToast("Error: Dexie.js no está disponible.", "error");
         return;
     }
 
-    const cells = row.cells;
-    const detailsContent = document.getElementById('contractDetailsContent');
-    detailsContent.innerHTML = `
-        <p><strong>N° Proveedor:</strong> ${cells[0].textContent}</p>
-        <p><strong>N° SICAC:</strong> ${cells[1].textContent}</p>
-        <p><strong>Fecha Inicio:</strong> ${cells[2].textContent}</p>
-        <p><strong>Fecha Fin:</strong> ${cells[3].textContent}</p>
-        <p><strong>Monto Total:</strong> ${cells[4].textContent}</p>
-        <p><strong>Estatus:</strong> ${cells[5].textContent}</p>
-        <p><strong>Modalidad:</strong> ${cells[6].textContent}</p>
-        <p><strong>Objeto Contractual:</strong> ${cells[7].textContent}</p>
-        `;
-    document.getElementById('contractDetailsModal').style.display = 'flex';
-}
-
-/**
- * Hides the contract details modal.
- */
-function closeContractDetailsModal() {
-    document.getElementById('contractDetailsModal').style.display = 'none';
-}
-
-// Close modals if clicked outside of the modal content
-window.onclick = function(event) {
-    const helpModal = document.getElementById('helpModal');
-    const contractDetailsModal = document.getElementById('contractDetailsModal');
-
-    if (event.target == helpModal) {
-        helpModal.style.display = "none";
-    }
-    if (event.target == contractDetailsModal) {
-        contractDetailsModal.style.display = "none";
-    }
-}
-
-// --- Future Backend Integration (Example functions - NOT implemented fully) ---
-// These functions would typically interact with a server-side API
-
-/*
-function collectContractFormData() {
-    const formData = {};
-    document.querySelectorAll('#nuevo-editar-contrato input, #nuevo-editar-contrato select, #nuevo-editar-contrato textarea').forEach(field => {
-        if (field.id) {
-            formData[field.id] = field.value;
-        }
+    // Inicializar base de datos
+    const db = new Dexie('SigesconDB');
+    db.version(1).stores({
+        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,fechaInicio,fechaTerminacion,periodoCulminacion,numeroContratoSICAC,divisionArea,eemn,region,naturalezaContratacion,lineaServicio,numeroPeticionOferta,modalidadContratacion,regimenLaboral,descripcionContrato,fechaCambioAlcance,montoOriginal,montoModificado,montoTotalContrato,numeroContrato,observaciones,estatusContrato,archivosAdjuntos,partidas',
+        hes: '++id,contractId,numeroHES,fechaInicioHES,fechaFinalHES,aprobadoHES,textoHES,ejecutadaHES,fechaCreadoHES,fechaAprobadoHES,textoBreveHES,valuacionHES,lugarPrestacionServicioHES,responsableSDOHES,anexosHES,valuadoHES,subTotalHES,gastosAdministrativosHES,totalHES,partidasHES',
+        modalities: '++id,name'
     });
 
-    const partidas = [];
-    document.querySelectorAll('#partidasTableBody tr').forEach(row => {
-        partidas.push({
-            description: row.querySelector('.description-input').value,
-            quantity: parseFloat(row.querySelector('.quantity-input').value) || 0,
-            umd: row.querySelector('.umd-input').value,
-            unitPrice: parseFloat(row.querySelector('.unit-price-input').value) || 0,
-            total: parseFloat(row.querySelector('.total-input').value) || 0,
+    try {
+        await db.open();
+        console.log("Base de datos abierta correctamente.");
+    } catch (err) {
+        console.error("Error al abrir la base de datos:", err.stack || err);
+        showToast("Error al cargar la base de datos local.", "error");
+    }
+
+    // Elementos del DOM
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.content-section');
+    const toastElement = document.getElementById('toast');
+
+    // Función para mostrar mensajes emergentes
+    window.showToast = (message, type = 'success') => {
+        if (!toastElement) return;
+
+        toastElement.textContent = message;
+        toastElement.className = `toast show ${type}`;
+
+        setTimeout(() => {
+            toastElement.classList.remove('show');
+        }, 3000);
+    };
+
+    // Manejar pestañas
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
         });
     });
-    formData.partidas = partidas;
-    return formData;
-}
 
-function saveContract(data) {
-    console.log("Saving contract data:", data);
-    // Example: fetch('/api/contracts', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
-    //     .then(response => response.json())
-    //     .then(result => {
-    //         console.log('Contract saved:', result);
-    //         alert('Contrato guardado exitosamente!');
-    //         // Optionally refresh contract list
-    //     })
-    //     .catch(error => {
-    //         console.error('Error saving contract:', error);
-    //         alert('Error al guardar el contrato.');
-    //     });
-}
+    // Botón de ayuda - redirección
+    const helpButton = document.querySelector('.help-btn');
+    if (helpButton) {
+        helpButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'ayuda.html';
+        });
+    }
 
-function collectAvanceFisicoData() {
-    const formData = {};
-    document.querySelectorAll('#avance-fisico input, #avance-fisico select, #avance-fisico textarea').forEach(field => {
-        if (field.id) {
-            formData[field.id] = field.value;
+    // Cargar modalidades dinámicas
+    const modalitySelect = document.getElementById('modalidad-contratacion');
+    const addModalityBtn = document.getElementById('add-modality-btn');
+    const removeModalityBtn = document.getElementById('remove-modality-btn');
+
+    const loadModalities = async () => {
+        try {
+            const modalities = await db.modalities.toArray();
+            modalitySelect.innerHTML = '<option value="">Selecciona una modalidad</option>';
+            modalities.forEach(mod => {
+                const option = document.createElement('option');
+                option.value = mod.name;
+                option.textContent = mod.name;
+                modalitySelect.appendChild(option);
+            });
+        } catch (err) {
+            console.error("Error al cargar las modalidades:", err);
+            showToast("Error al cargar las modalidades.", "error");
         }
-    });
-    // Add logic to collect data from any potential advance table if it existed
-    return formData;
-}
+    };
 
-function saveAvanceFisico(data) {
-    console.log("Saving avance físico data:", data);
-    // Example: fetch('/api/avance-fisico', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
-    //     .then(response => response.json())
-    //     .then(result => {
-    //         console.log('Avance físico saved:', result);
-    //         alert('Avance físico guardado exitosamente!');
-    //     })
-    //     .catch(error => {
-    //         console.error('Error saving avance físico:', error);
-    //         alert('Error al guardar el avance físico.');
-    //     });
-}
-*/
+    // Añadir nueva modalidad
+    if (addModalityBtn && modalitySelect) {
+        addModalityBtn.addEventListener('click', async () => {
+            const newModality = prompt("Ingrese una nueva modalidad:");
+            if (newModality && !Array.from(modalitySelect.options).some(opt => opt.value === newModality)) {
+                await db.modalities.add({ name: newModality });
+                showToast(`Modalidad "${newModality}" agregada.`, "success");
+                loadModalities();
+            } else {
+                showToast("La modalidad ya existe o no es válida.", "warning");
+            }
+        });
+    }
+
+    // Eliminar modalidad
+    if (removeModalityBtn && modalitySelect) {
+        removeModalityBtn.addEventListener('click', async () => {
+            const selected = modalitySelect.value;
+            if (selected) {
+                if (confirm(`¿Está seguro de eliminar "${selected}"?`)) {
+                    const modalityToDelete = await db.modalities.where({ name: selected }).first();
+                    if (modalityToDelete) {
+                        await db.modalities.delete(modalityToDelete.id);
+                        showToast(`Modalidad "${selected}" eliminada.`, "success");
+                        loadModalities();
+                    }
+                }
+            } else {
+                showToast("Seleccione una modalidad antes de eliminar.", "warning");
+            }
+        });
+    }
+
+    // Inicialización
+    if (modalitySelect) {
+        loadModalities();
+    }
+
+    // Mostrar mensaje inicial
+    showToast("SIGESCON cargado correctamente", "success");
+
+    // Manejar botones principales
+    const applyFiltersBtn = document.getElementById('apply-filters-btn');
+    const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', loadContractList);
+    }
+
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', () => {
+            filterProveedor.value = '';
+            filterSicac.value = '';
+            filterFechaInicio.value = '';
+            filterFechaFinal.value = '';
+        });
+    }
+
+    // Cargar lista inicial de contratos
+    if (document.getElementById('contract-list-body')) {
+        loadContractList();
+    }
+
+    // Manejar botones de avance físico
+    const advanceForm = document.getElementById('advance-form');
+    if (advanceForm) {
+        advanceForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const contractId = parseInt(document.getElementById('advance-contract-select').value);
+            const date = document.getElementById('advance-date').value;
+            const percentage = parseFloat(document.getElementById('advance-percentage').value);
+            const description = document.getElementById('advance-description').value;
+
+            if (!contractId || isNaN(percentage)) {
+                showToast('Seleccione un contrato y un porcentaje válido.', 'warning');
+                return;
+            }
+
+            const contract = await db.contracts.get(contractId);
+            if (!contract) {
+                showToast('Contrato no encontrado para registrar avance.', 'error');
+                return;
+            }
+
+            const amount = (contract.montoTotalContrato * percentage) / 100;
+
+            try {
+                await db.advances.add({
+                    contractId,
+                    date,
+                    percentage,
+                    amount,
+                    description
+                });
+                showToast('Avance físico registrado exitosamente.', 'success');
+                advanceForm.reset();
+                loadAdvanceHistory(contractId);
+                loadContractList(); // Actualizar la lista principal si es aplicable
+            } catch (error) {
+                console.error("Error al registrar avance:", error);
+                showToast('Error al registrar avance.', 'error');
+            }
+        });
+    }
+
+    // Cargar historial de avances
+    const loadAdvanceHistory = async (contractId) => {
+        try {
+            const advances = await db.advances.where({ contractId: contractId }).sortBy('date');
+            const historyBody = document.getElementById('advance-history-body');
+            historyBody.innerHTML = '';
+
+            if (advances.length === 0) {
+                historyBody.innerHTML = '<tr><td colspan="5" class="text-center">No hay avances registrados.</td></tr>';
+                return;
+            }
+
+            advances.forEach(advance => {
+                const row = `
+                    <tr>
+                        <td>${advance.date}</td>
+                        <td>${advance.percentage}%</td>
+                        <td>${advance.amount.toFixed(2)}</td>
+                        <td>${advance.description}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-advance-btn" data-id="${advance.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                `;
+                historyBody.innerHTML += row;
+            });
+
+            // Eventos para eliminar avances
+            document.querySelectorAll('.delete-advance-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const advanceId = parseInt(button.getAttribute('data-id'));
+                    if (confirm('¿Estás seguro de eliminar este avance?')) {
+                        await db.advances.delete(advanceId);
+                        showToast('Avance eliminado exitosamente.', 'success');
+                        loadAdvanceHistory(contractId);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error("Error al cargar historial de avances:", error);
+            showToast('Error al cargar historial de avances.', 'error');
+        }
+    };
+});

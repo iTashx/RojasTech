@@ -4,547 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGESCON - Gestión de Contratos Empresariales</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    </head>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/RojasTech/css/style.css">
+
+    <!-- Estilos Externos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
+
+    <!-- Scripts Externos -->
+    <script src="https://unpkg.com/dexie @3.2.0/dist/dexie.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js "></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js "></script>
+
+    <!-- Script Principal -->
+    <script src="/RojasTech/js/script.js"></script>
+</head>
 <body>
-    <div class="container">
-        <aside class="sidebar">
+    <header class="header">
+        <div class="header-content">
             <div class="logo">
-                <h1>SIGESCON</h1>
+                <i class="fas fa-file-contract"></i> Gestión de Contratos Empresariales
             </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#" onclick="showSection('resumen-general')"><i class="material-icons">dashboard</i> Resumen General</a></li>
-                    <li><a href="#" onclick="showSection('nuevo-editar-contrato')" class="active"><i class="material-icons">add_box</i> Nuevo/Editar Contrato</a></li>
-                    <li><a href="#" onclick="showSection('lista-contratos')"><i class="material-icons">list_alt</i> Lista de Contratos</a></li>
-                    <li><a href="#" onclick="showSection('gestion-hes')"><i class="material-icons">business_center</i> Gestión de HES</a></li>
-                    <li><a href="#" onclick="showSection('avance-fisico')"><i class="material-icons">trending_up</i> Avance Físico</a></li>
-                    <li><a href="#" onclick="showSection('resumen-grafico')"><i class="material-icons">show_chart</i> Resumen Gráfico</a></li>
-                    <li><a href="#" onclick="showSection('informes')"><i class="material-icons">description</i> Informes</a></li>
-                    <li><a href="#" onclick="showSection('papelera')"><i class="material-icons">delete_forever</i> Papelera</a></li>
-                </ul>
-            </nav>
-        </aside>
+            <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
+                <i class="fas fa-question-circle"></i> Ayuda
+            </a>
+        </div>
+    </header>
 
-        <main class="main-content">
-            <header class="header">
-                <h2>Gestión de Contratos Empresariales</h2>
-                <button class="help-button" onclick="showHelpModal()"><i class="material-icons">help_outline</i> Ayuda</button>
-            </header>
+    <div class="main-container">
+        <nav class="sidebar">
+            <button class="tab-btn active" data-target="general-summary">
+                <i class="fas fa-tachometer-alt"></i> Resumen General
+            </button>
+            <button class="tab-btn" data-target="new-edit-contract">
+                <i class="fas fa-file-contract"></i> Nuevo/Editar Contrato
+            </button>
+            <button class="tab-btn" data-target="contract-list">
+                <i class="fas fa-list"></i> Lista de Contratos
+            </button>
+            <button class="tab-btn" data-target="hes-management">
+                <i class="fas fa-clipboard-list"></i> Gestión de HES
+            </button>
+            <button class="tab-btn" data-target="physical-advance">
+                <i class="fas fa-chart-line"></i> Avance Físico (Manual)
+            </button>
+            <button class="tab-btn" data-target="graphic-summary">
+                <i class="fas fa-chart-bar"></i> Resumen Gráfico
+            </button>
+            <button class="tab-btn" data-target="reports">
+                <i class="fas fa-file-alt"></i> Informes
+            </button>
+        </nav>
 
-            <section id="resumen-general" class="content-section hidden">
-                <h3>Resumen General</h3>
-                <div class="summary-cards">
-                    <div class="card">
-                        <h3>Contratos Activos</h3>
-                        <p>123</p>
-                    </div>
-                    <div class="card">
-                        <h3>Monto Total Contratado</h3>
-                        <p>USD 1,234,567.89</p>
-                    </div>
-                    <div class="card">
-                        <h3>Contratos por Vencer (30 días)</h3>
-                        <p>5</p>
-                    </div>
-                    <div class="card">
-                        <h3>Total Modalidades</h3>
-                        <p>8</p>
-                    </div>
-                </div>
-                </section>
-
-            <section id="nuevo-editar-contrato" class="content-section">
-                <h3>Nuevo/Editar Contrato</h3>
-                <div class="form-container">
-                    <h4>Detalles del Contrato</h4>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="numProveedor">Número de Proveedor:</label>
-                            <input type="text" id="numProveedor" placeholder="Ej: 12345">
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaFirma">Fecha Firma del Contrato:</label>
-                            <input type="date" id="fechaFirma">
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaCreado">Fecha Creado:</label>
-                            <input type="date" id="fechaCreado">
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaInicio">Fecha Inicio:</label>
-                            <input type="date" id="fechaInicio">
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaTerminacion">Fecha Terminación:</label>
-                            <input type="date" id="fechaTerminacion">
-                        </div>
-                        <div class="form-group">
-                            <label for="periodoCulminacion">Periodo de Culminación (Días):</label>
-                            <input type="number" id="periodoCulminacion" min="0" placeholder="Ej: 365">
-                        </div>
-                        <div class="form-group">
-                            <label for="numSICAC">N° Contrato SICAC:</label>
-                            <input type="text" id="numSICAC" placeholder="Ej: SICAC-001">
-                        </div>
-                        <div class="form-group">
-                            <label for="divisionArea">División/Área:</label>
-                            <input type="text" id="divisionArea" placeholder="Ej: Finanzas">
-                        </div>
-                        <div class="form-group">
-                            <label for="eemn">EEMN:</label>
-                            <input type="text" id="eemn" placeholder="Ej: EEMN-001">
-                        </div>
-                        <div class="form-group">
-                            <label for="region">Región:</label>
-                            <input type="text" id="region" placeholder="Ej: Central">
-                        </div>
-                        <div class="form-group">
-                            <label for="naturalezaContratacion">Naturaleza de Contratación:</label>
-                            <input type="text" id="naturalezaContratacion" placeholder="Ej: Servicio">
-                        </div>
-                        <div class="form-group">
-                            <label for="lineaServicio">Línea de Servicio:</label>
-                            <input type="text" id="lineaServicio" placeholder="Ej: Consultoría">
-                        </div>
-                        <div class="form-group">
-                            <label for="numPeticionOferta">N° Petición de Oferta:</label>
-                            <input type="text" id="numPeticionOferta" placeholder="Ej: PO-2025-001">
-                        </div>
-                        <div class="form-group">
-                            <label for="modalidadContratacion">Modalidad de Contratación:</label>
-                            <div class="input-with-buttons">
-                                <select id="modalidadContratacion">
-                                    <option value="">Selecciona una modalidad</option>
-                                    <option value="directa">Directa</option>
-                                    <option value="licitacion">Licitación</option>
-                                    <option value="negociacion">Negociación</option>
-                                </select>
-                                <button type="button" class="add-button" onclick="addModalidad()"><i class="material-icons">add</i></button>
-                                <button type="button" class="add-button" style="background-color: #e74c3c;" onclick="alert('Funcionalidad de eliminar modalidad no implementada.')"><i class="material-icons">remove</i></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="regimenLaboral">Régimen Laboral:</label>
-                            <input type="text" id="regimenLaboral" placeholder="Ej: Manual">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="objetoContractual">Objeto Contractual / Descripción:</label>
-                            <textarea id="objetoContractual" rows="3" placeholder="Descripción detallada del objeto del contrato"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaCambioAlcance">Fecha Cambio de Alcance:</label>
-                            <input type="date" id="fechaCambioAlcance">
-                        </div>
-                        <div class="form-group">
-                            <label for="montoOriginal">Monto Original:</label>
-                            <input type="number" id="montoOriginal" step="0.01" value="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label for="montoModificado">Monto Modificado:</label>
-                            <input type="number" id="montoModificado" step="0.01" value="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label for="montoTotalContrato">Monto Total del Contrato:</label>
-                            <input type="number" id="montoTotalContrato" step="0.01" value="0.00" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="numContratoInterno">No. Contrato (Interno):</label>
-                            <input type="text" id="numContratoInterno" placeholder="Ej: CON-INT-001">
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="observaciones">Observaciones:</label>
-                            <textarea id="observaciones" rows="3" placeholder="Cualquier observación adicional relevante"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="estatus">Estatus:</label>
-                            <select id="estatus">
-                                <option value="activo">Activo</option>
-                                <option value="finalizado">Finalizado</option>
-                                <option value="suspendido">Suspendido</option>
-                                <option value="cancelado">Cancelado</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="moneda">Moneda:</label>
-                            <select id="moneda">
-                                <option value="USD">USD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="VEF">VEF</option>
-                            </select>
-                        </div>
-                        <div class="form-group full-width">
-                            <label for="adjuntarArchivos">Adjuntar Archivos:</label>
-                            <input type="file" id="adjuntarArchivos" multiple>
-                            <p class="file-info">Ningún archivo seleccionado</p>
-                        </div>
-                    </div>
-
-                    <h4 style="margin-top: 30px;">Partidas del Contrato</h4>
-                    <button type="button" class="add-partida-button" onclick="addPartida()">+ Añadir Partida</button>
-
-                    <div class="table-responsive">
-                        <table class="contract-parts-table">
-                            <thead>
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Descripción</th>
-                                    <th>Cantidad</th>
-                                    <th>UMD</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Total</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="partidasTableBody">
-                                </tbody>
-                        </table>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="save-button" id="guardarActualizarContrato"><i class="material-icons">save</i> Guardar/Actualizar Contrato</button>
-                        <button type="button" class="clear-button" id="limpiarFormulario"><i class="material-icons">clear</i> Limpiar Formulario</button>
-                    </div>
-                </div>
+        <main class="content">
+            <section id="general-summary" class="content-section active">
+                <h2><i class="fas fa-tachometer-alt"></i> Resumen General</h2>
+                <p>Cargando detalles...</p>
             </section>
 
-            <section id="lista-contratos" class="content-section hidden">
-                <h3>Lista de Contratos</h3>
-                <div class="filter-container">
-                    <div class="form-group">
-                        <label for="filterProveedor">N° Proveedor:</label>
-                        <input type="text" id="filterProveedor" placeholder="Filtrar por proveedor">
-                    </div>
-                    <div class="form-group">
-                        <label for="filterSICAC">N° SICAC:</label>
-                        <input type="text" id="filterSICAC" placeholder="Filtrar por SICAC">
-                    </div>
-                    <div class="form-group">
-                        <label for="filterEstatus">Estatus:</label>
-                        <select id="filterEstatus">
-                            <option value="">Todos</option>
-                            <option value="activo">Activo</option>
-                            <option value="finalizado">Finalizado</option>
-                            <option value="suspendido">Suspendido</option>
-                            <option value="cancelado">Cancelado</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="filterModalidad">Modalidad:</label>
-                        <select id="filterModalidad">
-                            <option value="">Todas</option>
-                            <option value="directa">Directa</option>
-                            <option value="licitacion">Licitación</option>
-                            <option value="negociacion">Negociación</option>
-                            </select>
-                    </div>
-                    <div class="filter-buttons">
-                        <button type="button" class="apply-filters-button"><i class="material-icons">filter_list</i> Aplicar Filtros</button>
-                        <button type="button" class="clear-filters-button"><i class="material-icons">clear_all</i> Limpiar Filtros</button>
-                    </div>
-                </div>
+            <section id="new-edit-contract" class="content-section">
+                <h2><i class="fas fa-file-contract"></i> Nuevo/Editar Contrato</h2>
+                <form id="contract-form">
+                    <!-- Campos del formulario -->
+                    <label for="linea-servicio">Línea de Servicio:</label>
+                    <input type="text" id="linea-servicio" placeholder="Ej.: Consultoría">
 
-                <div class="export-buttons">
-                    <button type="button" class="export-excel-button"><i class="material-icons">cloud_download</i> Exportar a Excel</button>
-                    <button type="button" class="export-pdf-button"><i class="material-icons">picture_as_pdf</i> Exportar a PDF</button>
-                </div>
+                    <label for="modalidad-contratacion">Modalidad de Contratación:</label>
+                    <select id="modalidad-contratacion">
+                        <option value="">Selecciona una modalidad</option>
+                        <!-- Opciones dinámicas -->
+                    </select>
 
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>N° Proveedor</th>
-                                <th>N° SICAC</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Fin</th>
-                                <th>Monto Total</th>
-                                <th>Estatus</th>
-                                <th>Modalidad</th>
-                                <th>Objeto Contractual</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1001</td>
-                                <td>SICAC-2023-001</td>
-                                <td>01/01/2023</td>
-                                <td>31/12/2023</td>
-                                <td>USD 500,000.00</td>
-                                <td>Activo</td>
-                                <td>Licitación</td>
-                                <td>Suministro de equipos de oficina.</td>
-                                <td>
-                                    <button class="action-button view-button" onclick="showContractDetails(this)"><i class="material-icons">visibility</i></button>
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>1002</td>
-                                <td>SICAC-2024-002</td>
-                                <td>15/03/2024</td>
-                                <td>15/09/2024</td>
-                                <td>USD 75,000.00</td>
-                                <td>Activo</td>
-                                <td>Directa</td>
-                                <td>Consultoría en TI para optimización de procesos.</td>
-                                <td>
-                                    <button class="action-button view-button" onclick="showContractDetails(this)"><i class="material-icons">visibility</i></button>
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            </tbody>
-                    </table>
-                </div>
+                    <button type="submit" class="btn btn-primary">Guardar/Actualizar Contrato</button>
+                    <button type="button" class="btn btn-secondary">Limpiar Formulario</button>
+                </form>
             </section>
 
-            <section id="gestion-hes" class="content-section hidden">
-                <h3>Gestión de HES (Hoja de Entrada de Servicios)</h3>
-                <p>Esta sección permitirá gestionar las Hojas de Entrada de Servicios asociadas a los contratos.</p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="hesContrato">Seleccionar Contrato:</label>
-                        <select id="hesContrato">
-                            <option value="">Contrato 001</option>
-                            <option value="">Contrato 002</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="hesNumero">Número de HES:</label>
-                        <input type="text" id="hesNumero" placeholder="Ej: HES-001">
-                    </div>
-                     <div class="form-group">
-                        <label for="hesFecha">Fecha HES:</label>
-                        <input type="date" id="hesFecha">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="hesDescripcion">Descripción de Servicio:</label>
-                        <textarea id="hesDescripcion" rows="3" placeholder="Detalle del servicio prestado"></textarea>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="save-button"><i class="material-icons">check</i> Registrar HES</button>
-                </div>
-                 <div class="table-responsive" style="margin-top: 30px;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Contrato</th>
-                                <th>Número HES</th>
-                                <th>Fecha</th>
-                                <th>Descripción</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>SICAC-2023-001</td>
-                                <td>HES-001-2023</td>
-                                <td>01/02/2023</td>
-                                <td>Revisión de software inicial.</td>
-                                <td>
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <section id="contract-list" class="content-section">
+                <h2><i class="fas fa-list"></i> Lista de Contratos</h2>
+                <form id="filter-contracts-form">
+                    <!-- Filtros -->
+                    <label for="filter-proveedor">N° Proveedor:</label>
+                    <input type="text" id="filter-proveedor" placeholder="Filtrar por proveedor">
+
+                    <label for="filter-sicac">N° SICAC:</label>
+                    <input type="text" id="filter-sicac" placeholder="Filtrar por SICAC">
+
+                    <button type="button" class="btn btn-success" id="apply-filters-btn">Aplicar Filtros</button>
+                    <button type="button" class="btn btn-secondary" id="clear-filters-btn">Limpiar Filtros</button>
+                </form>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>N° Proveedor</th>
+                            <th>N° SICAC</th>
+                            <th>Fecha Inicio</th>
+                            <th>Monto Total</th>
+                            <th>Estatus</th>
+                            <th>Modalidad</th>
+                            <th>Objeto Contractual</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contract-list-body">
+                        <!-- Filas dinámicas -->
+                    </tbody>
+                </table>
             </section>
 
-            <section id="avance-fisico" class="content-section hidden">
-                <h3>Avance Físico</h3>
-                <p>Registra el avance físico de los contratos.</p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="avanceFisicoContrato">Seleccionar Contrato:</label>
-                        <select id="avanceFisicoContrato">
-                            <option value="">Selecciona un contrato</option>
-                            <option value="contrato1">Contrato X</option>
-                            <option value="contrato2">Contrato Y</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="avanceFisicoFecha">Fecha de Avance:</label>
-                        <input type="date" id="avanceFisicoFecha">
-                    </div>
-                    <div class="form-group">
-                        <label for="avanceFisicoPorcentaje">Porcentaje de Avance (%):</label>
-                        <input type="number" id="avanceFisicoPorcentaje" min="0" max="100" step="0.01" placeholder="Ej: 50.75">
-                    </div>
-                     <div class="form-group full-width">
-                        <label for="avanceFisicoComentarios">Comentarios:</label>
-                        <textarea id="avanceFisicoComentarios" rows="3" placeholder="Comentarios adicionales sobre el avance"></textarea>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="save-button" id="guardarAvance"><i class="material-icons">save</i> Guardar Avance</button>
-                </div>
-                <div class="table-responsive" style="margin-top: 30px;">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Porcentaje (%)</th>
-                                <th>Comentarios</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>01/04/2024</td>
-                                <td>25.00</td>
-                                <td>Inicio de fase 1 completado.</td>
-                                <td>
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>01/05/2024</td>
-                                <td>50.00</td>
-                                <td>Avance de fase 2 según cronograma.</td>
-                                <td>
-                                    <button class="action-button edit-button"><i class="material-icons">edit</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="resumen-grafico" class="content-section hidden">
-                <h3>Resumen Gráfico</h3>
-                <p>Aquí se mostrarán gráficos de resumen del estado de los contratos.</p>
-                <div class="export-buttons" style="margin-bottom: 20px;">
-                    <button type="button" class="export-pdf-button"><i class="material-icons">picture_as_pdf</i> Exportar PDF</button>
-                    <button type="button" class="export-excel-button" style="background-color: #3498db;"><i class="material-icons">image</i> Exportar Imagen (Primer Gráfico)</button>
-                </div>
-                <div class="form-grid">
-                    <div class="card" style="text-align: center; height: 300px;">
-                        <h3>Avance Físico de Contratos</h3>
-                        <p>Gráfico de Avance Físico</p>
-                    </div>
-                    <div class="card" style="text-align: center; height: 300px;">
-                        <h3>Montos por Modalidad de Contratación</h3>
-                        <p>Gráfico de Montos por Modalidad</p>
-                    </div>
-                    <div class="card" style="text-align: center; height: 300px;">
-                        <h3>Estado de Contratos</h3>
-                        <p>Gráfico de Estado de Contratos</p>
-                    </div>
-                     <div class="card" style="text-align: center; height: 300px;">
-                        <h3>Contratos por Región</h3>
-                        <p>Gráfico de Contratos por Región</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="informes" class="content-section hidden">
-                <h3>Informes</h3>
-                <p>Generación de informes personalizados sobre contratos, pagos, HES y avances.</p>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="tipoInforme">Tipo de Informe:</label>
-                        <select id="tipoInforme">
-                            <option value="">Selecciona un tipo</option>
-                            <option value="contratos_activos">Contratos Activos</option>
-                            <option value="pagos_recibidos">Pagos Recibidos</option>
-                            <option value="hes_generadas">HES Generadas</option>
-                            <option value="avance_acumulado">Avance Acumulado</option>
-                        </select>
-                    </div>
-                     <div class="form-group">
-                        <label for="fechaInicioInforme">Fecha Inicio:</label>
-                        <input type="date" id="fechaInicioInforme">
-                    </div>
-                    <div class="form-group">
-                        <label for="fechaFinInforme">Fecha Fin:</label>
-                        <input type="date" id="fechaFinInforme">
-                    </div>
-                    <div class="form-group">
-                        <label for="formatoInforme">Formato de Salida:</label>
-                        <select id="formatoInforme">
-                            <option value="pdf">PDF</option>
-                            <option value="excel">Excel</option>
-                            <option value="csv">CSV</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="save-button"><i class="material-icons">print</i> Generar Informe</button>
-                </div>
-            </section>
-
-            <section id="papelera" class="content-section hidden">
-                <h3>Papelera de Reciclaje</h3>
-                <p>Aquí se encuentran los contratos y registros eliminados que pueden ser restaurados.</p>
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Tipo de Elemento</th>
-                                <th>Descripción</th>
-                                <th>Fecha Eliminación</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Contrato</td>
-                                <td>SICAC-2023-005 (Suministro de mobiliario)</td>
-                                <td>10/05/2024</td>
-                                <td>
-                                    <button class="action-button" style="color: #2ecc71;"><i class="material-icons">restore_from_trash</i></button>
-                                    <button class="action-button delete-button"><i class="material-icons">delete_forever</i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-
-            <footer class="footer">
-                <p>&copy; 2025 SIGESCON - Gestión de Contratos Empresariales. Todos los derechos reservados. | Desarrollado por RojasTech - <a href="#" style="color: #3498db; text-decoration: none;">Enviar Correo</a></p>
-            </footer>
+            <!-- Más secciones aquí -->
         </main>
     </div>
 
-    <div id="helpModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeHelpModal()">&times;</span>
-            <h3>Ayuda de SIGESCON</h3>
-            <p>Bienvenido al sistema SIGESCON, tu herramienta para la gestión eficiente de contratos empresariales.</p>
-            <h4>Secciones principales:</h4>
-            <ul>
-                <li><strong>Resumen General:</strong> Visualiza un panorama rápido de tus contratos.</li>
-                <li><strong>Nuevo/Editar Contrato:</strong> Crea y modifica los detalles de cada contrato, incluyendo sus partidas asociadas.</li>
-                <li><strong>Lista de Contratos:</strong> Explora todos tus contratos, fíltra, edita, elimina o visualiza detalles.</li>
-                <li><strong>Gestión de HES:</strong> Administra las Hojas de Entrada de Servicios.</li>
-                <li><strong>Avance Físico:</strong> Registra y sigue el progreso físico de tus contratos.</li>
-                <li><strong>Resumen Gráfico:</strong> Obtén visualizaciones claras del estado y distribución de tus contratos.</li>
-                <li><strong>Informes:</strong> Genera reportes personalizados para diferentes necesidades.</li>
-                <li><strong>Papelera:</strong> Gestiona elementos eliminados que pueden ser restaurados.</li>
-            </ul>
-            <p>Para soporte adicional, contacta a RojasTech.</p>
-        </div>
-    </div>
-
-    <div id="contractDetailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeContractDetailsModal()">&times;</span>
-            <h3>Detalles del Contrato</h3>
-            <div id="contractDetailsContent">
-                <p>Cargando detalles...</p>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <footer class="footer">
+        <p>&copy; 2025 SIGESCON - Gestión de Contratos Empresariales. Todos los derechos reservados.</p>
+        <p>| Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
+    </footer>
 </body>
 </html>
