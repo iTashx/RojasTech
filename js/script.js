@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // Inicialización de Dexie (base de datos local)
+    // Inicialización de Dexie (base de datos local.)
     const db = new Dexie('SigesconDB');
     db.version(1).stores({
         contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
