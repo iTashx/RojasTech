@@ -148,25 +148,24 @@
                         </div>
                         
                       <div class="formulario-container">
-    <h2>Formulario de Contrato</h2>
+    <!-- Sección de Modalidad de Contratación -->
+<div class="form-group">
+  <label for="modalidad-select">Selecciona una modalidad:</label>
+  <select id="modalidad-select" class="form-control">
+    <option value="">-- Selecciona --</option>
+  </select>
+</div>
 
-    <!-- Grupo de Modalidad de Contratación -->
-    <div class="form-group">
-      <label for="modalidad-contratacion">Modalidad de Contratación:</label>
-      <select id="modalidad-contratacion" class="form-select">
-        <option value="">-- Selecciona una opción --</option>
-        <option value="Obra">Obra</option>
-        <option value="Servicio">Servicio</option>
-        <option value="Suministro">Suministro</option>
-      </select>
-    </div>
+<div class="form-group">
+  <label for="nueva-modalidad">Añadir nueva modalidad:</label>
+  <input type="text" id="nueva-modalidad" class="form-control" placeholder="Ej: Consultoría">
+</div>
 
-    <!-- Botones -->
-    <div class="botones">
-      <button type="button" id="btn-guardar" class="btn btn-guardar">Guardar</button>
-      <button type="button" id="btn-cancelar" class="btn btn-cancelar">Cancelar</button>
-    </div>
-  </div>
+<div class="d-flex gap-2">
+  <button type="button" id="btn-anadir-modalidad" class="btn btn-primary"><i class="fas fa-plus"></i> Añadir</button>
+  <button type="button" id="btn-guardar-modalidad" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
+  <button type="button" id="btn-borrar-modalidad" class="btn btn-danger"><i class="fas fa-trash"></i> Borrar</button>
+</div>
                         <div class="form-group">
                             <label for="regimen-laboral">Régimen Laboral:</label>
                             <input type="text" id="regimen-laboral" class="form-control">
