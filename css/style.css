@@ -1,16 +1,16 @@
 /* Variables */
 :root {
-    --primary-color: #17a2b8;
+    --primary-color: #17a2b8; /* Este es el azul de los títulos, botones principales, etc. */
     --secondary-color: #6c757d;
     --accent-color: #ffc107;
     --danger-color: #dc3545;
     --success-color: #28a745;
-    --background-color: #f8f9fa;
+    --background-color: #e3f2fd; /* ¡CAMBIO AQUÍ! Azul muy claro, similar al fondo de la página de Ayuda */
     --card-background: #ffffff;
     --text-color: #343a40;
     --light-text-color: #6c757d;
     --border-color: #dee2e6;
-    --header-bg: #343a40; /* Fondo del encabezado y sidebar */
+    --header-bg: #1e88e5; /* ¡CAMBIO AQUÍ! Un azul más vibrante para el encabezado y el sidebar, combinando con el botón de ayuda */
     --sidebar-width: 250px;
 
     --spacing-xs: 5px;
@@ -30,7 +30,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: var(--background-color);
+    background-color: var(--background-color); /* Usa la nueva variable de fondo */
     color: var(--text-color);
     line-height: 1.6;
     display: flex;
@@ -39,7 +39,7 @@ body {
 }
 
 .header {
-    background-color: var(--header-bg);
+    background-color: var(--header-bg); /* Usa la nueva variable de encabezado/sidebar */
     color: white;
     padding: var(--spacing-md);
     box-shadow: var(--box-shadow);
@@ -52,16 +52,16 @@ body {
 
 .main-container {
     display: flex;
-    flex: 1; /* Permite que el contenedor principal ocupe el espacio restante */
+    flex: 1;
 }
 
 .sidebar {
     width: var(--sidebar-width);
-    background-color: var(--header-bg);
+    background-color: var(--header-bg); /* Usa la nueva variable de encabezado/sidebar */
     color: white;
     padding: var(--spacing-md);
     overflow-y: auto;
-    flex-shrink: 0; /* Evita que la sidebar se encoja */
+    flex-shrink: 0;
 }
 
 .sidebar .nav {
@@ -80,8 +80,8 @@ body {
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
-    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
-    text-align: left; /* Alinea el texto a la izquierda */
+    width: 100%;
+    text-align: left;
 }
 
 .sidebar .tab-btn.active,
@@ -92,9 +92,9 @@ body {
 .content {
     flex-grow: 1;
     padding: var(--spacing-md);
-    max-width: calc(100% - var(--sidebar-width)); /* Ajusta el ancho máximo del contenido */
+    max-width: calc(100% - var(--sidebar-width));
     margin: 0 auto;
-    overflow-y: auto; /* Para permitir el scroll en el contenido si es necesario */
+    overflow-y: auto;
 }
 
 .content-section {
@@ -146,8 +146,8 @@ textarea.form-control {
 
 .button-group {
     display: flex;
-    justify-content: center; /* Centrar los botones */
-    gap: var(--spacing-sm); /* Espacio entre botones */
+    justify-content: center;
+    gap: var(--spacing-sm);
     margin-top: var(--spacing-md);
 }
 
@@ -169,7 +169,7 @@ textarea.form-control {
 }
 
 .btn-primary:hover {
-    background-color: #117a8b; /* un poco más oscuro */
+    background-color: #117a8b;
     border-color: #117a8b;
 }
 
@@ -180,7 +180,7 @@ textarea.form-control {
 }
 
 .btn-success:hover {
-    background-color: #1e7e34; /* un poco más oscuro */
+    background-color: #1e7e34;
     border-color: #1e7e34;
 }
 
@@ -191,7 +191,7 @@ textarea.form-control {
 }
 
 .btn-danger:hover {
-    background-color: #bd2130; /* un poco más oscuro */
+    background-color: #bd2130;
     border-color: #bd2130;
 }
 
@@ -202,7 +202,7 @@ textarea.form-control {
 }
 
 .btn-secondary:hover {
-    background-color: #545b62; /* un poco más oscuro */
+    background-color: #545b62;
     border-color: #545b62;
 }
 
@@ -213,12 +213,12 @@ textarea.form-control {
 }
 
 .btn-info:hover {
-    background-color: #138496; /* un poco más oscuro */
+    background-color: #138496;
     border-color: #138496;
 }
 
 .help-btn {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color); /* Se mantiene el color original del botón de ayuda para consistencia con el primary-color */
     color: white;
     border: none;
     display: flex;
@@ -229,7 +229,7 @@ textarea.form-control {
 }
 
 .help-btn:hover {
-    background-color: #117a8b; /* un poco más oscuro */
+    background-color: #117a8b;
 }
 
 .table {
@@ -254,13 +254,13 @@ textarea.form-control {
 }
 
 .table-responsive {
-    overflow-x: auto; /* Permite el scroll horizontal en tablas */
+    overflow-x: auto;
 }
 
 /* Custom Grid for Contract Form */
 .contract-form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--spacing-md);
 }
 
@@ -316,25 +316,25 @@ textarea.form-control {
 .filter-buttons {
     display: flex;
     gap: var(--spacing-sm);
-    align-items: flex-end; /* Alinea los botones al final de la celda del grid */
+    align-items: flex-end;
 }
 
 .export-buttons {
     display: flex;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
-    justify-content: flex-end; /* Alinea los botones a la derecha */
+    justify-content: flex-end;
 }
 
 
 /* Footer */
 .footer {
-    background-color: var(--header-bg);
+    background-color: var(--header-bg); /* Usa la nueva variable de encabezado/sidebar */
     color: white;
     padding: var(--spacing-md);
     font-size: 0.9em;
     text-align: center;
-    flex-shrink: 0; /* Evita que el footer se encoja */
+    flex-shrink: 0;
 }
 
 .footer a {
@@ -395,25 +395,25 @@ textarea.form-control {
     .sidebar {
         width: 100%;
         height: auto;
-        padding: var(--spacing-sm); /* Reduce el padding en móviles */
+        padding: var(--spacing-sm);
     }
 
     .sidebar .tab-btn {
-        padding: var(--spacing-xs) var(--spacing-sm); /* Reduce el padding del botón */
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
 
     .content {
-        max-width: 100%; /* El contenido ocupa todo el ancho disponible */
-        padding: var(--spacing-sm); /* Reduce el padding del contenido */
+        max-width: 100%;
+        padding: var(--spacing-sm);
     }
 
     .contract-form-grid,
     .filter-container {
-        grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+        grid-template-columns: 1fr;
     }
 
     .col-span-2 {
-        grid-column: span 1; /* Vuelve a una columna en móviles */
+        grid-column: span 1;
     }
 
     .summary-cards {
@@ -421,11 +421,11 @@ textarea.form-control {
     }
 
     .button-group {
-        flex-direction: column; /* Apila los botones en columnas */
+        flex-direction: column;
     }
 
     .btn {
-        width: 100%; /* Botones de ancho completo */
-        margin-bottom: var(--spacing-sm); /* Espacio entre botones apilados */
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
     }
 }
