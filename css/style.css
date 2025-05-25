@@ -282,8 +282,12 @@ h2 i {
     gap: 10px; /* Espacio entre botones */
 }
 
+/*
+ * Asegúrate de que el bloque CSS no esté vacío.
+ * Si quieres aplicar un ancho mínimo, descomenta la línea:
+ */
 .button-group button {
-    /* min-width: 150px; Ancho mínimo para los botones de acción - quizás solo para los principales */
+    min-width: 150px; /* Ancho minimo para los botones de accion - quizás solo para los principales */
 }
 
 /* Contenedor de Toast */
