@@ -1,296 +1,699 @@
-/* Variables CSS (opcional, pero buena práctica) */
+/* Variables CSS */
 :root {
-    --primary-color: #0d6efd; /* Azul Bootstrap más oscuro */
-    --secondary-color: #6c757d;
-    --success-color: #198754;
-    --danger-color: #dc3545;
-    --info-color: #0dcaf0;
-    --warning-color: #ffc107;
+    --primary-color: #2c4a7e; /* Azul oscuro para sidebar y elementos principales */
+    --secondary-color: #518bca; /* Azul claro para encabezados y acentos */
+    --light-gray: #f8f9fa; /* Fondo general claro */
+    --medium-gray: #e9ecef; /* Separadores, bordes */
+    --dark-gray: #343a40; /* Texto oscuro, footer */
+    --text-color: #333; /* Color de texto general */
+    --border-color: #dee2e6; /* Bordes de tablas y cards */
 
-    /* Nuevos colores para la interfaz (más oscuros y definidos) */
-    --light-blue-header: #518bca; /* Un azul medio para el encabezado */
-    --dark-blue-sidebar: #2c4a7e; /* Un tono de azul oscuro para el sidebar */
-    --sidebar-text-color: #ffffff; /* Texto blanco para el sidebar */
-    --sidebar-active-bg: #466a9c; /* Color de fondo para botón activo en sidebar */
+    /* Colores para estados y botones */
+    --btn-primary-bg: #2c4a7e;
+    --btn-primary-border: #2c4a7e;
+    --btn-primary-hover-bg: #223a5f;
+    --btn-primary-hover-border: #223a5f;
 
-    --border-color: #e0e0e0;
-    --text-color-dark: #333;
-    --text-color-medium: #555;
-    --bg-light: #f8f9fa;
-    --bg-dark-overlay: rgba(0, 0, 0, 0.6);
+    --btn-secondary-bg: #6c757d;
+    --btn-secondary-border: #6c757d;
+    --btn-secondary-hover-bg: #5a6268;
+    --btn-secondary-hover-border: #545b62;
+
+    --btn-success-bg: #28a745;
+    --btn-success-border: #28a745;
+    --btn-success-hover-bg: #218838;
+    --btn-success-hover-border: #1e7e34;
+
+    --btn-danger-bg: #dc3545;
+    --btn-danger-border: #dc3545;
+    --btn-danger-hover-bg: #c82333;
+    --btn-danger-hover-border: #bd2130;
+
+    --btn-info-bg: #17a2b8;
+    --btn-info-border: #17a2b8;
+    --btn-info-hover-bg: #138496;
+    --btn-info-hover-border: #117a8b;
+
+    --btn-warning-bg: #ffc107;
+    --btn-warning-border: #ffc107;
+    --btn-warning-hover-bg: #e0a800;
+    --btn-warning-hover-border: #d39e00;
+
+    --light-blue-bg: #e6f2ff; /* Para barras de progreso o fondos claros */
+    --light-blue: #518bca;
+    --dark-blue: #2c4a7e;
+
+    /* Sombras */
+    --shadow-light: 0 0 5px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset básico y estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5; /* Fondo más claro y moderno */
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex; /* Para layout de sidebar y contenido */
+    min-height: 100vh; /* Ocupar toda la altura de la ventana */
+    overflow-x: hidden; /* Evitar scroll horizontal no deseado */
+}
+
+/* Contenedor principal de la aplicación */
+.main-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-width: 0; /* Permite que el contenido se encoja correctamente */
 }
 
-.header {
-    background-color: var(--light-blue-header); /* Aplicando el nuevo color */
-    color: white;
-    padding: 10px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-}
-
-.header .logo h1 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    text-align: center; /* Centrar el título en el header */
-    margin: 0;
-}
-
-.main-container {
-    display: flex;
-    flex: 1; /* Permite que el contenedor principal ocupe el espacio restante */
-}
-
+/* --- Sidebar --- */
 .sidebar {
     width: 250px;
-    background-color: var(--dark-blue-sidebar); /* Aplicando el nuevo color */
-    color: var(--sidebar-text-color); /* Color de texto para el sidebar */
-    padding: 20px 0;
-    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0; /* Evita que el sidebar se encoja */
-}
-
-.sidebar .nav-link {
-    color: var(--sidebar-text-color);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    text-decoration: none; /* Asegurar que no tenga subrayado */
-}
-
-.sidebar .nav-link:hover,
-.sidebar .nav-link.active {
-    background-color: var(--sidebar-active-bg); /* Color de fondo para activo/hover */
-    color: #fff;
-    border-left: 5px solid var(--primary-color);
-    padding-left: 15px; /* Ajuste para el borde */
-}
-
-.sidebar .nav-link i {
-    margin-right: 10px;
-    font-size: 1.1rem;
-}
-
-.content {
-    flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+    background-color: var(--primary-color);
+    color: white;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    margin: 20px; /* Margen alrededor del contenido principal */
-    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-medium);
+    z-index: 100; /* Asegurar que esté por encima del contenido si hay superposiciones */
+    flex-shrink: 0; /* No permitir que se encoja */
 }
 
-.content-section {
-    display: none;
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.content-section.active {
-    display: block;
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
 }
 
-h2 {
-    color: var(--text-color-dark);
-    margin-bottom: 25px;
-    font-size: 1.8rem;
+.sidebar-header i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.nav-links-container {
+    flex-grow: 1; /* Ocupa el espacio disponible en el centro */
+    margin-bottom: 20px;
+}
+
+.nav-link {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.05em;
 }
 
-h2 i {
-    margin-right: 10px;
+.nav-link i {
+    margin-right: 15px;
+    font-size: 1.1em;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: var(--shadow-light);
+}
+
+.sidebar-footer {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-footer .nav-link {
+    font-size: 0.95em;
+    padding: 10px 15px;
+}
+
+
+/* --- Topbar (Header de Contenido) --- */
+.topbar {
+    background-color: white;
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--medium-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-light);
+    flex-shrink: 0; /* No permitir que se encoja */
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 1.8em;
     color: var(--primary-color);
 }
 
+.header-actions .btn-help {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.header-actions .btn-help:hover {
+    background-color: #4278b3;
+}
+
+
+/* --- Contenido Principal (Main) --- */
+.content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: var(--light-gray);
+    overflow-y: auto; /* Para desplazamiento vertical si el contenido es largo */
+}
+
+.content-section {
+    display: none; /* Oculto por defecto */
+    animation: fadeIn 0.5s ease-out; /* Animación de entrada */
+}
+
+.content-section.active {
+    display: block; /* Visible cuando está activo */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 2em;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.content-section h2 i {
+    margin-right: 15px;
+    color: var(--secondary-color);
+}
+
+
+/* --- Cards Generales --- */
+.card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    margin-bottom: 25px;
+    overflow: hidden; /* Para que el contenido no sobresalga de los bordes redondeados */
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-color); /* Un borde sutil si el bg es el mismo */
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* --- Dashboard Específico --- */
 .summary-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
 }
 
-.summary-cards .card {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+.summary-card {
     text-align: center;
-    border-left: 5px solid var(--primary-color);
+    position: relative;
 }
 
-.summary-cards .card h3 {
-    font-size: 1.2rem;
-    color: var(--text-color-medium);
+.summary-card .card-body {
+    padding: 25px;
+}
+
+.summary-card h4 {
+    color: var(--secondary-color);
+    font-size: 1.3em;
     margin-bottom: 10px;
 }
 
-.summary-cards .card p {
-    font-size: 2.2rem;
+.summary-card .summary-value {
+    font-size: 2.5em;
     font-weight: bold;
     color: var(--primary-color);
     margin-bottom: 0;
 }
 
-/* Formularios y controles */
-.form-group {
+.summary-card .icon-card-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 3em;
+    opacity: 0.2;
+    color: var(--primary-color); /* Color por defecto del icono */
+}
+
+.summary-card .icon-card-overlay.green { color: #28a745; }
+.summary-card .icon-card-overlay.blue { color: #007bff; }
+.summary-card .icon-card-overlay.orange { color: #ffc107; }
+.summary-card .icon-card-overlay.red { color: #dc3545; }
+
+
+/* Barras de progreso generales */
+.progress-bar-container {
+    background-color: var(--medium-gray);
+    border-radius: 5px;
+    height: 30px; /* Altura de la barra de progreso */
+    overflow: hidden;
     margin-bottom: 15px;
+    display: flex; /* Para múltiples barras apiladas */
+}
+
+.progress-bar {
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 30px; /* Centrar texto verticalmente */
+    transition: width 0.5s ease-in-out;
+}
+
+.bg-light-blue {
+    background-color: var(--secondary-color);
+}
+
+.bg-dark-blue {
+    background-color: var(--primary-color);
+}
+
+
+/* --- Formularios --- */
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Columnas responsivas */
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 0; /* El gap ya maneja el espacio */
+    position: relative; /* Para la sugerencia de SICAC */
 }
 
 .form-group label {
-    font-weight: 500;
-    color: var(--text-color-dark);
-    margin-bottom: 5px;
     display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--primary-color);
 }
 
-.form-control, .form-select {
-    border-radius: 5px;
+.form-control,
+.form-select {
+    width: 100%;
+    padding: 10px 12px;
     border: 1px solid var(--border-color);
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    width: 100%; /* Asegura que ocupen todo el ancho disponible */
-    box-sizing: border-box; /* Incluye padding y borde en el ancho total */
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
 }
 
-/* Para los select con botones al lado (input-group) */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--secondary-color);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(81, 139, 202, 0.25); /* Sombra de foco */
+}
+
+.form-control[readonly],
+.form-control:disabled,
+.form-select:disabled {
+    background-color: var(--medium-gray);
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+textarea.form-control {
+    resize: vertical; /* Permitir redimensionar verticalmente */
+    min-height: 80px;
+}
+
 .input-group {
     display: flex;
-    width: 100%;
+    align-items: center;
 }
 
-.input-group > .form-select {
-    flex-grow: 1; /* Permite que el select ocupe el espacio disponible */
+.input-group .form-control,
+.input-group .form-select {
+    flex-grow: 1;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
 .input-group .btn {
-    border-radius: 0; /* Eliminar bordes redondeados por defecto */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px; /* Para que los bordes se toquen */
 }
-
-.input-group .btn:first-of-type {
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    margin-left: -1px; /* Para que los bordes se toquen visualmente */
-}
-
-.input-group .btn:last-of-type {
-    border-top-right-radius: 5px; /* Si solo hay 2 botones, este es el último */
-    border-bottom-right-radius: 5px;
-}
-/* Ajuste si hay más de dos botones, el segundo debería tener el radio en la derecha */
-.input-group .btn:nth-child(2) { /* el segundo botón */
+.input-group .btn:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
-.input-group .btn:last-child { /* el último botón del grupo */
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+.input-group .btn:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
-
-.contract-form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+/* Para el error de SICAC */
+.text-danger {
+    color: var(--btn-danger-bg);
+    font-size: 0.875em;
+    margin-top: 5px;
 }
 
-.contract-form-grid .col-span-2 {
-    grid-column: span 2;
-}
-
-/* Tablas */
-.table {
+/* Sugerencias SICAC */
+.list-group {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: var(--shadow-light);
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute; /* Para que aparezca sobre otros elementos */
     width: 100%;
-    margin-top: 20px;
-    border-collapse: collapse;
+    z-index: 999;
 }
 
-.table th, .table td {
+.list-group-item {
     padding: 10px 15px;
-    border: 1px solid #dee2e6; /* Un gris más suave */
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: var(--medium-gray);
+}
+
+.list-group-item.list-group-item-action {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.span-2 {
+    grid-column: span 2; /* Para que un campo ocupe dos columnas en la cuadrícula */
+}
+
+/* Botones de formulario */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end; /* Alinear a la derecha */
+}
+
+.form-actions-filter {
+    grid-column: 1 / -1; /* Ocupa todas las columnas disponibles */
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Alinear a la derecha */
+    margin-top: 15px;
+}
+
+
+/* --- Botones Generales --- */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* Asegurar que no tengan subrayado si son enlaces */
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+.btn:hover {
+    transform: translateY(-1px); /* Efecto ligero de elevación */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    color: white;
+    border: 1px solid var(--btn-primary-border);
+}
+.btn-primary:hover {
+    background-color: var(--btn-primary-hover-bg);
+    border-color: var(--btn-primary-hover-border);
+}
+
+.btn-secondary {
+    background-color: var(--btn-secondary-bg);
+    color: white;
+    border: 1px solid var(--btn-secondary-border);
+}
+.btn-secondary:hover {
+    background-color: var(--btn-secondary-hover-bg);
+    border-color: var(--btn-secondary-hover-border);
+}
+
+.btn-success {
+    background-color: var(--btn-success-bg);
+    color: white;
+    border: 1px solid var(--btn-success-border);
+}
+.btn-success:hover {
+    background-color: var(--btn-success-hover-bg);
+    border-color: var(--btn-success-hover-border);
+}
+
+.btn-danger {
+    background-color: var(--btn-danger-bg);
+    color: white;
+    border: 1px solid var(--btn-danger-border);
+}
+.btn-danger:hover {
+    background-color: var(--btn-danger-hover-bg);
+    border-color: var(--btn-danger-hover-border);
+}
+
+.btn-info {
+    background-color: var(--btn-info-bg);
+    color: white;
+    border: 1px solid var(--btn-info-border);
+}
+.btn-info:hover {
+    background-color: var(--btn-info-hover-bg);
+    border-color: var(--btn-info-hover-border);
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.85em;
+}
+
+/* Grupos de botones */
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
+}
+
+.button-group .btn {
+    min-width: 150px; /* Ancho mínimo para botones de acción (Exportar) */
+}
+
+
+/* --- Tablas --- */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto; /* Para tablas que exceden el ancho de la pantalla */
+    margin-bottom: 20px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: white;
+    box-shadow: var(--shadow-light);
+    border-radius: 8px;
+    overflow: hidden; /* Para los bordes redondeados del thead */
+}
+
+.data-table th,
+.data-table td {
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
     text-align: left;
     vertical-align: middle;
 }
 
-.table thead th {
-    background-color: #e9ecef; /* Un fondo ligeramente más oscuro para el encabezado */
+.data-table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.data-table th {
     font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid #ced4da;
+    white-space: nowrap; /* Evitar que los encabezados se rompan en varias líneas */
 }
 
-.table-hover tbody tr:hover {
-    background-color: #e2f2ff; /* Un azul claro al pasar el ratón */
+.data-table tbody tr:nth-child(even) {
+    background-color: var(--light-gray); /* Raya para mejor legibilidad */
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #fdfdfd;
+.data-table tbody tr:hover {
+    background-color: var(--medium-gray);
+    transition: background-color 0.2s ease;
 }
 
-.btn {
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    font-size: 0.9rem;
-    display: inline-flex;
-    align-items: center;
+.data-table td .btn {
+    margin-right: 5px; /* Espacio entre botones en la columna de acciones */
+    margin-bottom: 5px; /* Para cuando se envuelvan */
+}
+
+/* Ajustes para tablas con texto pequeño (Partidas, HES partidas) */
+.data-table.small-font th,
+.data-table.small-font td {
+    font-size: 0.9em;
+    padding: 8px 12px;
+}
+
+.data-table.small-font .form-control,
+.data-table.small-font .form-select {
+    font-size: 0.9em;
+    padding: 6px 8px;
+}
+
+
+/* --- Modals (Ventanas Modales) --- */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Posición fija en la ventana */
+    z-index: 1000; /* Siempre encima */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilitar scroll si el contenido es muy grande */
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente oscuro */
+    display: flex; /* Para centrar el contenido */
     justify-content: center;
-    text-decoration: none; /* Asegurar que no tenga subrayado */
-    border: 1px solid transparent; /* Base para el borde */
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
-.btn:active {
-    transform: translateY(1px); /* Pequeño efecto de click */
+.modal.show {
+    display: flex;
+    opacity: 1;
 }
 
-.btn i {
-    margin-right: 5px;
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centrar */
+    padding: 25px;
+    border: 1px solid #888;
+    width: 90%; /* Ancho responsivo */
+    max-width: 600px; /* Ancho máximo */
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease-in-out;
 }
 
-.btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
-.btn-primary:hover { background-color: #0a58ca; border-color: #0a58ca; }
-.btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); color: white; }
-.btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
-.btn-success { background-color: var(--success-color); border-color: var(--success-color); color: white; }
-.btn-success:hover { background-color: #157347; border-color: #146c43; }
-.btn-danger { background-color: var(--danger-color); border-color: var(--danger-color); color: white; }
-.btn-danger:hover { background-color: #bb2d3b; border-color: #b02a37; }
-.btn-info { background-color: var(--info-color); border-color: var(--info-color); color: #212529; } /* Color de texto oscuro para info */
-.btn-info:hover { background-color: #31d2f2; border-color: #25cff2; }
-.btn-warning { background-color: var(--warning-color); border-color: var(--warning-color); color: #212529; }
-.btn-warning:hover { background-color: #ffcd39; border-color: #ffc720; }
-
-.btn-sm {
-    padding: 5px 10px;
-    font-size: 0.8rem;
+.modal.show .modal-content {
+    transform: translateY(0);
 }
 
-.button-group {
-    display: flex; /* Para alinear botones */
-    gap: 10px; /* Espacio entre botones */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--medium-gray);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-/*
- * Asegúrate de que el bloque CSS no esté vacío.
- * Si quieres aplicar un ancho mínimo, descomenta la línea:
- */
-.button-group button {
-    min-width: 150px; /* Ancho minimo para los botones de accion - quizás solo para los principales */
+.modal-header h5 {
+    margin: 0;
+    font-size: 1.3em;
+    color: var(--primary-color);
 }
 
-/* Contenedor de Toast */
+.modal-header .close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.modal-header .close-btn:hover,
+.modal-header .close-btn:focus {
+    color: var(--btn-danger-bg);
+    text-decoration: none;
+}
+
+.modal-body {
+    padding: 0; /* Ya el padding está en modal-content */
+}
+
+
+/* --- Toasts (Notificaciones) --- */
 #toast-container {
     position: fixed;
     bottom: 20px;
@@ -299,79 +702,51 @@ h2 i {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: 10px; /* Espacio entre toasts */
 }
 
 .toast {
-    background-color: #333;
+    background-color: var(--dark-gray);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border-radius: 5px;
-    margin-bottom: 10px;
-    opacity: 0.95; /* Ligeramente más opaco */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-    animation: fadeInOut 3.5s forwards; /* Duración ajustada */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     min-width: 250px;
     text-align: center;
 }
 
-.toast.success { background-color: var(--success-color); }
-.toast.error { background-color: var(--danger-color); }
-.toast.warning { background-color: var(--warning-color); color: var(--text-color-dark); }
-.toast.info { background-color: var(--info-color); color: var(--text-color-dark); }
+.toast.success {
+    background-color: var(--btn-success-bg);
+}
 
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateY(20px); }
-    10% { opacity: 0.95; transform: translateY(0); }
-    90% { opacity: 0.95; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(20px); }
+.toast.error {
+    background-color: var(--btn-danger-bg);
+}
+
+.toast.info {
+    background-color: var(--btn-info-bg);
+}
+
+.toast.warning {
+    background-color: var(--btn-warning-bg);
 }
 
 
-/* Filtros */
-.filter-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
-    padding: 15px;
-    background-color: var(--bg-light);
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    align-items: flex-end; /* Alinea los botones con los inputs */
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filter-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-/* Exportación */
-.export-buttons {
-    display: flex;
-    flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
-    gap: 10px;
-    margin-bottom: 20px;
-    justify-content: flex-end; /* Alinea a la derecha */
-}
-
-/* Footer */
+/* --- Footer --- */
 .footer {
-    background-color: #343a40;
-    color: white;
-    padding: 15px 0;
-    font-size: 0.9rem;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: auto; /* Empuja el footer hacia abajo */
+    background-color: var(--dark-gray);
+    color: rgba(255, 255, 255, 0.7);
     text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+    border-top: 1px solid var(--primary-color);
+    flex-shrink: 0; /* No permitir que se encoja */
 }
 
 .footer a {
-    color: var(--info-color);
+    color: var(--secondary-color);
     text-decoration: none;
 }
 
@@ -379,389 +754,343 @@ h2 i {
     text-decoration: underline;
 }
 
-/* Responsive adjustments */
+
+/* --- Gráficos (Chart.js) --- */
+.chart-container {
+    width: 100%;
+    max-width: 900px; /* Limitar ancho del gráfico */
+    margin: 20px auto; /* Centrar gráfico */
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar el canvas y el botón */
+}
+
+canvas {
+    max-width: 100%; /* Asegurar que el canvas sea responsivo */
+    height: auto;
+}
+
+/* Estilos específicos para la vista de detalle de HES */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.detail-grid p {
+    margin-bottom: 0;
+}
+.detail-grid p strong {
+    color: var(--primary-color);
+}
+
+
+/* --- Responsive Design (Media Queries) --- */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 200px; /* Reducir ancho del sidebar en pantallas medianas */
+    }
+
+    .topbar h1 {
+        font-size: 1.5em;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .content-section h2 {
+        font-size: 1.8em;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajustar min-width */
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}
+
 @media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
+    body {
+        flex-direction: column; /* Apilar sidebar y contenido en pantallas pequeñas */
     }
 
     .sidebar {
         width: 100%;
+        height: auto;
+        padding: 15px;
+        flex-direction: row; /* Sidebar horizontal */
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-header {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .nav-links-container {
+        display: none; /* Ocultar enlaces de navegación por defecto */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* Altura de la barra lateral */
+        left: 0;
+        background-color: var(--primary-color);
         padding: 10px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-medium);
     }
 
-    .sidebar .nav {
-        flex-direction: row;
-        overflow-x: auto; /* Permite scroll horizontal para botones */
-        white-space: nowrap;
-        justify-content: flex-start; /* Ajustar para que no se separen demasiado */
+    .sidebar-footer {
+        display: none; /* Ocultar pie de página del sidebar por defecto */
     }
 
-    .sidebar .nav-link {
-        padding: 10px;
-        font-size: 0.85rem;
-        flex-shrink: 0; /* Evita que los botones se encojan demasiado */
-        text-align: center;
-        flex-direction: column; /* Icono arriba, texto abajo */
+    /* Implementar un botón de menú "hamburguesa" para mostrar/ocultar el sidebar */
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        margin-left: 15px;
+    }
+    
+    /* Mostrar nav y footer al activar el menú */
+    .sidebar.active .nav-links-container,
+    .sidebar.active .sidebar-footer {
+        display: flex;
     }
 
-    .sidebar .nav-link i {
-        margin-right: 0;
-        margin-bottom: 5px;
+
+    .main-container {
+        width: 100%;
+        padding-top: 0; /* Sin espacio para el sidebar flotante */
     }
 
-    .sidebar .nav-link.active {
-        border-left: none;
-        border-bottom: 3px solid var(--primary-color);
-        padding-left: 10px; /* Restablecer padding-left */
+    .topbar {
+        flex-direction: column; /* Apilar elementos de la topbar */
+        align-items: flex-start;
+        padding: 15px 20px;
+        gap: 10px;
+    }
+
+    .topbar h1 {
+        font-size: 1.3em;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
     }
 
     .content {
-        margin: 10px;
         padding: 15px;
     }
 
-    .header .logo h1 {
-        font-size: 1.5rem;
+    .form-grid {
+        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        gap: 15px;
+    }
+    .span-2 {
+        grid-column: span 1; /* Ocupa solo una columna */
+    }
+
+    .form-actions,
+    .form-actions-filter {
+        flex-direction: column; /* Apilar botones */
+        gap: 10px;
+    }
+    .form-actions .btn,
+    .form-actions-filter .btn {
+        width: 100%;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .button-group .btn {
+        width: 100%;
+        min-width: unset; /* Remover el min-width */
+    }
+
+    .table-responsive {
+        width: 100%; /* Asegurar que ocupe todo el ancho */
+        overflow-x: auto; /* Permitir scroll horizontal si la tabla es muy ancha */
     }
 
     .summary-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Una columna por tarjeta en móviles */
     }
+}
 
-    .contract-form-grid {
-        grid-template-columns: 1fr;
-    }
+/* Añadir un botón de menú hamburguesa para móviles */
+.menu-toggle {
+    display: none; /* Oculto en escritorio */
+}
 
-    .contract-form-grid .col-span-2 {
-        grid-column: span 1;
-    }
-
-    .filter-container, .chart-controls {
+@media (max-width: 768px) {
+    .sidebar {
         flex-direction: column;
-        align-items: stretch;
+        align-items: flex-start;
+        padding: 0; /* Eliminar padding para que el contenido se ajuste */
+        height: auto;
+        position: relative; /* Para que el menú se expanda abajo */
     }
 
-    .filter-buttons {
-        flex-direction: column;
-        gap: 5px;
-    }
-    
-    .export-buttons {
-        flex-direction: column;
-        gap: 5px;
-        align-items: flex-start; /* Ajustar alineación en móvil */
+    .sidebar-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .chart-export-btn {
-        position: static; /* Quitar posicionamiento absoluto en móvil */
-        margin-top: 15px;
+    .nav-links-container,
+    .sidebar-footer {
+        display: none; /* Oculto por defecto */
+        width: 100%;
+        padding: 10px 0;
+        background-color: var(--primary-color);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .nav-links-container .nav-link,
+    .sidebar-footer .nav-link {
+        padding-left: 20px; /* Indentar enlaces */
+    }
+
+    .sidebar.active .nav-links-container,
+    .sidebar.active .sidebar-footer {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .menu-toggle {
+        display: block; /* Mostrar botón de menú hamburguesa */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.8em;
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+
+    .main-container {
         width: 100%;
     }
+
+    .topbar {
+        padding: 15px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    /* Ajustar tamaño de fuente para mejor lectura en móviles */
+    body {
+        font-size: 0.95em;
+    }
+    h2 {
+        font-size: 1.6em !important;
+    }
+    .summary-card h4 {
+        font-size: 1.1em;
+    }
+    .summary-card .summary-value {
+        font-size: 2em;
+    }
+    .summary-card .icon-card-overlay {
+        font-size: 2.5em;
+    }
 }
 
-/* Mejora de la tabla de partidas del contrato y HES */
-.table-responsive {
-    overflow-x: auto; /* Asegura el scroll horizontal si la tabla es muy ancha */
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
+/* Impresión */
+@media print {
+    body {
+        display: block; /* Desactivar flex para impresión */
+        margin: 0;
+        padding: 0;
+    }
 
-.contract-list-table,
-#hes-list-table,
-#deleted-contracts-table,
-#deleted-hes-table,
-#partidas-table, /* También para la tabla de partidas en el formulario de contrato */
-#hes-partidas-table /* Y para las partidas de HES */
-{
-    min-width: 800px; /* Ancho mínimo para que no se vea tan apretada */
-    border-collapse: separate; /* Necesario para border-radius en thead/tbody */
-    border-spacing: 0;
-}
+    .sidebar,
+    .topbar,
+    .footer,
+    .btn, /* Ocultar todos los botones */
+    .form-actions,
+    .filter-controls,
+    .button-group,
+    #toast-container,
+    .action-column { /* Ocultar columna de acciones en tablas */
+        display: none !important;
+    }
 
-.contract-list-table thead th:first-child,
-#hes-list-table thead th:first-child,
-#deleted-contracts-table thead th:first-child,
-#deleted-hes-table thead th:first-child,
-#partidas-table thead th:first-child,
-#hes-partidas-table thead th:first-child {
-    border-top-left-radius: 8px;
-}
+    .content {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        box-shadow: none;
+        background-color: white;
+    }
 
-.contract-list-table thead th:last-child,
-#hes-list-table thead th:last-child,
-#deleted-contracts-table thead th:last-child,
-#deleted-hes-table thead th:last-child,
-#partidas-table thead th:last-child,
-#hes-partidas-table thead th:last-child {
-    border-top-right-radius: 8px;
-}
+    .content-section {
+        display: block !important; /* Asegurar que todas las secciones relevantes se muestren */
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always; /* Cada sección en una nueva página */
+    }
 
-/* Nota: Los border-radius para tbody solo funcionarán si las celdas directamente tienen el borde y el borde-collapse es separate, 
-   o si se usan pseudo-elementos o una estructura más compleja. Para simplicidad, los mantendremos en thead. */
+    .content-section:last-child {
+        page-break-after: auto;
+    }
 
+    .card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        margin-bottom: 20px;
+    }
 
-/* Estilos para barras de progreso (avance) */
-.progress {
-    height: 20px; /* Altura de la barra de progreso */
-    border-radius: 5px;
-    background-color: #e9ecef;
-    overflow: hidden; /* Asegura que el progress-bar se ajuste */
-}
+    .card-header {
+        background-color: #eee;
+        color: #333;
+        border-bottom: 1px solid #ccc;
+    }
 
-.progress-bar {
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    line-height: 20px; /* Centra el texto verticalmente */
-    transition: width 0.6s ease;
-    white-space: nowrap; /* Evita que el texto se rompa */
-    padding: 0 5px; /* Pequeño padding para el texto si es muy corto */
-}
+    .data-table {
+        border: 1px solid #ccc;
+    }
+    .data-table th,
+    .data-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+    }
+    .data-table thead {
+        background-color: #eee;
+        color: #333;
+    }
+    
+    /* Eliminar la columna de acciones en las tablas para impresión */
+    .data-table th:last-child,
+    .data-table td:last-child {
+        display: none;
+    }
 
-/* Clases específicas para el color de las barras */
-.bg-light-blue {
-    background-color: var(--light-blue-header) !important;
-}
-
-.bg-dark-blue {
-    background-color: var(--dark-blue-sidebar) !important;
-}
-
-/* Para los switches de checkbox (no se usa directamente en este HTML, pero útil si se añade) */
-.form-check.form-switch {
-    display: flex;
-    align-items: center;
-    min-height: 1.5em; /* Asegura espacio suficiente */
-    padding-left: 0; /* Deshacer padding por defecto si existe */
-}
-
-.form-check-input {
-    width: 3em; /* Ancho del switch */
-    height: 1.5em; /* Alto del switch */
-    margin-left: 0; /* Deshacer margin por defecto */
-    margin-right: 0.5rem; /* Espacio a la derecha del switch */
-    flex-shrink: 0; /* Evita que el input se encoja */
-    background-color: #ced4da;
-    border: 1px solid rgba(0,0,0,.25);
-    vertical-align: top;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    transition: background-position .15s ease-in-out;
-}
-
-.form-check-input:checked {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
-}
-
-/* Estilos para el modal personalizado */
-.custom-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-dark-overlay); /* Variable para el fondo oscuro */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1060;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.custom-modal-overlay.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.custom-modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
-    transform: translateY(-20px);
-    transition: transform 0.3s ease;
-    position: relative;
-}
-
-.custom-modal-overlay.show .custom-modal-content {
-    transform: translateY(0);
-}
-
-.custom-modal-content h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    text-align: center;
-}
-
-.custom-modal-content .form-group {
-    margin-bottom: 20px;
-}
-
-.custom-modal-content .modal-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.custom-modal-content .close-button {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: #aaa;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s ease;
-}
-
-.custom-modal-content .close-button:hover {
-    color: #666;
-}
-
-.list-group {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    max-height: 200px; /* Limitar altura para scroll */
-    overflow-y: auto;
-}
-
-.list-group-item {
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-}
-
-.list-group-item:last-child {
-    border-bottom: none;
-}
-
-/* Estilos para la sección de gráficos */
-.chart-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    margin-bottom: 20px;
-    position: relative; /* Para el botón de exportar */
-}
-
-.chart-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
-    align-items: flex-end;
-}
-
-.chart-controls .form-group {
-    margin-bottom: 0; /* Eliminar margen inferior si es parte del flex */
-}
-
-.chart-export-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    z-index: 10; /* Asegurarse de que esté por encima del canvas */
-}
-
-/* Estilos para el detalle de HES en informes */
-.hes-report-detail {
-    background-color: var(--bg-light);
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-    border: 1px solid #e9ecef;
-}
-
-.hes-report-detail h4 {
-    color: var(--primary-color);
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-}
-
-.hes-report-detail p {
-    margin-bottom: 8px;
-    color: var(--text-color-medium);
-}
-
-.hes-report-detail p strong {
-    color: var(--text-color-dark);
-}
-
-.hes-report-detail .progress {
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-
-/* Estilos para las sugerencias de SICAC (autocompletado) */
-#sicac-suggestions {
-    border: 1px solid var(--border-color);
-    border-top: none;
-    border-radius: 0 0 5px 5px;
-    max-height: 150px;
-    overflow-y: auto;
-    position: absolute; /* O relative al form-group si es necesario */
-    width: 100%;
-    background-color: #fff;
-    z-index: 100; /* Asegura que esté por encima de otros elementos */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-#sicac-suggestions .list-group-item {
-    cursor: pointer;
-    border-radius: 0;
-    transition: background-color 0.2s ease;
-}
-
-#sicac-suggestions .list-group-item:hover {
-    background-color: var(--bg-light);
-}
-
-/* Estilos para tablas de partidas dentro de formularios (contrato y HES) */
-#partidas-table .form-control,
-#hes-partidas-table .form-control,
-#partidas-table .form-select,
-#hes-partidas-table .form-select {
-    width: 100%;
-    padding: 6px 10px;
-    font-size: 0.9rem;
-    height: auto; /* Autoajustar altura para evitar problemas con padding */
-}
-
-#partidas-table td,
-#hes-partidas-table td {
-    vertical-align: top; /* Alinear el contenido de las celdas a la parte superior */
-    padding: 5px; /* Reducir padding en celdas de tabla de partidas */
-}
-
-#partidas-table .btn-sm,
-#hes-partidas-table .btn-sm {
-    font-size: 0.75rem;
-    padding: 4px 8px;
+    /* Asegurarse de que los gráficos sean visibles */
+    canvas {
+        background-color: white; /* Asegurar fondo blanco para el gráfico */
+    }
 }

@@ -4,236 +4,300 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGESCON - Sistema de Gestión de Contratos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📋</text></svg>">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    
+    <link rel="stylesheet" href="styles.css"> 
 </head>
 <body>
-    <div class="header">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div class="logo">
-                <h1><i class="fas fa-file-contract"></i> SIGESCON</h1>
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-file-contract"></i> SIGESCON</h3>
+        </div>
+        <nav class="nav-links-container">
+            <a href="#" class="nav-link active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i> Resumen General
+            </a>
+            <a href="#" class="nav-link" data-section="new-edit-contract">
+                <i class="fas fa-plus-circle"></i> Nuevo/Editar Contrato
+            </a>
+            <a href="#" class="nav-link" data-section="list-contracts">
+                <i class="fas fa-list-alt"></i> Lista de Contratos
+            </a>
+            <a href="#" class="nav-link" data-section="hes-management">
+                <i class="fas fa-file-invoice"></i> Gestión de HES
+            </a>
+            <a href="#" class="nav-link" data-section="graphic-summary">
+                <i class="fas fa-chart-bar"></i> Resumen Gráfico
+            </a>
+            <a href="#" class="nav-link" data-section="deleted-records">
+                <i class="fas fa-recycle"></i> Papelera de Reciclaje
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-link" data-section="help-section">
+                <i class="fas fa-info-circle"></i> Ayuda
+            </a>
+            <a href="#" class="nav-link" data-section="settings-section">
+                <i class="fas fa-cog"></i> Configuración
+            </a>
         </div>
     </div>
 
     <div class="main-container">
-        <aside class="sidebar">
-            <nav class="nav">
-                <a href="#" class="nav-link active" data-section="dashboard">
-                    <i class="fas fa-home"></i> Inicio
-                </a>
-                <a href="#" class="nav-link" data-section="new-edit-contract">
-                    <i class="fas fa-plus-circle"></i> Nuevo Contrato
-                </a>
-                <a href="#" class="nav-link" data-section="list-contracts">
-                    <i class="fas fa-list-alt"></i> Listado de Contratos
-                </a>
-                <a href="#" class="nav-link" data-section="hes-management">
-                    <i class="fas fa-clipboard-list"></i> Gestión HES
-                </a>
-                <a href="#" class="nav-link" data-section="graphic-summary">
-                    <i class="fas fa-chart-pie"></i> Resumen Gráfico
-                </a>
-                <a href="#" class="nav-link" data-section="settings">
-                    <i class="fas fa-cogs"></i> Configuración
-                </a>
-                <a href="#" class="nav-link" data-section="deleted-records">
-                    <i class="fas fa-trash-alt"></i> Registros Eliminados
-                </a>
-            </nav>
-        </aside>
+        <header class="topbar">
+            <h1>Gestión de Contratos Empresariales</h1>
+            <div class="header-actions">
+                <button class="btn btn-help" data-section="help-section"><i class="fas fa-question-circle"></i> Ayuda</button>
+            </div>
+        </header>
 
         <main class="content">
-            <div id="dashboard" class="content-section active">
-                <h2><i class="fas fa-home"></i> Dashboard</h2>
-                <p>Bienvenido al Sistema de Gestión de Contratos. Aquí podrás ver un resumen rápido de tus contratos.</p>
+            <section id="dashboard" class="content-section active">
+                <h2><i class="fas fa-tachometer-alt"></i> Resumen General</h2>
+                <p>Obtén una visión rápida del estado y la distribución de tus contratos.</p>
                 
                 <div class="summary-cards">
-                    <div class="card">
-                        <h3>Contratos Activos</h3>
-                        <p id="active-contracts-count">0</p>
+                    <div class="card summary-card">
+                        <div class="card-body">
+                            <h4>Contratos Activos</h4>
+                            <p id="active-contracts-count" class="summary-value">0</p>
+                            <i class="fas fa-check-circle icon-card-overlay green"></i>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3>Contratos Completados</h3>
-                        <p id="completed-contracts-count">0</p>
+                    <div class="card summary-card">
+                        <div class="card-body">
+                            <h4>Contratos Completados</h4>
+                            <p id="completed-contracts-count" class="summary-value">0</p>
+                            <i class="fas fa-trophy icon-card-overlay blue"></i>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3>Contratos en Proceso</h3>
-                        <p id="in-progress-contracts-count">0</p>
+                    <div class="card summary-card">
+                        <div class="card-body">
+                            <h4>Contratos en Proceso</h4>
+                            <p id="in-progress-contracts-count" class="summary-value">0</p>
+                            <i class="fas fa-spinner icon-card-overlay orange"></i>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3>Contratos Vencidos</h3>
-                        <p id="expired-contracts-count">0</p>
+                    <div class="card summary-card">
+                        <div class="card-body">
+                            <h4>Contratos Vencidos</h4>
+                            <p id="expired-contracts-count" class="summary-value">0</p>
+                            <i class="fas fa-exclamation-triangle icon-card-overlay red"></i>
+                        </div>
                     </div>
                 </div>
 
-                <h3>Avance General de Contratos (Promedio)</h3>
-                <div class="progress mb-4">
-                    <div id="overall-physical-progress" class="progress-bar bg-light-blue" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Físico</div>
-                </div>
-                <div class="progress mb-4">
-                    <div id="overall-financial-progress" class="progress-bar bg-dark-blue" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Financiero</div>
+                <div class="card full-width-card">
+                    <div class="card-header">
+                        Avance General de Contratos (Promedio)
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-bar-container">
+                            <div id="overall-physical-progress" class="progress-bar bg-light-blue" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Físico</div>
+                            <div id="overall-financial-progress" class="progress-bar bg-dark-blue" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0% Financiero</div>
+                        </div>
+                    </div>
                 </div>
 
-                <h3>Contratos Recientes o Pendientes</h3>
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="recent-contracts-table">
-                        <thead>
-                            <tr>
-                                <th>Nº Contrato</th>
-                                <th>Objeto</th>
-                                <th>Contratista</th>
-                                <th>Fecha Fin</th>
-                                <th>Estatus</th>
-                                <th>Avance Físico</th>
-                                <th>Avance Financiero</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
+                <div class="card full-width-card mt-3">
+                    <div class="card-header">
+                        Contratos Recientes o Pendientes
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Contratos más próximos a vencer o recién vencidos.</p>
+                        <div class="table-responsive">
+                            <table class="data-table" id="recent-contracts-table">
+                                <thead>
+                                    <tr>
+                                        <th>N° SICAC</th>
+                                        <th>Objeto</th>
+                                        <th>Contratista</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Estatus</th>
+                                        <th>Avance Físico</th>
+                                        <th>Avance Financiero</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="new-edit-contract" class="content-section">
-                <h2><i class="fas fa-file-contract"></i> <span id="contract-form-title">Nuevo Contrato</span></h2>
-                <form id="contract-form">
+            <section id="new-edit-contract" class="content-section">
+                <h2 id="contract-form-title"><i class="fas fa-plus-circle"></i> Nuevo Contrato</h2>
+                <p>Completa el formulario para registrar un nuevo contrato o editar uno existente.</p>
+                
+                <form id="contract-form" class="form-container">
                     <input type="hidden" id="contract-id">
-                    <div class="contract-form-grid">
+                    
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label for="numero-sicac">Nº Contrato SICAC</label>
-                            <input type="text" id="numero-sicac" class="form-control" required>
-                            <small id="sicac-error" class="text-danger" style="display:none;">Este número de contrato SICAC ya existe. Selecciona de la lista para añadir partidas.</small>
-                            <div id="sicac-suggestions" class="list-group" style="display:none;">
+                            <label for="numero-sicac">N° Contrato SICAC:</label>
+                            <input type="text" id="numero-sicac" class="form-control" required placeholder="Ej: SICAC-2024-001">
+                            <small id="sicac-error" class="text-danger" style="display: none;">Ya existe un contrato con este Número SICAC.</small>
+                            <div id="sicac-suggestions" class="list-group" style="display: none; position: absolute; z-index: 1000; width: calc(100% - 20px);">
                                 </div>
                         </div>
                         <div class="form-group">
-                            <label for="numero-referencia">Nº Referencia</label>
-                            <input type="text" id="numero-referencia" class="form-control">
-                        </div>
-                        <div class="form-group col-span-2">
-                            <label for="objeto-contrato">Objeto del Contrato</label>
-                            <textarea id="objeto-contrato" class="form-control" rows="3" required></textarea>
+                            <label for="numero-referencia">N° Referencia:</label>
+                            <input type="text" id="numero-referencia" class="form-control" placeholder="Opcional">
                         </div>
                         <div class="form-group">
-                            <label for="contratista">Contratista</label>
-                            <input type="text" id="contratista" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha-inicio">Fecha Inicio</label>
-                            <input type="date" id="fecha-inicio" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="fecha-fin">Fecha Fin</label>
-                            <input type="date" id="fecha-fin" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="duracion-dias">Duración (Días)</label>
-                            <input type="number" id="duracion-dias" class="form-control" min="1" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="monto-original">Monto Original</label>
-                            <input type="number" id="monto-original" class="form-control" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="modalidad-contratacion">Modalidad Contratación</label>
+                            <label for="modalidad-contratacion">Modalidad de Contratación:</label>
                             <div class="input-group">
-                                <select id="modalidad-contratacion" class="form-select">
+                                <select id="modalidad-contratacion" class="form-select" required>
                                     </select>
-                                <button type="button" class="btn btn-sm btn-success" id="add-modalidad-btn"><i class="fas fa-plus"></i></button>
-                                <button type="button" class="btn btn-sm btn-danger" id="remove-modalidad-btn"><i class="fas fa-minus"></i></button>
+                                <button type="button" class="btn btn-primary" id="add-modalidad-btn" title="Gestionar Modalidades"><i class="fas fa-cog"></i></button>
+                                <button type="button" class="btn btn-danger" id="remove-modalidad-btn" title="Eliminar Modalidad Seleccionada"><i class="fas fa-minus"></i></button>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="estatus-contrato">Estatus Contrato</label>
+                            <label for="contratista">Contratista:</label>
+                            <input type="text" id="contratista" class="form-control" required placeholder="Nombre del Contratista">
+                        </div>
+                        <div class="form-group">
+                            <label for="objeto-contrato">Objeto Contractual / Descripción:</label>
+                            <textarea id="objeto-contrato" class="form-control" rows="3" required placeholder="Breve descripción del objeto del contrato"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="monto-original">Monto Original (VES):</label>
+                            <input type="number" id="monto-original" class="form-control" step="0.01" min="0" required placeholder="Ej: 15000.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-inicio">Fecha Inicio:</label>
+                            <input type="date" id="fecha-inicio" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fecha-fin">Fecha Fin:</label>
+                            <input type="date" id="fecha-fin" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="duracion-dias">Duración (Días):</label>
+                            <input type="number" id="duracion-dias" class="form-control" readonly placeholder="Se calcula automáticamente">
+                        </div>
+                        <div class="form-group">
+                            <label for="estatus-contrato">Estatus:</label>
                             <select id="estatus-contrato" class="form-select" required>
                                 <option value="Activo">Activo</option>
                                 <option value="En Proceso">En Proceso</option>
                                 <option value="Completado">Completado</option>
                                 <option value="Suspendido">Suspendido</option>
                                 <option value="Vencido">Vencido</option>
+                                <option value="Rescindido">Rescindido</option>
                             </select>
                         </div>
-                        <div class="form-group col-span-2">
-                            <label for="observaciones-contrato">Observaciones</label>
-                            <textarea id="observaciones-contrato" class="form-control" rows="3"></textarea>
+                        <div class="form-group span-2">
+                            <label for="observaciones-contrato">Observaciones:</label>
+                            <textarea id="observaciones-contrato" class="form-control" rows="3" placeholder="Notas adicionales del contrato"></textarea>
                         </div>
                     </div>
 
-                    <h3>Partidas del Contrato</h3>
-                    <div class="button-group mb-3">
-                        <button type="button" class="btn btn-info" id="add-partida-btn"><i class="fas fa-plus"></i> Añadir Partida</button>
-                    </div>
+                    <h4 class="mt-4">Partidas del Contrato</h4>
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="partidas-table">
+                        <table class="data-table small-font">
                             <thead>
                                 <tr>
                                     <th>Descripción</th>
                                     <th>Unidad</th>
                                     <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Monto</th>
+                                    <th>Precio Unitario (VES)</th>
+                                    <th>Monto Total (VES)</th>
                                     <th>Avance Físico (%)</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="partidas-table-body">
                                 </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn btn-success mt-2" id="add-partida-btn"><i class="fas fa-plus"></i> Añadir Partida</button>
 
-                    <div class="button-group justify-content-end mt-4">
+                    <div class="form-actions mt-4">
                         <button type="submit" class="btn btn-primary" id="save-contract-btn"><i class="fas fa-save"></i> Guardar Contrato</button>
                         <button type="button" class="btn btn-secondary" id="cancel-contract-btn"><i class="fas fa-times"></i> Cancelar</button>
                     </div>
                 </form>
+            </section>
+
+            <div id="modalidad-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Gestionar Modalidades de Contratación</h5>
+                        <button type="button" class="close-btn" id="close-modalidad-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="new-modalidad-name">Añadir Nueva Modalidad:</label>
+                            <div class="input-group">
+                                <input type="text" id="new-modalidad-name" class="form-control" placeholder="Nombre de la nueva modalidad">
+                                <button type="button" class="btn btn-success" id="save-modalidad-btn"><i class="fas fa-plus"></i> Añadir</button>
+                            </div>
+                        </div>
+                        <h6 class="mt-3">Modalidades Existentes:</h6>
+                        <ul id="modalidad-list" class="list-group">
+                            </ul>
+                    </div>
+                </div>
             </div>
 
-            <div id="list-contracts" class="content-section">
-                <h2><i class="fas fa-list-alt"></i> Listado de Contratos</h2>
-                <div class="filter-container">
-                    <div class="form-group filter-group">
-                        <label for="filter-sicac">Filtrar por Nº SICAC:</label>
-                        <input type="text" id="filter-sicac" class="form-control" placeholder="Buscar por SICAC">
+            <section id="list-contracts" class="content-section">
+                <h2><i class="fas fa-list-alt"></i> Lista de Contratos</h2>
+                <p>Consulta, filtra y exporta tus contratos registrados.</p>
+
+                <div class="filter-controls card">
+                    <div class="card-header">
+                        Filtros de Contratos
                     </div>
-                    <div class="form-group filter-group">
-                        <label for="filter-contractor">Filtrar por Contratista:</label>
-                        <input type="text" id="filter-contractor" class="form-control" placeholder="Buscar por Contratista">
-                    </div>
-                    <div class="form-group filter-group">
-                        <label for="filter-status">Filtrar por Estatus:</label>
-                        <select id="filter-status" class="form-select">
-                            <option value="">Todos</option>
-                            <option value="Activo">Activo</option>
-                            <option value="En Proceso">En Proceso</option>
-                            <option value="Completado">Completado</option>
-                            <option value="Suspendido">Suspendido</option>
-                            <option value="Vencido">Vencido</option>
-                        </select>
-                    </div>
-                    <div class="filter-buttons">
-                        <button type="button" class="btn btn-primary" id="apply-filter-btn"><i class="fas fa-filter"></i> Aplicar Filtro</button>
-                        <button type="button" class="btn btn-secondary" id="clear-filter-btn"><i class="fas fa-sync-alt"></i> Limpiar</button>
+                    <div class="card-body form-grid">
+                        <div class="form-group">
+                            <label for="filter-sicac">N° SICAC:</label>
+                            <input type="text" id="filter-sicac" class="form-control" placeholder="Filtrar por SICAC">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-contractor">Contratista:</label>
+                            <input type="text" id="filter-contractor" class="form-control" placeholder="Filtrar por Contratista">
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-status">Estatus:</label>
+                            <select id="filter-status" class="form-select">
+                                <option value="">Todos los Estatus</option>
+                                <option value="Activo">Activo</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Completado">Completado</option>
+                                <option value="Suspendido">Suspendido</option>
+                                <option value="Vencido">Vencido</option>
+                                <option value="Rescindido">Rescindido</option>
+                            </select>
+                        </div>
+                        <div class="form-actions-filter">
+                            <button type="button" class="btn btn-primary" id="apply-filter-btn"><i class="fas fa-filter"></i> Aplicar Filtros</button>
+                            <button type="button" class="btn btn-secondary" id="clear-filter-btn"><i class="fas fa-times"></i> Limpiar Filtros</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="export-buttons mb-3">
-                    <button type="button" class="btn btn-success" id="export-contracts-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-                    <button type="button" class="btn btn-danger" id="export-contracts-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                <div class="button-group mt-3">
+                    <button class="btn btn-success" id="export-contracts-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                    <button class="btn btn-danger" id="export-contracts-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped contract-list-table" id="contracts-table">
+                <div class="table-responsive mt-3">
+                    <table class="data-table" id="contracts-table">
                         <thead>
                             <tr>
-                                <th>Nº SICAC</th>
-                                <th>Nº Ref.</th>
-                                <th>Objeto</th>
+                                <th>N° SICAC</th>
+                                <th>N° Ref.</th>
+                                <th>Objeto Contrato</th>
                                 <th>Contratista</th>
                                 <th>Fecha Inicio</th>
                                 <th>Fecha Fin</th>
                                 <th>Duración (Días)</th>
-                                <th>Monto Original</th>
+                                <th>Monto Original (VES)</th>
                                 <th>Modalidad</th>
                                 <th>Estatus</th>
                                 <th>Avance Físico (%)</th>
@@ -245,104 +309,104 @@
                             </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
-            <div id="hes-management" class="content-section">
-                <h2><i class="fas fa-clipboard-list"></i> Gestión de HES (Hoja de Estimación de Servicios)</h2>
-                <form id="hes-form">
+            <section id="hes-management" class="content-section">
+                <h2><i class="fas fa-file-invoice"></i> Gestión de HES (Hoja de Estimación de Servicios)</h2>
+                <p>Registro y consulta de Hojas de Entrada de Servicios (HES) asociadas a contratos.</p>
+                
+                <form id="hes-form" class="form-container mb-4">
                     <input type="hidden" id="hes-id">
-                    <div class="contract-form-grid">
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label for="hes-contract-select">Seleccionar Contrato:</label>
+                            <label for="hes-contract-select">Contrato Asociado:</label>
                             <select id="hes-contract-select" class="form-select" required>
                                 </select>
                         </div>
                         <div class="form-group">
-                            <label for="hes-number">Nº HES:</label>
-                            <input type="text" id="hes-number" class="form-control" required>
-                            <small id="hes-number-error" class="text-danger" style="display:none;">Este número de HES ya existe para este contrato.</small>
+                            <label for="hes-number">Número de HES:</label>
+                            <input type="text" id="hes-number" class="form-control" required placeholder="Ej: HES-001-2024">
+                            <small id="hes-number-error" class="text-danger" style="display: none;">Ya existe una HES con este número para el contrato seleccionado.</small>
                         </div>
                         <div class="form-group">
-                            <label for="hes-date">Fecha HES:</label>
+                            <label for="hes-date">Fecha de HES:</label>
                             <input type="date" id="hes-date" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="hes-monto">Monto HES Total:</label>
-                            <input type="number" id="hes-monto" class="form-control" step="0.01" required readonly>
-                            <small class="text-muted">Calculado automáticamente por las partidas HES.</small>
+                            <label for="hes-monto">Monto Total de HES (VES):</label>
+                            <input type="number" id="hes-monto" class="form-control" step="0.01" min="0" readonly value="0.00">
                         </div>
-                        <div class="form-group col-span-2">
+                        <div class="form-group span-2">
                             <label for="hes-observations">Observaciones HES:</label>
-                            <textarea id="hes-observations" class="form-control" rows="2"></textarea>
+                            <textarea id="hes-observations" class="form-control" rows="2" placeholder="Notas o detalles de la HES"></textarea>
                         </div>
                     </div>
 
-                    <h3>Partidas de la HES</h3>
-                    <div class="button-group mb-3">
-                        <button type="button" class="btn btn-info" id="add-hes-partida-btn"><i class="fas fa-plus"></i> Añadir Partida HES</button>
-                    </div>
+                    <h4 class="mt-4">Partidas de la HES</h4>
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="hes-partidas-table">
+                        <table class="data-table small-font">
                             <thead>
                                 <tr>
-                                    <th>Partida del Contrato</th>
+                                    <th>Partida de Contrato</th>
                                     <th>Unidad</th>
                                     <th>Cant. Contrato</th>
                                     <th>P.U. Contrato</th>
                                     <th>Monto Contrato</th>
-                                    <th>Cant. HES</th>
+                                    <th>Cantidad HES</th>
                                     <th>P.U. HES</th>
                                     <th>Monto HES</th>
-                                    <th>Avance Físico HES (%)</th>
+                                    <th>Avance Físico (%)</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="hes-partidas-table-body">
                                 </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn btn-success mt-2" id="add-hes-partida-btn"><i class="fas fa-plus"></i> Añadir Partida HES</button>
 
-                    <div class="button-group justify-content-end mt-4">
+                    <div class="form-actions mt-4">
                         <button type="submit" class="btn btn-primary" id="save-hes-btn"><i class="fas fa-save"></i> Guardar HES</button>
                         <button type="button" class="btn btn-secondary" id="cancel-hes-btn"><i class="fas fa-times"></i> Cancelar</button>
                     </div>
                 </form>
 
-                <hr class="my-5">
-
-                <h3>Listado de HES Registradas</h3>
-                <div class="filter-container">
-                    <div class="form-group filter-group">
-                        <label for="filter-hes-contract">Filtrar por Contrato:</label>
-                        <select id="filter-hes-contract" class="form-select">
-                            <option value="">Todos los Contratos</option>
-                            </select>
+                <div class="filter-controls card mt-4">
+                    <div class="card-header">
+                        Filtros de HES
                     </div>
-                    <div class="form-group filter-group">
-                        <label for="filter-hes-number">Filtrar por Nº HES:</label>
-                        <input type="text" id="filter-hes-number" class="form-control" placeholder="Buscar por Nº HES">
-                    </div>
-                    <div class="filter-buttons">
-                        <button type="button" class="btn btn-primary" id="apply-hes-filter-btn"><i class="fas fa-filter"></i> Aplicar Filtro</button>
-                        <button type="button" class="btn btn-secondary" id="clear-hes-filter-btn"><i class="fas fa-sync-alt"></i> Limpiar</button>
+                    <div class="card-body form-grid">
+                        <div class="form-group">
+                            <label for="filter-hes-contract">Contrato:</label>
+                            <select id="filter-hes-contract" class="form-select">
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-hes-number">Número de HES:</label>
+                            <input type="text" id="filter-hes-number" class="form-control" placeholder="Filtrar por número de HES">
+                        </div>
+                        <div class="form-actions-filter">
+                            <button type="button" class="btn btn-primary" id="apply-hes-filter-btn"><i class="fas fa-filter"></i> Aplicar Filtros</button>
+                            <button type="button" class="btn btn-secondary" id="clear-hes-filter-btn"><i class="fas fa-times"></i> Limpiar Filtros</button>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="export-buttons mb-3">
-                    <button type="button" class="btn btn-success" id="export-hes-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-                    <button type="button" class="btn btn-danger" id="export-hes-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+
+                <div class="button-group mt-3">
+                    <button class="btn btn-success" id="export-hes-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                    <button class="btn btn-danger" id="export-hes-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="hes-list-table">
+                <div class="table-responsive mt-3">
+                    <table class="data-table" id="hes-list-table">
                         <thead>
                             <tr>
                                 <th>Contrato SICAC</th>
-                                <th>Nº HES</th>
+                                <th>N° HES</th>
                                 <th>Fecha HES</th>
-                                <th>Monto HES</th>
-                                <th>Avance Físico Contrato (%)</th>
-                                <th>Avance Financiero Contrato (%)</th>
+                                <th>Monto HES (VES)</th>
+                                <th>Avance Físico (%)</th>
+                                <th>Avance Financiero (%)</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -351,142 +415,244 @@
                     </table>
                 </div>
 
-                 <div id="hes-detail-view" class="hes-report-detail" style="display: none;">
-                    <h4>Detalle de HES: <span id="hes-detail-number"></span> del Contrato <span id="hes-detail-contract-sicac"></span></h4>
-                    <p><strong>Fecha:</strong> <span id="hes-detail-date"></span></p>
-                    <p><strong>Monto Total:</strong> <span id="hes-detail-monto"></span></p>
-                    <p><strong>Observaciones:</strong> <span id="hes-detail-observations"></span></p>
-                    <h5>Partidas Incluidas en esta HES:</h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="hes-detail-partidas-table">
-                            <thead>
-                                <tr>
-                                    <th>Partida del Contrato</th>
-                                    <th>Cantidad HES</th>
-                                    <th>Precio Unitario HES</th>
-                                    <th>Monto Partida HES</th>
-                                    <th>Avance Físico HES (%)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
+                <div id="hes-detail-view" class="card mt-4" style="display: none;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Detalle de HES: <span id="hes-detail-number"></span></h5>
+                        <button type="button" class="btn btn-secondary btn-sm" id="close-hes-detail-btn"><i class="fas fa-times"></i> Cerrar Detalle</button>
                     </div>
-                    <div class="modal-buttons justify-content-end">
-                        <button type="button" class="btn btn-secondary" id="close-hes-detail-btn"><i class="fas fa-times"></i> Cerrar</button>
+                    <div class="card-body">
+                        <div class="detail-grid">
+                            <p><strong>Contrato SICAC:</strong> <span id="hes-detail-contract-sicac"></span></p>
+                            <p><strong>Fecha de HES:</strong> <span id="hes-detail-date"></span></p>
+                            <p><strong>Monto Total HES:</strong> <span id="hes-detail-monto"></span></p>
+                            <p class="span-2"><strong>Observaciones:</strong> <span id="hes-detail-observations"></span></p>
+                        </div>
+                        <h6 class="mt-3">Partidas de esta HES:</h6>
+                        <div class="table-responsive">
+                            <table class="data-table small-font">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción Partida Contrato</th>
+                                        <th>Cantidad HES</th>
+                                        <th>P.U. HES</th>
+                                        <th>Monto HES</th>
+                                        <th>Avance Físico Partida (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hes-detail-partidas-table-body">
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div id="graphic-summary" class="content-section">
-                <h2><i class="fas fa-chart-pie"></i> Resumen Gráfico</h2>
+            <section id="graphic-summary" class="content-section">
+                <h2><i class="fas fa-chart-bar"></i> Resumen Gráfico</h2>
                 <p>Obtén visualizaciones claras del estado y distribución de tus contratos.</p>
 
-                <div class="chart-controls">
-                    <div class="form-group flex-grow-1">
-                        <label for="chart-contract-select">Seleccionar Contrato (Opcional):</label>
-                        <select id="chart-contract-select" class="form-select">
-                            <option value="">Todos los Contratos</option>
+                <div class="filter-controls card">
+                    <div class="card-header">
+                        Opciones de Gráfico
+                    </div>
+                    <div class="card-body form-grid">
+                        <div class="form-group">
+                            <label for="chart-contract-select">Contrato Específico:</label>
+                            <select id="chart-contract-select" class="form-select">
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chart-type-select">Tipo de Gráfico:</label>
+                            <select id="chart-type-select" class="form-select" required>
+                                <option value="status">Contratos por Estatus</option>
+                                <option value="modality">Contratos por Modalidad</option>
+                                <option value="physicalAdvance">Avance Físico y Financiero</option>
+                                <option value="montoTipo">Monto por Modalidad</option>
+                                <option value="montoEstatus">Monto por Estatus</option>
+                                <option value="timeline">Línea de Tiempo de Contratos</option>
                             </select>
-                    </div>
-                    <div class="form-group flex-grow-1">
-                        <label for="chart-type-select">Tipo de Gráfico:</label>
-                        <select id="chart-type-select" class="form-select">
-                            <option value="status">Contratos por Estatus</option>
-                            <option value="modality">Contratos por Modalidad</option>
-                            <option value="physicalAdvance">Avance Físico por Contrato (Detalle)</option>
-                            <option value="financialAdvance">Avance Financiero por Contrato (Detalle)</option>
-                            <option value="montoTipo">Monto Total por Modalidad</option>
-                            <option value="montoEstatus">Monto Total por Estatus</option>
-                            <option value="timeline">Línea de Tiempo de Contratos</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" id="render-chart-btn"><i class="fas fa-sync-alt"></i> Generar Gráfico</button>
+                        </div>
+                        <div class="form-actions-filter">
+                            <button type="button" class="btn btn-primary" id="render-chart-btn"><i class="fas fa-chart-pie"></i> Generar Gráfico</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="chart-container">
-                    <button type="button" class="btn btn-secondary btn-sm chart-export-btn" id="export-chart-image-btn" style="display: none;">
-                        <i class="fas fa-download"></i> Exportar Imagen
-                    </button>
-                    <canvas id="mainChart"></canvas>
+                <div class="chart-container card mt-4">
+                    <div class="card-body">
+                        <canvas id="mainChart"></canvas>
+                        <button class="btn btn-info mt-3" id="export-chart-image-btn" style="display: none;"><i class="fas fa-download"></i> Descargar Imagen</button>
+                    </div>
                 </div>
-            </div>
+            </section>
+            
+            <section id="deleted-records" class="content-section">
+                <h2><i class="fas fa-recycle"></i> Papelera de Reciclaje</h2>
+                <p>Gestiona contratos y HES eliminados. Puedes restaurarlos o eliminarlos permanentemente.</p>
 
-            <div id="settings" class="content-section">
-                <h2><i class="fas fa-cogs"></i> Configuración</h2>
-                <p>Aquí podrás gestionar la configuración de la aplicación.</p>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        Contratos Eliminados
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table" id="deleted-contracts-table">
+                                <thead>
+                                    <tr>
+                                        <th>N° SICAC</th>
+                                        <th>Objeto Contrato</th>
+                                        <th>Contratista</th>
+                                        <th>Fecha Eliminación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
-            <div id="deleted-records" class="content-section">
-                <h2><i class="fas fa-trash-alt"></i> Registros Eliminados</h2>
-                <p>Gestiona y recupera contratos o HES eliminados.</p>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        HES Eliminadas
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table" id="deleted-hes-table">
+                                <thead>
+                                    <tr>
+                                        <th>Contrato SICAC</th>
+                                        <th>N° HES</th>
+                                        <th>Fecha Eliminación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                <h3>Contratos Eliminados</h3>
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="deleted-contracts-table">
-                        <thead>
-                            <tr>
-                                <th>Nº SICAC</th>
-                                <th>Objeto</th>
-                                <th>Contratista</th>
-                                <th>Fecha Eliminación</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
+            <section id="help-section" class="content-section">
+                <h2><i class="fas fa-info-circle"></i> Ayuda - SIGESCON</h2>
+                <p>Bienvenido a la sección de ayuda de SIGESCON. Aquí encontrarás información detallada sobre el funcionamiento del sistema.</p>
+
+                <div class="card">
+                    <div class="card-header">
+                        ¿Qué es SIGESCON?
+                    </div>
+                    <div class="card-body">
+                        <p>SIGESCON es una aplicación web desarrollada en HTML + JavaScript (con Chart.js y Bootstrap) diseñada para gestionar contratos empresariales, Hojas de Entrada de Servicios (HES), avances físicos, informes y estadísticas.</p>
+                        <ul>
+                            <li><strong>Tecnología:</strong> Frontend puro (sin backend)</li>
+                            <li><strong>Almacenamiento:</strong> Base de datos local con LocalStorage del navegador</li>
+                            <li><strong>Exportaciones:</strong> Excel y PDF</li>
+                            <li><strong>Gráficos:</strong> Chart.js</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <h3 class="mt-5">HES Eliminadas</h3>
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped" id="deleted-hes-table">
-                        <thead>
-                            <tr>
-                                <th>Contrato SICAC</th>
-                                <th>Nº HES</th>
-                                <th>Fecha Eliminación</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Barra de Navegación
+                    </div>
+                    <div class="card-body">
+                        <p>La barra lateral contiene todas las funcionalidades del sistema, divididas en módulos independientes:</p>
+                        <ul>
+                            <li><strong>Resumen General:</strong> Muestra estadísticas claves del sistema.</li>
+                            <li><strong>Nuevo/Editar Contrato:</strong> Formulario para crear o actualizar contratos.</li>
+                            <li><strong>Lista de Contratos:</strong> Consulta, filtra y exporta tus contratos.</li>
+                            <li><strong>Gestión de HES:</strong> Registra Hojas de Entrada de Servicios asociadas a contratos.</li>
+                            <li><strong>Resumen Gráfico:</strong> Visualización gráfica de los datos.</li>
+                            <li><strong>Papelera de Reciclaje:</strong> Gestiona elementos eliminados.</li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Módulo: Nuevo/Editar Contrato
+                    </div>
+                    <div class="card-body">
+                        <p>Este formulario permite registrar nuevos contratos o editar uno ya existente. Contiene campos como:</p>
+                        <ul>
+                            <li>Número de SICAC</li>
+                            <li>Número de Referencia</li>
+                            <li>Objeto Contractual / Descripción</li>
+                            <li>Contratista</li>
+                            <li>Fechas de Inicio y Fin (Duración calculada automáticamente)</li>
+                            <li>Monto Original</li>
+                            <li>Modalidad de Contratación (dinámica con botones + y -)</li>
+                            <li>Partidas (agregables dinámicamente)</li>
+                            <li>Estatus</li>
+                            <li>Observaciones</li>
+                        </ul>
+                        <p>Al guardar, el contrato se añadirá a la lista de contratos y sus datos se guardarán en tu navegador.</p>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        Módulo: Gestión de HES
+                    </div>
+                    <div class="card-body">
+                        <p>Permite registrar Hojas de Entrada de Servicios (HES) para cada contrato. Cada HES debe estar asociada a un contrato existente y contiene sus propias partidas.</p>
+                        <ul>
+                            <li>Número de HES (único por contrato)</li>
+                            <li>Fecha de HES</li>
+                            <li>Monto Total de HES (calculado automáticamente)</li>
+                            <li>Partidas de la HES (referenciando partidas del contrato)</li>
+                            <li>Observaciones</li>
+                        </ul>
+                        <p>Las HES contribuyen al cálculo del avance financiero del contrato.</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary mt-4" onclick="showSection('dashboard');"><i class="fas fa-arrow-left"></i> Volver al Inicio</button>
+            </section>
+
+            <section id="settings-section" class="content-section">
+                <h2><i class="fas fa-cog"></i> Configuración</h2>
+                <p>Aquí puedes gestionar opciones del sistema.</p>
+
+                <div class="card">
+                    <div class="card-header">
+                        Gestión de Modalidades de Contratación
+                    </div>
+                    <div class="card-body">
+                        <p>Añade o elimina modalidades de contratación que aparecerán en el formulario de contratos.</p>
+                        <div class="form-group">
+                            <label for="config-new-modality-name">Añadir Nueva Modalidad:</label>
+                            <div class="input-group">
+                                <input type="text" id="config-new-modality-name" class="form-control" placeholder="Nombre de la nueva modalidad">
+                                <button type="button" class="btn btn-success" id="config-add-modality-btn"><i class="fas fa-plus"></i> Añadir</button>
+                            </div>
+                        </div>
+                        <h6 class="mt-3">Modalidades Existentes:</h6>
+                        <ul id="config-modalidad-list" class="list-group">
+                            </ul>
+                    </div>
+                </div>
+            </section>
+
         </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 SIGESCON - Gestión de Contratos Empresariales.</p>
+            <p>Desarrollado por RojaTech - Contacto: <a href="mailto:tucorreo@ejemplo.com">Enviar Correo</a></p>
+        </footer>
     </div>
+    
+    <div id="toast-container"></div>
 
-    <footer class="footer">
-        <div class="container text-center">
-            <p>&copy; 2024 SIGESCON. Todos los derechos reservados. Desarrollado por <a href="#" target="_blank">Tu Nombre/Empresa</a>.</p>
-        </div>
-    </footer>
-
-    <div id="modalidad-modal" class="custom-modal-overlay">
-        <div class="custom-modal-content">
-            <button type="button" class="close-button" id="close-modalidad-modal">&times;</button>
-            <h3>Gestionar Modalidades de Contratación</h3>
-            <div class="form-group">
-                <label for="new-modalidad-name">Nombre de la Nueva Modalidad:</label>
-                <input type="text" id="new-modalidad-name" class="form-control" placeholder="Ej: Consultoría IT">
-            </div>
-            <div class="modal-buttons">
-                <button type="button" class="btn btn-primary" id="save-modalidad-btn"><i class="fas fa-plus"></i> Añadir</button>
-            </div>
-            <hr>
-            <h4>Modalidades Existentes:</h4>
-            <ul id="modalidad-list" class="list-group">
-                </ul>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.umd.min.js"></script>
-    <script src="script.js"></script>
+
+    <script src="script.js"></script> 
 </body>
 </html>
