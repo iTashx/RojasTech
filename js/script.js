@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const db = new Dexie('SigesconDB');
     db.version(1).stores({
-        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaInicio,montoTotalContrato,modalidadContratacion',
+        contracts: '++id,numeroProveedor,fechaInicio,montoTotalContrato,modalidadContratacion',
         hes: '++id,contractId,numeroHES,fechaInicioHES,fechaFinalHES'
     });
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contractListBody.innerHTML = '';
 
         if (contracts.length === 0) {
-            contractListBody.innerHTML = `<tr><td colspan="8" class="text-center">No hay contratos registrados.</td></tr>`;
+            contractListBody.innerHTML = `<tr><td colspan="6" class="text-center">No hay contratos registrados.</td></tr>`;
             return;
         }
 
@@ -62,8 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${contract.fechaInicio}</td>
                 <td>${contract.montoTotalContrato.toFixed(2)}</td>
                 <td>${contract.estatusContrato || '-'}</td>
-                <td>${contract.modalidadContratacion || '-'}</td>
-                <td>${contract.objetoContractual || '-'}</td>
                 <td>
                     <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             await db.contracts.add({
                 numeroProveedor: 'PROV-123',
-                fechaFirmaContrato: new Date().toISOString(),
                 fechaInicio: new Date().toISOString(),
                 montoTotalContrato: 10000,
                 modalidadContratacion: modalidadContratacion

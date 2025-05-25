@@ -1,17 +1,16 @@
 /* Variables */
 :root {
-    --primary-color: #4CAF50;
-    --secondary-color: #2196F3;
-    --accent-color: #FFC107;
-    --danger-color: #F44336;
-    --success-color: #4CAF50;
-    --info-color: #03A9F4;
-    --background-color: #f0f2f5;
+    --primary-color: #17a2b8;
+    --secondary-color: #6c757d;
+    --accent-color: #ffc107;
+    --danger-color: #dc3545;
+    --success-color: #28a745;
+    --background-color: #f8f9fa;
     --card-background: #ffffff;
-    --text-color: #333;
-    --light-text-color: #666;
-    --border-color: #ddd;
-    --header-bg: #3f51b5;
+    --text-color: #343a40;
+    --light-text-color: #6c757d;
+    --border-color: #dee2e6;
+    --header-bg: #343a40;
 
     --spacing-xs: 5px;
     --spacing-sm: 10px;
@@ -74,7 +73,7 @@ body {
 
 .sidebar .tab-btn.active,
 .sidebar .tab-btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
 .content {
