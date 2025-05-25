@@ -1705,26 +1705,4 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnGuardar = document.getElementById("btn-guardar");
   const btnCancelar = document.getElementById("btn-cancelar");
 
-  // Mostrar la modalidad seleccionada (puedes usarlo para guardar)
-  btnGuardar.addEventListener("click", function () {
-    const valorSeleccionado = selectModalidad.value;
-
-    if (!valorSeleccionado) {
-      alert("Por favor, selecciona una modalidad de contratación.");
-      return;
-    }
-
-    alert(`Modalidad seleccionada: ${valorSeleccionado}`);
-    // Aquí puedes llamar a tu función de guardado o enviar datos
-  });
-
-  // Reiniciar formulario o navegar atrás
-  btnCancelar.addEventListener("click", function () {
-    if (confirm("¿Deseas cancelar y reiniciar el formulario?")) {
-      selectModalidad.value = ""; // Limpiar selección
-    }
-  });
-});
-
-
 });
