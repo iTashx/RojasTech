@@ -462,7 +462,7 @@ h2 i {
     align-items: center;
 }
 
-/* Slider/carrusel controles visibles */
+/* Slider/carrusel controles visibles y compactos */
 #contracts-slider .carousel-control-prev,
 #contracts-slider .carousel-control-next {
     width: 40px;
@@ -478,16 +478,23 @@ h2 i {
 #contracts-slider .carousel-control-next-icon {
     background-size: 70% 70%;
 }
-
-/* Botones de exportar en avance físico y financiero */
+#contracts-slider-inner .carousel-item .card {
+    border: 2px solid #e3e3e3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    font-size: 1.1rem;
+    color: #222;
+}
+#contracts-slider-inner .carousel-item .card h3 {
+    font-size: 1.3rem;
+    color: #007bff;
+    font-weight: bold;
+}
 .export-buttons-avance {
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
     justify-content: flex-end;
 }
-
-/* Selectores en resumen gráfico */
 .graficos-selectores {
     display: flex;
     gap: 15px;

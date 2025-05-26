@@ -72,18 +72,7 @@
                         <div class="col-md-6 mb-3">
                             <div id="contracts-slider" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner" id="contracts-slider-inner">
-                                    <!-- Aquí se insertarán dinámicamente los contratos -->
-                                    <div class="carousel-item active">
-                                        <div class="card">
-                                            <h3>Contrato Ejemplo</h3>
-                                            <p><strong>N° Proveedor:</strong> 12345</p>
-                                            <p><strong>N° SICAC:</strong> 67890</p>
-                                            <p><strong>Monto:</strong> USD 10.000,00</p>
-                                            <p><strong>Fecha Inicio:</strong> 2024-01-01</p>
-                                            <p><strong>Estatus:</strong> Activo</p>
-                                        </div>
-                                    </div>
-                                    <!-- Más contratos se agregarán aquí con JS -->
+                                    <!-- Contratos se llenan dinámicamente con JS -->
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#contracts-slider" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -517,6 +506,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="export-buttons-avance">
+                        <button class="btn btn-info" id="export-physical-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                        <button class="btn btn-danger" id="export-physical-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                    </div>
                 </section>
 
                 <section id="financial-advance" class="content-section">
@@ -553,6 +546,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="export-buttons-avance">
+                        <button class="btn btn-info" id="export-financial-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                        <button class="btn btn-danger" id="export-financial-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                    </div>
                 </section>
 
                 <section id="graphic-summary" class="content-section">
@@ -571,6 +568,15 @@
                                 <canvas id="contractModalityChart"></canvas>
                             </div>
                         </div>
+                    </div>
+                    <div class="graficos-selectores">
+                        <select id="graficos-contrato-select"></select>
+                        <select id="graficos-tipo-select">
+                            <option value="bar">Barras</option>
+                            <option value="line">Línea de tiempo</option>
+                            <option value="pie">Pastel</option>
+                            <option value="doughnut">Dona</option>
+                        </select>
                     </div>
                 </section>
 
