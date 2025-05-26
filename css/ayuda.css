@@ -44,7 +44,7 @@ body {
     padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
-    line-height: 1.6;
+    line-height: 1.7;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -338,137 +338,15 @@ footer a:hover {
 }
 
 .help-content {
- 
     margin-left: 250px;
-
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.help-section {
-    margin-bottom: 30px;
-}
-
-.help-section h2 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.help-section h3 {
-    color: #34495e;
-    margin-top: 25px;
-}
-
-.help-section ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.help-section li {
-    margin-bottom: 10px;
-}
-
-.help-section li:before {
-    content: "•";
-    color: #3498db;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 10px 0;
-}
-
-.help-note {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
-    padding: 15px;
-    margin: 15px 0;
-}
-
-/* Estilos para la documentación de ayuda */
-
-/* Layout principal */
-.help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 100vh;
-    background-color: var(--help-background);
-}
-
-/* Navegación */
-.help-nav {
-    background-color: var(--help-primary);
-    color: white;
-    padding: 1rem;
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.help-nav-header {
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
-}
-
-.help-nav-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-.help-nav-header p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin: 0.5rem 0 0;
-}
-
-.help-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.help-nav li {
-    margin: 0.5rem 0;
-}
-
-.help-nav a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.help-nav a:hover {
-    background-color: var(--help-accent);
-}
-
-/* Contenido principal */
-.help-content {
-    margin-left: 250px;
-    padding: 2rem;
+    padding: 1rem 2rem;
     max-width: 1200px;
 }
 
-/* Secciones */
 .help-section {
     margin-bottom: 3rem;
     background: white;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -510,12 +388,12 @@ footer a:hover {
 .help-section ul,
 .help-section ol {
     padding-left: 1.5rem;
-    margin: 1rem 0;
+    margin: 1rem 0 1.5rem 0;
 }
 
 .help-section li {
-    margin: 0.5rem 0;
-    line-height: 1.5;
+    margin: 0.75rem 0;
+    line-height: 1.6;
 }
 
 /* Notas y advertencias */
@@ -523,14 +401,14 @@ footer a:hover {
     background-color: #e3f2fd;
     border-left: 4px solid #2196f3;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
 
 .help-warning {
     background-color: #fff3e0;
     border-left: 4px solid #ff9800;
     padding: 1rem;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
 
 /* Responsive */
@@ -647,4 +525,8 @@ footer a:hover {
 .help-tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
+}
+
+.help-content p {
+    margin-bottom: 1.5rem;
 }
