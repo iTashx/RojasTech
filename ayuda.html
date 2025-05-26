@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ayuda - SIGESCON</title>
+    <title>Manual de Usuario - SIGESCON</title>
 
     <!-- Estilos -->
+ <HEAD>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/RojasTech/css/ayuda.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="css/ayuda.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css " />
+ 
     <link rel="stylesheet" href="css/style.css">
     <style>
         .help-content {
@@ -60,6 +66,106 @@
     </style>
 </head>
 <body>
+ HEAD
+    <header class="header">
+        <div class="container">
+            <h1>Manual de Usuario SIGESCON</h1>
+            <div class="header-buttons">
+                <a href="/RojasTech/index.html" class="btn btn-primary"><i class="fas fa-arrow-circle-left me-2"></i> Volver a SIGESCON</a>
+            </div>
+        </div>
+    </header>
+    
+    <main class="help-main-container">
+        <aside class="help-sidebar">
+            <div class="sidebar-sticky">
+                <input type="text" id="search-ayuda" class="form-control mb-3" placeholder="Buscar en la documentación">
+                <nav id="ayuda-nav" class="nav flex-column">
+                    <a class="nav-link active" href="#introduccion">Introducción a SIGESCON</a>
+                    <a class="nav-link" href="#gestion-contratos">Gestión de Contratos</a>
+                    <a class="nav-link" href="#gestion-hes">Gestión de HES</a>
+                    <a class="nav-link" href="#seguimiento-avances">Seguimiento de Avances</a>
+                    <a class="nav-link" href="#informes-reportes">Informes y Reportes</a>
+                    <a class="nav-link" href="#papelera-reciclaje">Papelera de Reciclaje</a>
+                </nav>
+            </div>
+        </aside>
+        
+        <section id="ayuda-content" class="help-content">
+            <!-- El contenido de la documentación se cargará aquí -->
+        </section>
+    </main>
+    
+    <!-- Footer (copiado de index.html) -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2023 SIGESCON - Gestión de Contratos Empresariales. Desarrollado por RojasTech - Contacto: <a href="mailto:tash@rojastech.com">Enviar Correo</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#ayuda-nav .nav-link');
+            const sections = document.querySelectorAll('#ayuda-content section');
+            const searchInput = document.getElementById('search-ayuda');
+            
+            // Función para cargar contenido (simplificada para este ejemplo)
+            async function loadSectionContent(sectionId) {
+                // Aquí cargarías el contenido real de la sección.
+                // Por ahora, solo mostraremos el ID de la sección.
+                const contentDiv = document.getElementById('ayuda-content');
+                if(contentDiv) {
+                   // Ejemplo simple: cargar de un archivo markdown. Necesitarías un parser de markdown (como marked.js)
+                   // fetch(`/RojasTech/docs/${sectionId}.md`)
+                   //    .then(response => response.text())
+                   //    .then(markdown => { contentDiv.innerHTML = marked.parse(markdown); })
+                   //    .catch(err => contentDiv.innerHTML = '<p>Error al cargar contenido.</p>');
+
+                   // Simulación de carga de contenido:
+                   contentDiv.innerHTML = `<h2>${sectionId.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())}</h2><p>Contenido de la sección ${sectionId}...</p>`;
+                }
+            }
+
+            // Manejar clics en la navegación
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    link.classList.add('active');
+                    loadSectionContent(targetId); // Cargar contenido de la sección
+                });
+            });
+
+            // Manejar búsqueda (básica)
+            if (searchInput) {
+                searchInput.addEventListener('input', () => {
+                    const query = searchInput.value.toLowerCase();
+                    sections.forEach(section => {
+                        const text = section.textContent.toLowerCase();
+                        if (text.includes(query)) {
+                            section.style.display = 'block';
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Cargar contenido de la sección activa al inicio (si hay hash en URL)
+            const initialHash = window.location.hash.substring(1);
+            if (initialHash) {
+                const initialLink = document.querySelector(`#ayuda-nav a[href="#${initialHash}"]`);
+                if (initialLink) { initialLink.click(); }
+                 else { loadSectionContent(initialHash); } // Cargar aunque no esté en nav (si quieres permitirlo)
+            } else {
+                // Cargar la sección de Introducción por defecto
+                loadSectionContent('introduccion');
+            }
+        });
+    </script>
+=======
     <!-- Header (si es necesario, o puedes usar el mismo de index.html si lo incluyes via JS/PHP) -->
     <header class="header bg-light-blue">
         <div class="container-fluid">
@@ -261,5 +367,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/ayuda.js" defer></script>
+>>>>>>> 0931677495620c53846d9dea486f91f945dff66e
 </body>
 </html>

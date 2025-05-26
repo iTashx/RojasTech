@@ -1818,7 +1818,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // --- Inicialización ---
-    // Cargar la primera pestaña activa al inicio
     // Mover la inicialización aquí para asegurar que los event listeners estén configurados
     const initialActiveTab = document.querySelector('.tab-btn.active');
     if (initialActiveTab) {
