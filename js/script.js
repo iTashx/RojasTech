@@ -844,6 +844,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!hasExecutedQuantity) {
             showToast("Debe ingresar al menos una cantidad a ejecutar en las partidas de la HES.", "warning");
+            console.warn("Guardar HES cancelado: No se especificó cantidad a ejecutar en partidas.");
             return;
         }
 
@@ -1779,9 +1780,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         let data = [];
         let columns = [];
         let filename = '';
+        let title = '';
+
         if (tipo === 'fisico') {
             const contractId = parseInt(document.getElementById('physical-advance-contract-select').value);
-            if (!contractId) return;
+            if (!contractId) { showToast("Seleccione un contrato para exportar el avance físico.", "warning"); return; }
             const contract = await db.contracts.get(contractId);
             const partidas = await db.partidas.where({ contractId }).toArray();
             for (const p of partidas) {
@@ -1790,14 +1793,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     p.descripcion,
                     p.cantidad,
                     ejecutada,
-                    p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) : '0.00'
+                    p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) + '%' : '0.00%'
                 ]);
             }
             columns = ['Descripción', 'Cantidad Contrato', 'Cantidad Ejecutada', 'Avance (%)'];
             filename = `AvanceFisico_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+            title = `Avance Físico del Contrato ${contract.numeroSICAC || contract.numeroProveedor}`;
+
         } else if (tipo === 'financiero') {
             const contractId = parseInt(document.getElementById('financial-advance-contract-select').value);
-            if (!contractId) return;
+            if (!contractId) { showToast("Seleccione un contrato para exportar el avance financiero.", "warning"); return; }
             const contract = await db.contracts.get(contractId);
             const hesList = await db.hes.where({ contractId }).toArray();
             for (const hes of hesList) {
@@ -1805,21 +1810,67 @@ document.addEventListener('DOMContentLoaded', async () => {
                     hes.noHes,
                     hes.fechaInicioHes,
                     hes.fechaFinalHes,
-                    hes.totalHes,
+                    hes.totalHes.toFixed(2),
                     hes.aprobado
                 ]);
             }
             columns = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
             filename = `AvanceFinanciero_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+            title = `Avance Financiero del Contrato ${contract.numeroSICAC || contract.numeroProveedor}`;
+
+        } else if (tipo === 'contratos') {
+             const contracts = await db.contracts.toArray();
+             if (contracts.length === 0) { showToast("No hay datos para exportar a PDF.", "warning"); return; }
+
+             columns = [
+                 "N° Prov.", "N° SICAC", "Fecha Inicio", "Fecha Fin",
+                 "Monto Total", "Av. Físico", "Av. Financ.", "Estatus", "Modalidad"
+             ];
+             for (const c of contracts) {
+                 const { physicalAdvancePercentage, financialAdvancePercentage } = await calculateContractAdvances(c.id);
+                 data.push([
+                     c.numeroProveedor,
+                     c.numeroSICAC || '-',
+                     c.fechaInicio || '-',
+                     c.fechaTerminacion || '-',
+                     `${c.montoTotalContrato ? c.montoTotalContrato.toFixed(2) : '0.00'} ${c.moneda || 'USD'}`,
+                     `${physicalAdvancePercentage.toFixed(1)}%`,
+                     `${financialAdvancePercentage.toFixed(1)}%`,
+                     c.estatusContrato || '-',
+                     c.modalidadContratacion || '-'
+                 ]);
+             }
+             filename = "ListaContratos.pdf";
+             title = "Lista de Contratos";
         }
+
         if (data.length > 0) {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.autoTable({ head: [columns], body: data });
+            const doc = new jsPDF('landscape'); // Usar landscape para más columnas
+
+            doc.autoTable({
+                head: [columns],
+                body: data,
+                startY: 20,
+                styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+                headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' }, // Azul acero
+                margin: { top: 15, left: 10, right: 10, bottom: 10 },
+                didDrawPage: function(data) {
+                    doc.text(title, data.settings.margin.left, 10);
+                }
+            });
             doc.save(filename);
             showToast('Exportado a PDF.', 'success');
         }
     }
+
+    document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
+    document.getElementById('export-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('contratos')); // Lista Contratos
+
+    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
+    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico')); // Avance Físico
+    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
+    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero')); // Avance Financiero
 
     // --- RESUMEN GRÁFICO: SELECTORES Y RENDERIZADO ---
     async function renderGraficosSelectores() {
