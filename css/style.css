@@ -422,7 +422,7 @@ h2 i {
     background-color: var(--dark-blue-sidebar) !important;
 }
 
-/* Para los switches de checkbox */
+/* Para los switches de checkbox. */
 .form-check.form-switch {
     display: flex;
     align-items: center;

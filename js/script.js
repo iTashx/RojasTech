@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         await db.open();
         console.log("Base de datos abierta exitosamente.");
-        // seedDatabase(); // Habilitar para cargar datos de prueba al inicio.
+        // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
     } catch (err) {
         console.error("Error al abrir la base de datos:", err);
         showToast("Error al cargar la base de datos local. " + err.message, "error");
