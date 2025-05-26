@@ -13,9 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await db.open();
         console.log("Base de datos abierta exitosamente.");
         // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
-        await renderContractsSlider(); // Añadir llamada inicial al cargar
-        await renderCharts(); // Asegurar que los gráficos se rendericen al inicio
-        renderModalidadesSelect(); // Cargar modalidades guardadas al inicio
 
     } catch (err) {
         console.error("Error al abrir la base de datos:", err);
@@ -191,6 +188,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Asegurar que los event listeners de exportación estén adjuntos después de que los elementos existan
+    document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
+    document.getElementById('export-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('contratos'));
+
+    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
+    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico'));
+    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
+    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero'));
+
+    // Asegurar que los event listeners de gráficos estén adjuntos
+    document.getElementById('graficos-contrato-select')?.addEventListener('change', (e) => {
+        const contratoId = parseInt(e.target.value);
+        const tipo = document.getElementById('graficos-tipo-select').value;
+        renderResumenGrafico(contratoId, tipo);
+    });
+    document.getElementById('graficos-tipo-select')?.addEventListener('change', (e) => {
+        const tipo = e.target.value;
+        const contratoId = parseInt(document.getElementById('graficos-contrato-select').value);
+        renderResumenGrafico(contratoId, tipo);
+    });
+
+    // Inicializar selectores de gráficos si la pestaña está activa al inicio
+    const resumenGraficoTabBtn = document.querySelector('[data-target="graphic-summary"]');
+    if (resumenGraficoTabBtn) {
+        resumenGraficoTabBtn.addEventListener('click', async () => {
+            await renderGraficosSelectores();
+        });
+    }
+    if (document.getElementById('graphic-summary').classList.contains('active')) {
+        renderGraficosSelectores();
+    }
 
     // --- Funciones para Resumen General ---
     async function updateSummaryCards() {
@@ -1618,39 +1647,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Fallback si no hay ninguna pestaña marcada como activa en HTML
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
     }
-
-    // Asegurar que los event listeners de exportación estén adjuntos después de que los elementos existan
-    document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
-    document.getElementById('export-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('contratos'));
-
-    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
-    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico'));
-    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
-    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero'));
-
-    // Asegurar que los event listeners de gráficos estén adjuntos
-    document.getElementById('graficos-contrato-select')?.addEventListener('change', (e) => {
-        const contratoId = parseInt(e.target.value);
-        const tipo = document.getElementById('graficos-tipo-select').value;
-        renderResumenGrafico(contratoId, tipo);
-    });
-    document.getElementById('graficos-tipo-select')?.addEventListener('change', (e) => {
-        const tipo = e.target.value;
-        const contratoId = parseInt(document.getElementById('graficos-contrato-select').value);
-        renderResumenGrafico(contratoId, tipo);
-    });
-
-    // Inicializar selectores de gráficos si la pestaña está activa al inicio
-    const resumenGraficoTabBtn = document.querySelector('[data-target="graphic-summary"]');
-    if (resumenGraficoTabBtn) {
-        resumenGraficoTabBtn.addEventListener('click', async () => {
-            await renderGraficosSelectores();
-        });
-    }
-    if (document.getElementById('graphic-summary').classList.contains('active')) {
-        renderGraficosSelectores();
-    }
-
 
     // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
     async function renderContractsSlider() {
