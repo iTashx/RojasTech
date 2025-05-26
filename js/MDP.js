@@ -341,11 +341,11 @@ document.addEventListener('DOMContentLoaded', () => {
     MDP.init();
 
     // Asegurarse de que la sección de administración esté oculta al cargar la página
-    MDP.hideAdminSection();
+    // MDP.hideAdminSection(); // Comentado para depuración
     // Asegurarse de que la sección de documentación esté oculta al cargar la página
-    MDP.hideDocumentation();
+    // MDP.hideDocumentation(); // Comentado para depuración
     // Asegurarse de que el contenido principal esté oculto al cargar la página
-    MDP.hideContent();
+    // MDP.hideContent(); // Comentado para depuración
 
     // Configurar listeners para el formulario de administración (dentro del contenido del MDP)
     const adminForm = document.getElementById('mdp-admin-form');
