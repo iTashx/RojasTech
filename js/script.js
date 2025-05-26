@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
-    db.version(2).stores({
+    db.version(3).stores({
         contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
         partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
         hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
         hesPartidas: '++id,hesId,contractPartidaId,descripcion,cantidadOriginal,cantidadEjecutada,umd,precioUnitario,totalPartidaHes',
-        trash: '++id,originalId,type,data,deletedAt' // Para la papelera de reciclaje
+        trash: '++id,originalId,type,data,deletedAt',
+        archivos: '++id,entidadId,entidadTipo,nombre,tipo,tamano,fechaModificacion,contenido'
     });
 
     try {
@@ -415,6 +416,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             estatusContrato: document.getElementById('estatus-contrato').value,
             moneda: document.getElementById('moneda').value,
             // Los archivos adjuntos requieren manejo especial
+            archivosAdjuntos: await handleFileUpload(
+                document.getElementById('adjuntar-archivos'),
+                document.getElementById('adjuntar-archivos-info')
+            )
         };
 
         if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
@@ -462,14 +467,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    document.getElementById('adjuntar-archivos').addEventListener('change', (e) => {
-        const fileInput = e.target;
-        const infoSpan = document.getElementById('adjuntar-archivos-info');
-        if (fileInput.files.length > 0) {
-            infoSpan.textContent = `${fileInput.files.length} archivo(s) seleccionado(s)`;
+    // Función para manejar archivos adjuntos
+    async function handleFileUpload(fileInput, infoSpan) {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            const fileList = Array.from(files).map(file => ({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: file.lastModified
+            }));
+            infoSpan.textContent = `${files.length} archivo(s) seleccionado(s)`;
+            return fileList;
         } else {
             infoSpan.textContent = 'Ningún archivo seleccionado';
+            return [];
         }
+    }
+
+    // Modificar el event listener de adjuntar archivos en contratos
+    document.getElementById('adjuntar-archivos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(e.target, document.getElementById('adjuntar-archivos-info'));
+        // Aquí podrías guardar la lista de archivos en la base de datos o manejarla según necesites
     });
 
 
@@ -650,7 +669,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hesContractSelect.addEventListener('change', async () => {
         const contractId = parseInt(hesContractSelect.value);
         hesPartidasTableBody.innerHTML = '';
-        hesPartidasInfo.style.display = 'block'; // Mostrar mensaje informativo por defecto
+        hesPartidasInfo.style.display = 'block';
 
         if (!contractId) {
             hesPartidasInfo.textContent = 'Seleccione un contrato para cargar sus partidas.';
@@ -665,19 +684,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Calcular avance físico y financiero del contrato para verificar si está al 100%
+        // Calcular avance físico y financiero del contrato
         const { physicalAdvancePercentage, financialAdvancePercentage } = await calculateContractAdvances(contractId);
 
-        if (physicalAdvancePercentage >= 99.99 || financialAdvancePercentage >= 99.99) { // Usar 99.99 para evitar errores de coma flotante
-            hesPartidasInfo.textContent = `Este contrato ya ha alcanzado el 100% de avance físico o financiero. No se pueden crear más HES para él.`;
+        // Mostrar advertencia pero permitir edición
+        if (physicalAdvancePercentage >= 99.99 || financialAdvancePercentage >= 99.99) {
+            hesPartidasInfo.textContent = `Advertencia: Este contrato ha alcanzado el 100% de avance físico o financiero.`;
             hesPartidasInfo.classList.remove('alert-info');
-            hesPartidasInfo.classList.add('alert-danger');
-            saveHesBtn.disabled = true; // Deshabilitar guardar HES
-            return;
+            hesPartidasInfo.classList.add('alert-warning');
         } else {
-            hesPartidasInfo.classList.remove('alert-danger');
+            hesPartidasInfo.classList.remove('alert-warning');
             hesPartidasInfo.classList.add('alert-info');
-            saveHesBtn.disabled = false; // Habilitar guardar HES
         }
         
         const partidas = await db.partidas.where({ contractId: contractId }).toArray();
@@ -686,14 +703,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         
-        hesPartidasInfo.style.display = 'none'; // Ocultar mensaje si hay partidas
+        hesPartidasInfo.style.display = 'none';
 
         for (const partida of partidas) {
-            const executedAmountForPartida = await getExecutedQuantityForContractPartida(partida.id);
+            const executedAmountForPartida = await getExecutedQuantityForContractPartida(partida.id, currentHesId);
             const availableQuantity = partida.cantidad - executedAmountForPartida;
 
             const row = document.createElement('tr');
-            row.dataset.contractPartidaId = partida.id; // Almacena el ID de la partida del contrato
+            row.dataset.contractPartidaId = partida.id;
             row.innerHTML = `
                 <td>${partidas.indexOf(partida) + 1}</td>
                 <td>${partida.descripcion}</td>
@@ -707,7 +724,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             hesPartidasTableBody.appendChild(row);
         }
-        updateHesPartidaTotals(); // Calcular totales iniciales
+        updateHesPartidaTotals();
     });
 
     // Delegación de eventos para input de cantidad a ejecutar en HES
@@ -799,7 +816,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             subTotalHes: parseFloat(hesSubtotalInput.value) || 0,
             gastosAdministrativosHes: parseFloat(hesGastosAdministrativosInput.value) || 0,
             totalHes: parseFloat(hesTotalInput.value) || 0,
-            // Anexos no se guardan directamente en Dexie
+            anexos: await handleFileUpload(
+                document.getElementById('hes-anexos'),
+                document.getElementById('hes-anexos-info')
+            )
         };
 
         if (!hesData.noHes || !hesData.fechaInicioHes || !hesData.fechaFinalHes) {
@@ -807,7 +827,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Validación de que alguna partida tenga cantidad a ejecutar > 0
         const hesPartidaRows = hesPartidasTableBody.querySelectorAll('tr');
         let hasExecutedQuantity = false;
         const hesPartidasToSave = [];
@@ -822,12 +841,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (cantidadEjecutada > 0) {
                 hasExecutedQuantity = true;
-                const executedAmountForPartida = await getExecutedQuantityForContractPartida(contractPartidaId, currentHesId); // Excluir la HES actual si estamos editando
+                const executedAmountForPartida = await getExecutedQuantityForContractPartida(contractPartidaId, currentHesId);
                 const availableQuantity = cantidadOriginalContract - executedAmountForPartida;
 
-                if (cantidadEjecutada > availableQuantity + 0.001) { // Pequeña tolerancia flotante
+                if (cantidadEjecutada > availableQuantity + 0.001) {
                     showToast(`La cantidad a ejecutar para la partida "${descripcion}" excede la cantidad disponible.`, "error");
-                    return; // Detener el guardado
+                    return;
                 }
 
                 hesPartidasToSave.push({
@@ -844,7 +863,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!hasExecutedQuantity) {
             showToast("Debe ingresar al menos una cantidad a ejecutar en las partidas de la HES.", "warning");
-            console.warn("Guardar HES cancelado: No se especificó cantidad a ejecutar en partidas.");
             return;
         }
 
@@ -859,19 +877,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast("HES guardada exitosamente.", "success");
             }
 
-            // Guardar partidas de la HES
-            await db.hesPartidas.where({ hesId: hesId }).delete(); // Eliminar antiguas partidas de la HES
+            await db.hesPartidas.where({ hesId: hesId }).delete();
             for (const hesPartida of hesPartidasToSave) {
-                hesPartida.hesId = hesId; // Asignar el ID de la HES
+                hesPartida.hesId = hesId;
                 await db.hesPartidas.add(hesPartida);
             }
 
             clearHesFormBtn.click();
             await loadHesList();
-            // Actualizar avances del contrato si el contrato está visible en la lista
-            await loadContractList(); // Recargar lista de contratos para actualizar avances
-            await updateSummaryCards(); // Recargar resumen
-            await populateContractSelect(hesContractSelect); // Recargar opciones del select
+            await loadContractList();
+            await updateSummaryCards();
+            await populateContractSelect(hesContractSelect);
         } catch (error) {
             console.error("Error al guardar/actualizar HES:", error);
             showToast("Error al guardar/actualizar HES: " + error.message, "error");
@@ -2164,4 +2180,205 @@ document.addEventListener('DOMContentLoaded', async () => {
         doc.save(`Informe_${contract.numeroSICAC || contract.numeroProveedor}.pdf`);
         showToast("Informe exportado a PDF.", "success");
     });
+
+    // Modificar el event listener de anexos en HES
+    document.getElementById('hes-anexos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(e.target, document.getElementById('hes-anexos-info'));
+        // Aquí podrías guardar la lista de archivos en la base de datos o manejarla según necesites
+    });
+
+    // Función para guardar archivos en la base de datos
+    async function guardarArchivos(entidadId, entidadTipo, files) {
+        try {
+            // Primero eliminar archivos existentes para esta entidad
+            await db.archivos.where({ entidadId, entidadTipo }).delete();
+            
+            // Guardar los nuevos archivos
+            for (const file of files) {
+                const reader = new FileReader();
+                const contenido = await new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                
+                await db.archivos.add({
+                    entidadId,
+                    entidadTipo,
+                    nombre: file.name,
+                    tipo: file.type,
+                    tamano: file.size,
+                    fechaModificacion: file.lastModified,
+                    contenido
+                });
+            }
+            return true;
+        } catch (error) {
+            console.error('Error al guardar archivos:', error);
+            showToast('Error al guardar los archivos adjuntos', 'error');
+            return false;
+        }
+    }
+
+    // Función para recuperar archivos de la base de datos
+    async function recuperarArchivos(entidadId, entidadTipo) {
+        try {
+            const archivos = await db.archivos.where({ entidadId, entidadTipo }).toArray();
+            return archivos.map(archivo => ({
+                name: archivo.nombre,
+                type: archivo.tipo,
+                size: archivo.tamano,
+                lastModified: archivo.fechaModificacion,
+                content: archivo.contenido
+            }));
+        } catch (error) {
+            console.error('Error al recuperar archivos:', error);
+            showToast('Error al recuperar los archivos adjuntos', 'error');
+            return [];
+        }
+    }
+
+    // Modificar la función handleFileUpload para incluir el guardado
+    async function handleFileUpload(fileInput, infoSpan, entidadId, entidadTipo) {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            const fileList = Array.from(files);
+            infoSpan.textContent = `${files.length} archivo(s) seleccionado(s)`;
+            
+            if (entidadId && entidadTipo) {
+                await guardarArchivos(entidadId, entidadTipo, fileList);
+            }
+            
+            return fileList.map(file => ({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: file.lastModified
+            }));
+        } else {
+            infoSpan.textContent = 'Ningún archivo seleccionado';
+            return [];
+        }
+    }
+
+    // Modificar los event listeners para incluir el guardado
+    document.getElementById('adjuntar-archivos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(
+            e.target, 
+            document.getElementById('adjuntar-archivos-info'),
+            currentContractId,
+            'contrato'
+        );
+    });
+
+    document.getElementById('hes-anexos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(
+            e.target, 
+            document.getElementById('hes-anexos-info'),
+            currentHesId,
+            'hes'
+        );
+    });
+
+    // Modificar la función de cargar contrato para incluir archivos
+    async function cargarContrato(contractId) {
+        // ... existing code ...
+        
+        // Cargar archivos adjuntos
+        const archivos = await recuperarArchivos(contractId, 'contrato');
+        if (archivos.length > 0) {
+            document.getElementById('adjuntar-archivos-info').textContent = 
+                `${archivos.length} archivo(s) adjunto(s)`;
+        }
+        
+        // ... rest of existing code ...
+    }
+
+    // Modificar la función de cargar HES para incluir archivos
+    async function cargarHES(hesId) {
+        // ... existing code ...
+        
+        // Cargar anexos
+        const archivos = await recuperarArchivos(hesId, 'hes');
+        if (archivos.length > 0) {
+            document.getElementById('hes-anexos-info').textContent = 
+                `${archivos.length} archivo(s) adjunto(s)`;
+        }
+        
+        // ... rest of existing code ...
+    }
+
+    // Función para descargar archivos adjuntos
+    async function descargarArchivo(archivo) {
+        try {
+            // Crear un enlace temporal
+            const link = document.createElement('a');
+            link.href = archivo.content;
+            link.download = archivo.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error al descargar archivo:', error);
+            showToast('Error al descargar el archivo', 'error');
+        }
+    }
+
+    // Función para mostrar la lista de archivos adjuntos
+    function mostrarArchivosAdjuntos(archivos, contenedorId) {
+        const contenedor = document.getElementById(contenedorId);
+        if (!contenedor) return;
+        
+        contenedor.innerHTML = '';
+        if (archivos.length === 0) {
+            contenedor.innerHTML = '<p class="text-muted">No hay archivos adjuntos</p>';
+            return;
+        }
+        
+        const lista = document.createElement('ul');
+        lista.className = 'list-group';
+        
+        archivos.forEach(archivo => {
+            const item = document.createElement('li');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center';
+            
+            const info = document.createElement('div');
+            info.innerHTML = `
+                <strong>${archivo.name}</strong>
+                <small class="text-muted ms-2">${(archivo.size / 1024).toFixed(2)} KB</small>
+            `;
+            
+            const boton = document.createElement('button');
+            boton.className = 'btn btn-sm btn-primary';
+            boton.innerHTML = '<i class="fas fa-download"></i>';
+            boton.onclick = () => descargarArchivo(archivo);
+            
+            item.appendChild(info);
+            item.appendChild(boton);
+            lista.appendChild(item);
+        });
+        
+        contenedor.appendChild(lista);
+    }
+
+    // Modificar las funciones de cargar para mostrar los archivos
+    async function cargarContrato(contractId) {
+        // ... existing code ...
+        
+        // Cargar y mostrar archivos adjuntos
+        const archivos = await recuperarArchivos(contractId, 'contrato');
+        mostrarArchivosAdjuntos(archivos, 'archivos-contrato');
+        
+        // ... rest of existing code ...
+    }
+
+    async function cargarHES(hesId) {
+        // ... existing code ...
+        
+        // Cargar y mostrar anexos
+        const archivos = await recuperarArchivos(hesId, 'hes');
+        mostrarArchivosAdjuntos(archivos, 'archivos-hes');
+        
+        // ... rest of existing code ...
+    }
 });

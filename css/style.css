@@ -525,3 +525,55 @@ h2 i {
         align-items: stretch;
     }
 }
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+#hes-partidas-info {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.hes-cantidad-ejecutar {
+    width: 100px;
+    text-align: right;
+}
+
+.hes-partida-total {
+    font-weight: bold;
+    color: #28a745;
+}
+
+#hes-subtotal,
+#hes-gastos-administrativos,
+#hes-total {
+    font-weight: bold;
+    text-align: right;
+}
+
+#hes-total {
+    color: #28a745;
+    font-size: 1.1em;
+}
