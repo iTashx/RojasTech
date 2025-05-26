@@ -41,6 +41,18 @@
     --ayuda-sidebar-text: #f8f9fa;
     --ayuda-link-color: #ffffff;
     --ayuda-link-hover-bg: #007bff;
+    --ayuda-text-color: #333;
+    --ayuda-light-text-color: #666;
+    --ayuda-border-color: #ddd;
+    --ayuda-header-bg: #3f51b5;
+
+    --ayuda-spacing-xs: 5px;
+    --ayuda-spacing-sm: 10px;
+    --ayuda-spacing-md: 20px;
+    --ayuda-spacing-lg: 30px;
+
+    --ayuda-border-radius: 8px;
+    --ayuda-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -52,7 +64,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--ayuda-background-color);
-    color: var(--text-color);
+    color: var(--ayuda-text-color);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -60,14 +72,19 @@ body {
 }
 
 header {
-    background-color: var(--header-bg);
+    background-color: var(--ayuda-header-bg);
     color: white;
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--ayuda-spacing-md) var(--ayuda-spacing-lg);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--ayuda-box-shadow);
     flex-wrap: wrap;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
 }
 
 header h1 {
@@ -78,17 +95,17 @@ header h1 {
 }
 
 header h1 .fas {
-    margin-right: var(--spacing-sm);
+    margin-right: var(--ayuda-spacing-sm);
 }
 
 .header-buttons {
     display: flex;
-    gap: var(--spacing-sm);
+    gap: var(--ayuda-spacing-sm);
 }
 
 main {
     flex-grow: 1;
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--ayuda-spacing-md) var(--ayuda-spacing-lg);
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
@@ -97,52 +114,52 @@ main {
 
 .card {
     background-color: var(--card-background);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    margin-bottom: var(--spacing-md);
+    padding: var(--ayuda-spacing-md);
+    border-radius: var(--ayuda-border-radius);
+    box-shadow: var(--ayuda-box-shadow);
+    margin-bottom: var(--ayuda-spacing-md);
 }
 
 .card h2 {
-    color: var(--header-bg);
+    color: var(--ayuda-header-bg);
     margin-top: 0;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--ayuda-spacing-md);
     font-size: 1.5em;
     display: flex;
     align-items: center;
 }
 
 .card h2 .fas {
-    margin-right: var(--spacing-sm);
+    margin-right: var(--ayuda-spacing-sm);
 }
 
 .card h3 {
     color: var(--primary-color);
     margin-top: 0;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--ayuda-spacing-sm);
     font-size: 1.2em;
     display: flex;
     align-items: center;
 }
 
 .card h3 .fas {
-    margin-right: var(--spacing-xs);
+    margin-right: var(--ayuda-spacing-xs);
     font-size: 0.9em;
-    color: var(--text-color);
+    color: var(--ayuda-text-color);
 }
 
 .card ul, .card ol {
-    margin-bottom: var(--spacing-sm);
-    padding-left: var(--spacing-md);
+    margin-bottom: var(--ayuda-spacing-sm);
+    padding-left: var(--ayuda-spacing-md);
 }
 
 .card ul li, .card ol li {
-    margin-bottom: var(--spacing-xs);
-    color: var(--light-text-color);
+    margin-bottom: var(--ayuda-spacing-xs);
+    color: var(--ayuda-light-text-color);
 }
 
 .card ul li strong, .card ol li strong {
-    color: var(--text-color);
+    color: var(--ayuda-text-color);
 }
 
 /* Botones */
@@ -152,9 +169,9 @@ main {
 .secondary-btn,
 .excel-btn,
 .pdf-btn {
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--ayuda-spacing-sm) var(--ayuda-spacing-md);
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--ayuda-border-radius);
     cursor: pointer;
     font-size: 1em;
     font-weight: bold;
@@ -163,7 +180,7 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xs);
+    gap: var(--ayuda-spacing-xs);
     text-decoration: none;
     white-space: nowrap;
 }
@@ -218,7 +235,7 @@ main {
 }
 
 .small-btn {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--ayuda-spacing-xs) var(--ayuda-spacing-sm);
     font-size: 0.85em;
     vertical-align: middle;
     line-height: 1;
@@ -227,14 +244,14 @@ main {
 /* Toast */
 .toast {
     display: inline-block;
-    background-color: var(--header-bg);
+    background-color: var(--ayuda-header-bg);
     color: white;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius);
+    padding: var(--ayuda-spacing-xs) var(--ayuda-spacing-sm);
+    border-radius: var(--ayuda-border-radius);
     font-size: 0.9em;
-    box-shadow: var(--box-shadow);
+    box-shadow: var(--ayuda-box-shadow);
     vertical-align: middle;
-    margin: 0 var(--spacing-xs);
+    margin: 0 var(--ayuda-spacing-xs);
 }
 
 .toast.show {
@@ -249,13 +266,14 @@ main {
 
 /* Footer */
 footer {
-    background-color: var(--header-bg);
+    background-color: var(--ayuda-sidebar-bg);
     color: white;
     text-align: center;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--ayuda-spacing-sm) var(--ayuda-spacing-lg);
     font-size: 0.9em;
-    margin-top: var(--spacing-md);
+    margin-top: var(--ayuda-spacing-md);
     flex-shrink: 0;
+    width: 100%;
 }
 
 footer a {
@@ -277,15 +295,17 @@ footer a:hover {
     header {
         flex-direction: column;
         align-items: flex-start;
-        padding: var(--spacing-md) var(--spacing-sm);
+        padding: var(--ayuda-spacing-md) var(--ayuda-spacing-sm);
+        position: static;
+        height: auto;
     }
 
     .header-buttons {
-        margin-top: var(--spacing-sm);
+        margin-top: var(--ayuda-spacing-sm);
     }
 
     main {
-        padding: var(--spacing-sm);
+        padding: var(--ayuda-spacing-sm);
     }
 }
 
@@ -297,13 +317,13 @@ footer a:hover {
     .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
         width: 100%;
         justify-content: center;
-        margin-bottom: var(--spacing-sm);
+        margin-bottom: var(--ayuda-spacing-sm);
     }
 
     .small-btn {
         font-size: 0.75em;
         display: inline-block;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: var(--ayuda-spacing-xs) var(--ayuda-spacing-sm);
     }
 
     .card h2 {
@@ -315,7 +335,7 @@ footer a:hover {
     }
 
     .card ul, .card ol {
-        padding-left: var(--spacing-md);
+        padding-left: var(--ayuda-spacing-md);
     }
 }
 
@@ -463,13 +483,13 @@ footer a:hover {
 .help-content {
     flex-grow: 1;
     margin-left: 250px;
-    padding: 20px;
+    padding: var(--ayuda-spacing-md);
 }
 
 .help-section {
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: var(--ayuda-spacing-lg);
+    padding-bottom: var(--ayuda-spacing-md);
+    border-bottom: 1px solid var(--ayuda-border-color);
 }
 
 .help-section:last-child {
@@ -512,7 +532,7 @@ footer a:hover {
 .help-image {
     max-width: 95%;
     height: auto;
-    border: 1px solid #ddd;
+    border: 1px solid var(--ayuda-border-color);
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: block;
@@ -521,7 +541,7 @@ footer a:hover {
 
 .image-caption {
     font-style: italic;
-    color: #555;
+    color: var(--ayuda-light-text-color);
     margin-top: 8px;
     font-size: 0.9em;
 }
@@ -611,7 +631,7 @@ footer a:hover {
 @media only screen and (max-width: 768px) {
     .help-main-container {
         flex-direction: column;
-        padding-top: 120px;
+        padding-top: 0;
     }
 
     .help-sidebar {
@@ -625,11 +645,12 @@ footer a:hover {
         left: auto;
         z-index: auto;
         padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .help-content {
         margin-left: 0;
-        padding: 15px;
+        padding: var(--ayuda-spacing-sm);
     }
 
     .modal-content {
@@ -651,7 +672,11 @@ footer a:hover {
     }
 
     .help-section {
-        margin-bottom: 20px;
+        margin-bottom: var(--ayuda-spacing-md);
+    }
+
+    .help-image {
+        max-width: 100%;
     }
 }
 
@@ -660,7 +685,7 @@ footer a:hover {
         padding-top: 100px;
     }
     .help-content {
-        padding: 10px;
+        padding: var(--ayuda-spacing-sm);
     }
     .help-section h2 {
         font-size: 1.5em;

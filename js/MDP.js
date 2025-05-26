@@ -76,6 +76,8 @@ const MDP = {
         const password = form.querySelector('[name="mdp-password"]').value;
 
         // Verificar credenciales
+        console.log("Intentando iniciar sesión con usuario:", username, "y contraseña:", password);
+        console.log("Credenciales esperadas:", MDPConfig.credentials);
         if (username === MDPConfig.credentials.username && password === MDPConfig.credentials.password) {
             const token = this.generateToken();
             localStorage.setItem('mdp_token', token);
