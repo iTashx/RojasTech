@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
-    db.version(4).stores({
-        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,montoTotalContrato,estatusContrato',
+    db.version(5).stores({
+        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,montoTotalContrato,estatusContrato,numeroSICAC', // Agregado numeroSICAC como índice
         partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
         hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
         hesPartidas: '++id,hesId,contractPartidaId,descripcion,cantidadOriginal,cantidadEjecutada,umd,precioUnitario,totalPartidaHes',
