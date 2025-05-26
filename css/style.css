@@ -35,7 +35,10 @@ body {
     flex-wrap: wrap;
     /* Alinea los elementos al inicio */
     justify-content: flex-start;
+ 
     gap: 30px; /* Aumentar espacio entre elementos */
+
+    gap: 20px; /* Espacio entre el grupo del logo y los botones */
     align-items: center; /* Asegura la alineación vertical */
 }
 
