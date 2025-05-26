@@ -503,6 +503,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Lógica de Lista de Contratos ---
 
     async function loadContractList(filters = {}) {
+        console.log("Cargando lista de contratos con filtros:", filters); // Log para depuración
         contractListBody.innerHTML = '';
 
         let contracts = await db.contracts.toArray();
@@ -1761,9 +1762,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
     async function renderContractsSlider() {
+        console.log("Renderizando carrusel de contratos..."); // Log para depuración
         const sliderInner = document.getElementById('contracts-slider-inner');
         const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
         sliderInner.innerHTML = '';
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+            // Ocultar controles si no hay contratos
+            document.querySelector('.carousel-control-prev').style.display = 'none';
+            document.querySelector('.carousel-control-next').style.display = 'none';
+            // Limpiar resumen si no hay contratos
+            document.getElementById('total-contract-amount').textContent = 'USD 0.00';
+            document.getElementById('contracts-expiry-list').innerHTML = '<li>No hay contratos próximos a vencer</li>';
+            document.getElementById('financial-progress-bar').style.width = '0%';
+            document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('financial-progress-label').textContent = '0%';
+            document.getElementById('physical-progress-bar').style.width = '0%';
+            document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('physical-progress-label').textContent = '0%';
+            return; // Salir si no hay contratos
+        }
+        // Mostrar controles si hay contratos
+        document.querySelector('.carousel-control-prev').style.display = '';
+        document.querySelector('.carousel-control-next').style.display = '';
+
         contracts.forEach((contract, idx) => {
             const isActive = idx === 0 ? 'active' : '';
             const card = document.createElement('div');
@@ -1781,6 +1804,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             sliderInner.appendChild(card);
         });
         if (contracts.length > 0) {
+            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id); // Log
             updateSummaryByContract(contracts[0]);
         }
     }
@@ -1788,10 +1812,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contractsSlider = document.getElementById('contracts-slider');
     if (contractsSlider) {
         contractsSlider.addEventListener('slid.bs.carousel', async function (e) {
+            console.log("Evento slid.bs.carousel disparado. Index:", e.to); // Log para depuración
             const idx = e.to;
             const contracts = await db.contracts.toArray();
             if (contracts[idx]) {
+                console.log("Actualizando resumen para contrato index:", idx, contracts[idx].id); // Log
                 updateSummaryByContract(contracts[idx]);
+            } else {
+                 console.warn("Contrato en index no encontrado:", idx); // Log de advertencia
             }
         });
     }
