@@ -438,6 +438,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             )
         };
 
+        // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
+        const cleanedContractData = {
+            numeroProveedor: contractData.numeroProveedor,
+            fechaFirmaContrato: contractData.fechaFirmaContrato,
+            fechaCreado: contractData.fechaCreado,
+            fechaInicio: contractData.fechaInicio,
+            fechaTerminacion: contractData.fechaTerminacion,
+            periodoCulminacion: contractData.periodoCulminacion,
+            numeroSICAC: contractData.numeroSICAC,
+            divisionArea: contractData.divisionArea,
+            eemn: contractData.eemn,
+            region: contractData.region,
+            naturalezaContratacion: contractData.naturalezaContratacion,
+            lineaServicio: contractData.lineaServicio,
+            noPeticionOferta: contractData.noPeticionOferta,
+            modalidadContratacion: contractData.modalidadContratacion,
+            regimenLaboral: contractData.regimenLaboral,
+            objetoContractual: contractData.objetoContractual,
+            fechaCambioAlcance: contractData.fechaCambioAlcance,
+            montoOriginal: contractData.montoOriginal,
+            montoModificado: contractData.montoModificado,
+            montoTotalContrato: contractData.montoTotalContrato,
+            numeroContratoInterno: contractData.numeroContratoInterno,
+            observaciones: contractData.observaciones,
+            estatusContrato: contractData.estatusContrato,
+            moneda: contractData.moneda
+            // No incluir archivosAdjuntos aquí, se manejan por separado
+        };
+
         if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
             showToast("Por favor, complete los campos obligatorios: N° Proveedor, Fecha Firma, Fecha Inicio y Fecha Terminación.", "warning");
             return;
@@ -446,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             let contractId;
             if (currentContractId) {
-                await db.contracts.update(currentContractId, contractData);
+                await db.contracts.update(currentContractId, cleanedContractData);
                 contractId = currentContractId;
                 showToast("Contrato actualizado exitosamente.", "success");
             } else {
@@ -458,7 +487,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         return; // Detener el proceso si hay duplicado
                     }
                 }
-                contractId = await db.contracts.add(contractData);
+                contractId = await db.contracts.add(cleanedContractData);
                 showToast("Contrato guardado exitosamente.", "success");
             }
 
