@@ -1,7 +1,7 @@
 /* ayuda.css */
 
 /* Importación de fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Roboto :wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
 /* Variables CSS */
 :root {
@@ -44,7 +44,7 @@ body {
     padding: 0;
     background-color: var(--background-color);
     color: var(--text-color);
-    line-height: 1.7;
+    line-height: 1.6;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -234,8 +234,14 @@ main {
 }
 
 @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Footer */
@@ -311,42 +317,79 @@ footer a:hover {
 }
 
 /* Estilos específicos de ayuda.html */
-.section-title {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 10px;
-    margin-bottom: 20px;
+
+/* Layout principal */
+.help-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+    background-color: var(--help-background);
 }
 
-.feature-box {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
+/* Navegación */
+.help-nav {
+    background-color: var(--help-primary);
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
-.feature-box:hover {
-    transform: translateY(-3px);
+.help-nav-header {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
 }
 
-.code-example {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 6px;
-    font-family: monospace;
-    overflow-x: auto;
+.help-nav-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
 }
 
+.help-nav-header p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0.5rem 0 0;
+}
+
+.help-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.help-nav li {
+    margin: 0.5rem 0;
+}
+
+.help-nav a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.help-nav a:hover {
+    background-color: var(--help-accent);
+}
+
+/* Contenido principal */
 .help-content {
-    margin-left: 250px;
-    padding: 1rem 2rem;
-    max-width: 1200px;
+    margin-left: 250px; /* Espacio para la navegación fija */
+    padding: 2rem; /* Padding alrededor del contenido */
+    flex-grow: 1; /* Permitir que crezca para ocupar espacio */
 }
 
+/* Secciones */
 .help-section {
     margin-bottom: 3rem;
     background: white;
-    padding: 1.5rem 2rem;
+    padding: 2rem; /* Padding dentro de cada sección */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -388,12 +431,12 @@ footer a:hover {
 .help-section ul,
 .help-section ol {
     padding-left: 1.5rem;
-    margin: 1rem 0 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .help-section li {
-    margin: 0.75rem 0;
-    line-height: 1.6;
+    margin: 0.5rem 0;
+    line-height: 1.5;
 }
 
 /* Notas y advertencias */
@@ -401,35 +444,35 @@ footer a:hover {
     background-color: #e3f2fd;
     border-left: 4px solid #2196f3;
     padding: 1rem;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 .help-warning {
     background-color: #fff3e0;
     border-left: 4px solid #ff9800;
     padding: 1rem;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .help-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Apilar en una columna */
     }
 
     .help-nav {
-        position: static;
-        width: 100%;
+        position: static; /* Dejar de ser fijo */
+        width: 100%; /* Ocupar todo el ancho */
         height: auto;
     }
 
     .help-content {
-        margin-left: 0;
-        padding: 1rem;
+        margin-left: 0; /* Eliminar margen izquierdo */
+        padding: 1rem; /* Ajustar padding para pantallas pequeñas */
     }
 
     .help-section {
-        padding: 1rem;
+        padding: 1rem; /* Ajustar padding en secciones para pantallas pequeñas */
     }
 }
 
@@ -525,8 +568,4 @@ footer a:hover {
 .help-tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
-}
-
-.help-content p {
-    margin-bottom: 1.5rem;
 }
