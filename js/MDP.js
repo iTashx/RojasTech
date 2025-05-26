@@ -163,11 +163,27 @@ const MDP = {
     },
 
     showError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'mdp-status mdp-status-error';
-        errorDiv.textContent = message;
-        document.body.appendChild(errorDiv);
-        setTimeout(() => errorDiv.remove(), 3000);
+        const errorDiv = document.getElementById('mdp-error');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+                errorDiv.textContent = '';
+            }, 3000);
+        }
+    },
+
+    showSuccess(message) {
+        const successDiv = document.getElementById('mdp-success');
+        if (successDiv) {
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+                successDiv.textContent = '';
+            }, 3000);
+        }
     },
 
     showLoginForm() {
@@ -263,4 +279,33 @@ function loadConfig() {
 document.addEventListener('DOMContentLoaded', () => {
     loadConfig();
     MDP.init();
+
+    // Configurar listeners para el formulario de administración (dentro del contenido del MDP)
+    const adminForm = document.getElementById('mdp-admin-form');
+    if (adminForm) {
+        adminForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newUsernameInput = document.getElementById('new-username');
+            const newPasswordInput = document.getElementById('new-password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+
+            const newUsername = newUsernameInput.value;
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (newPassword !== confirmPassword) {
+                MDP.showError('Las contraseñas no coinciden.');
+                return;
+            }
+
+            if (updateCredentials(newUsername, newPassword)) {
+                MDP.showSuccess('Credenciales actualizadas exitosamente.');
+                // Limpiar formulario de administración
+                adminForm.reset();
+            } else {
+                // Esto no debería ocurrir con la lógica actual, pero es un fallback
+                MDP.showError('Error al actualizar credenciales.');
+            }
+        });
+    }
 }); 
