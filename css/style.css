@@ -33,9 +33,10 @@ body {
 
 .header .d-flex {
     flex-wrap: wrap;
-    /* Ajusta la alineación cuando los elementos se envuelven */
-    align-items: center; /* Alinea verticalmente */
-    gap: 10px; /* Espacio entre elementos (logo y botones) */
+    /* Alinea los elementos al inicio */
+    justify-content: flex-start;
+    gap: 20px; /* Espacio entre el grupo del logo y los botones */
+    align-items: center; /* Asegura la alineación vertical */
 }
 
 .header .logo h1 {
