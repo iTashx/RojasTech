@@ -62,7 +62,9 @@ const MDP = {
         if (token) {
             this.state.isAuthenticated = true;
             this.hideLoginForm();
-            this.showContent(); // Mostrar contenido al validar token
+            this.showContent(); // Mostrar contenedor principal del contenido
+            this.showDocumentation(); // Mostrar la sección de documentación
+            this.hideAdminSection(); // Ocultar la sección de administración por defecto
             // this.loadContent(); // Cargar contenido específico si es necesario
         } else {
              this.state.isAuthenticated = false;
@@ -83,7 +85,9 @@ const MDP = {
             localStorage.setItem('mdp_token', token);
             this.state.isAuthenticated = true;
             this.hideLoginForm();
-            this.showContent(); // Mostrar contenido al hacer login
+            this.showContent(); // Mostrar contenedor principal del contenido
+            this.showDocumentation(); // Mostrar la sección de documentación
+            this.hideAdminSection(); // Ocultar la sección de administración por defecto
             // this.loadContent(); // Cargar contenido específico si es necesario
             this.showSuccess('Inicio de sesión exitoso.'); // Mostrar mensaje de éxito
         } else {
@@ -224,6 +228,35 @@ const MDP = {
         }
     },
 
+    // Nuevas funciones para mostrar/ocultar secciones específicas del MDP
+    showDocumentation() {
+        const docSection = document.querySelector('.mdp-documentation');
+        if (docSection) {
+            docSection.style.display = 'block';
+        }
+    },
+
+    hideDocumentation() {
+        const docSection = document.querySelector('.mdp-documentation');
+        if (docSection) {
+            docSection.style.display = 'none';
+        }
+    },
+
+    showAdminSection() {
+        const adminSection = document.querySelector('.mdp-admin-section');
+        if (adminSection) {
+            adminSection.style.display = 'block';
+        }
+    },
+
+    hideAdminSection() {
+        const adminSection = document.querySelector('.mdp-admin-section');
+        if (adminSection) {
+            adminSection.style.display = 'none';
+        }
+    },
+
     // Exportación de documentación
     exportDocumentation(format = 'pdf') {
         const content = document.querySelector('.mdp-content').innerHTML;
@@ -303,6 +336,13 @@ function loadConfig() {
 document.addEventListener('DOMContentLoaded', () => {
     loadConfig();
     MDP.init();
+
+    // Asegurarse de que la sección de administración esté oculta al cargar la página
+    MDP.hideAdminSection();
+    // Asegurarse de que la sección de documentación esté oculta al cargar la página
+    MDP.hideDocumentation();
+    // Asegurarse de que el contenido principal esté oculto al cargar la página
+    MDP.hideContent();
 
     // Configurar listeners para el formulario de administración (dentro del contenido del MDP)
     const adminForm = document.getElementById('mdp-admin-form');
