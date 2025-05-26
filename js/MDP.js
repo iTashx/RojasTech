@@ -57,28 +57,35 @@ const MDP = {
     },
 
     validateToken(token) {
-        // Aquí iría la lógica de validación del token
-        // Por ahora, solo verificamos que exista
+        // Aquí iría la lógica de validación del token (si fuera un token real)
+        // Por ahora, solo verificamos si el token existe
         if (token) {
             this.state.isAuthenticated = true;
             this.hideLoginForm();
-            this.loadContent();
+            this.showContent(); // Mostrar contenido al validar token
+            // this.loadContent(); // Cargar contenido específico si es necesario
+        } else {
+             this.state.isAuthenticated = false;
+             this.showLoginForm();
+             this.hideContent(); // Ocultar contenido si el token no es válido
         }
     },
 
     handleLogin(form) {
-        const username = form.querySelector('[name="username"]').value;
-        const password = form.querySelector('[name="password"]').value;
+        const username = form.querySelector('[name="mdp-username"]').value;
+        const password = form.querySelector('[name="mdp-password"]').value;
 
         // Verificar credenciales
-        if (username === 'itash' && password === 'angel1008') {
+        if (username === MDPConfig.credentials.username && password === MDPConfig.credentials.password) {
             const token = this.generateToken();
             localStorage.setItem('mdp_token', token);
             this.state.isAuthenticated = true;
             this.hideLoginForm();
-            this.loadContent();
+            this.showContent(); // Mostrar contenido al hacer login
+            // this.loadContent(); // Cargar contenido específico si es necesario
+            this.showSuccess('Inicio de sesión exitoso.'); // Mostrar mensaje de éxito
         } else {
-            this.showError('Credenciales inválidas');
+            this.showError('Credenciales inválidas.');
         }
     },
 
@@ -187,16 +194,31 @@ const MDP = {
     },
 
     showLoginForm() {
-        const loginContainer = document.getElementById('mdp-login-container');
-        if (loginContainer) {
-            loginContainer.style.display = 'block';
+        const loginDiv = document.getElementById('mdp-login');
+        if (loginDiv) {
+            loginDiv.style.display = 'block';
         }
     },
 
     hideLoginForm() {
-        const loginContainer = document.getElementById('mdp-login-container');
-        if (loginContainer) {
-            loginContainer.style.display = 'none';
+        const loginDiv = document.getElementById('mdp-login');
+        if (loginDiv) {
+            loginDiv.style.display = 'none';
+        }
+    },
+
+    // Nuevas funciones para mostrar/ocultar contenido principal
+    showContent() {
+        const contentDiv = document.getElementById('mdp-content');
+        if (contentDiv) {
+            contentDiv.style.display = 'block';
+        }
+    },
+
+    hideContent() {
+        const contentDiv = document.getElementById('mdp-content');
+        if (contentDiv) {
+            contentDiv.style.display = 'none';
         }
     },
 
