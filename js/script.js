@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await db.open();
         console.log("Base de datos abierta exitosamente.");
         // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
+        await renderContractsSlider(); // Añadir llamada inicial al cargar
+        await renderCharts(); // Asegurar que los gráficos se rendericen al inicio
+        renderModalidadesSelect(); // Cargar modalidades guardadas al inicio
+
     } catch (err) {
         console.error("Error al abrir la base de datos:", err);
         showToast("Error al cargar la base de datos local. " + err.message, "error");
@@ -204,6 +208,61 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error("Error al actualizar tarjetas de resumen:", error);
             showToast("Error al cargar resumen general.", "error");
         }
+    }
+
+    // Nueva función para actualizar el resumen basado en el contrato seleccionado en el slider
+    async function updateSummaryByContract(contract) {
+        try {
+            if (!contract) return;
+
+            // Actualizar Monto Total Contratado (del contrato seleccionado)
+            document.getElementById('total-contract-amount').textContent = `USD ${formatMonto(contract.montoTotalContrato)}`;
+
+            // Actualizar Días para Vencimiento (solo para el contrato seleccionado)
+            const expiryList = document.getElementById('contracts-expiry-list');
+            expiryList.innerHTML = ''; // Limpiar lista anterior
+            if (contract.fechaTerminacion) {
+                const today = new Date();
+                const terminationDate = new Date(contract.fechaTerminacion + 'T00:00:00');
+                const diffTime = terminationDate.getTime() - today.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const expiryItem = document.createElement('li');
+                expiryItem.textContent = `${contract.numeroSICAC || contract.numeroProveedor || 'Contrato'}: ${diffDays} días`;
+                expiryList.appendChild(expiryItem);
+            } else {
+                 const expiryItem = document.createElement('li');
+                 expiryItem.textContent = `${contract.numeroSICAC || contract.numeroProveedor || 'Contrato'}: Fecha de terminación no especificada`;
+                 expiryList.appendChild(expiryItem);
+            }
+
+            // Actualizar Avance Financiero y Físico (del contrato seleccionado)
+            const { physicalPercentage, financialPercentage } = await calculateContractAdvances(contract.id);
+
+            // Avance Financiero
+            const financialProgressBar = document.getElementById('financial-progress-bar');
+            const financialProgressLabel = document.getElementById('financial-progress-label');
+            financialProgressBar.style.width = `${financialPercentage}%`;
+            financialProgressBar.setAttribute('aria-valuenow', financialPercentage);
+            financialProgressLabel.textContent = `${financialPercentage.toFixed(2)}%`;
+
+            // Avance Físico
+            const physicalProgressBar = document.getElementById('physical-progress-bar');
+            const physicalProgressLabel = document.getElementById('physical-progress-label');
+            physicalProgressBar.style.width = `${physicalPercentage}%`;
+            physicalProgressBar.setAttribute('aria-valuenow', physicalPercentage);
+            physicalProgressLabel.textContent = `${physicalPercentage.toFixed(2)}%`;
+
+
+        } catch (error) {
+            console.error("Error al actualizar resumen por contrato:", error);
+            showToast("Error al cargar detalles del contrato.", "error");
+        }
+    }
+
+    // Función auxiliar para formatear monto a USD 32.000,00
+    function formatMonto(amount) {
+        if (amount === undefined || amount === null) return '0.00';
+        return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 
     // --- Lógica del Formulario Nuevo/Editar Contrato ---
