@@ -16,8 +16,47 @@
                 <p class="text-muted">SIGESCON - Documentación Técnica</p>
             </div>
 
+            <!-- Formulario de Login -->
+            <div id="mdp-login">
+                <form id="mdp-login-form" class="mdp-form">
+                    <div class="mb-3">
+                        <label for="mdp-username" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="mdp-username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mdp-password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="mdp-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i>Ingresar
+                    </button>
+                </form>
+                <div id="mdp-error" class="alert alert-danger mdp-alert"></div>
+            </div>
+
             <!-- Contenido del MDP -->
             <div id="mdp-content">
+                <div class="mdp-admin-section">
+                    <h3><i class="fas fa-cog me-2"></i>Administración de Credenciales</h3>
+                    <form id="mdp-admin-form" class="mdp-form">
+                        <div class="mb-3">
+                            <label for="new-username" class="form-label">Nuevo Usuario</label>
+                            <input type="text" class="form-control" id="new-username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new-password" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="new-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirm-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-save me-2"></i>Actualizar Credenciales
+                        </button>
+                    </form>
+                    <div id="mdp-success" class="alert alert-success mdp-alert"></div>
+                </div>
 
                 <!-- Contenido de la documentación -->
                 <div class="mdp-documentation">

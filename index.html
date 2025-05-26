@@ -29,6 +29,9 @@
                     <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
                         <i class="fas fa-question-circle me-2"></i> Ayuda
                     </a>
+                    <a href="docs/MDP.html" target="_blank" class="btn btn-secondary ms-2">
+                        <i class="fas fa-book me-2"></i> MDP
+                    </a>
                 </div>
             </div>
         </header>
@@ -431,7 +434,23 @@
                                     </tr>
                                 </thead>
                                 <tbody id="hes-partidas-table-body">
-                                    
+                                    <tr>
+                                        <td>${partidas.indexOf(partida) + 1}</td>
+                                        <td>${partida.descripcion}</td>
+                                        <td>${partida.umd}</td>
+                                        <td>${partida.precioUnitario.toFixed(2)}</td>
+                                        <td>${partida.cantidad}</td>
+                                        <td>${executedAmountForPartida.toFixed(2)}</td>
+                                        <td>${availableQuantity.toFixed(2)}</td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <button class="btn btn-outline-secondary decrement-hes-cantidad" type="button"><i class="fas fa-minus"></i></button>
+                                                <input type="number" class="form-control hes-cantidad-ejecutar text-center" min="0" max="${availableQuantity}" step="0.01" value="0.00">
+                                                <button class="btn btn-outline-secondary increment-hes-cantidad" type="button"><i class="fas fa-plus"></i></button>
+                                            </div>
+                                        </td>
+                                        <td><span class="hes-partida-total">0.00</span></td>
+                                    </tr>
                                     </tbody>
                             </table>
                         </div>
