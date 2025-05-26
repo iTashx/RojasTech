@@ -1,0 +1,510 @@
+/* Estilos para el Manual de Desarrollo Privado (MDP) */
+
+/* Variables globales */
+:root {
+    --mdp-primary-color: #2c3e50;
+    --mdp-secondary-color: #34495e;
+    --mdp-accent-color: #3498db;
+    --mdp-background-color: #f8f9fa;
+    --mdp-card-background: #ffffff;
+    --mdp-border-color: #eee;
+    --mdp-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--mdp-background-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor principal */
+.mdp-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+/* Tarjeta principal */
+.mdp-card {
+    background: var(--mdp-card-background);
+    border-radius: 10px;
+    box-shadow: var(--mdp-shadow);
+    padding: 30px;
+}
+
+/* Encabezado */
+.mdp-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mdp-header h1 {
+    color: var(--mdp-primary-color);
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.mdp-header p {
+    color: var(--mdp-secondary-color);
+    font-size: 1.1em;
+}
+
+/* Formularios */
+.mdp-form {
+    margin-bottom: 20px;
+}
+
+.mdp-form .form-label {
+    color: var(--mdp-primary-color);
+    font-weight: 500;
+}
+
+.mdp-form .form-control {
+    border: 1px solid var(--mdp-border-color);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.mdp-form .form-control:focus {
+    border-color: var(--mdp-accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Botones */
+.mdp-form .btn {
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mdp-form .btn-primary {
+    background-color: var(--mdp-accent-color);
+    border-color: var(--mdp-accent-color);
+}
+
+.mdp-form .btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.mdp-form .btn-success {
+    background-color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.mdp-form .btn-success:hover {
+    background-color: #27ae60;
+    border-color: #27ae60;
+}
+
+/* Alertas */
+.mdp-alert {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* Sección de administración */
+.mdp-admin-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--mdp-border-color);
+}
+
+.mdp-admin-section h3 {
+    color: var(--mdp-primary-color);
+    margin-bottom: 20px;
+}
+
+/* Contenido de documentación */
+.mdp-documentation {
+    margin-top: 30px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mdp-container {
+        margin: 20px auto;
+        padding: 10px;
+    }
+
+    .mdp-card {
+        padding: 20px;
+    }
+
+    .mdp-header h1 {
+        font-size: 1.5em;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mdp-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Variables específicas para MDP */
+:root {
+    --mdp-primary: #2c3e50;
+    --mdp-secondary: #34495e;
+    --mdp-accent: #3498db;
+    --mdp-code-bg: #f8f9fa;
+    --mdp-border: #e9ecef;
+    --mdp-text: #2c3e50;
+    --mdp-link: #3498db;
+    --mdp-link-hover: #2980b9;
+}
+
+/* Estilos generales */
+.mdp-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--mdp-text);
+}
+
+/* Encabezados */
+.mdp-container h1 {
+    color: var(--mdp-primary);
+    border-bottom: 2px solid var(--mdp-accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.mdp-container h2 {
+    color: var(--mdp-secondary);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.mdp-container h3 {
+    color: var(--mdp-secondary);
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Enlaces */
+.mdp-container a {
+    color: var(--mdp-link);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.mdp-container a:hover {
+    color: var(--mdp-link-hover);
+    text-decoration: underline;
+}
+
+/* Bloques de código */
+.mdp-container pre {
+    background-color: var(--mdp-code-bg);
+    border: 1px solid var(--mdp-border);
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.mdp-container code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/* Tablas */
+.mdp-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.mdp-container th,
+.mdp-container td {
+    border: 1px solid var(--mdp-border);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.mdp-container th {
+    background-color: var(--mdp-primary);
+    color: white;
+}
+
+.mdp-container tr:nth-child(even) {
+    background-color: var(--mdp-code-bg);
+}
+
+/* Listas */
+.mdp-container ul,
+.mdp-container ol {
+    padding-left: 2rem;
+    margin: 1rem 0;
+}
+
+.mdp-container li {
+    margin: 0.5rem 0;
+}
+
+/* Diagramas */
+.mdp-container .mermaid {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+}
+
+/* Notas y advertencias */
+.mdp-container .note {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.mdp-container .warning {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Navegación */
+.mdp-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--mdp-primary);
+    color: white;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.mdp-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mdp-nav li {
+    margin: 0.5rem 0;
+}
+
+.mdp-nav a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.mdp-nav a:hover {
+    background-color: var(--mdp-accent);
+}
+
+/* Contenido principal */
+.mdp-content {
+    margin-left: 250px;
+    padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mdp-nav {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .mdp-content {
+        margin-left: 0;
+    }
+}
+
+/* Estilos para secciones específicas */
+.mdp-section {
+    margin-bottom: 3rem;
+}
+
+.mdp-section-title {
+    color: var(--mdp-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para ejemplos de código */
+.mdp-code-example {
+    background-color: var(--mdp-code-bg);
+    border: 1px solid var(--mdp-border);
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.mdp-code-example pre {
+    margin: 0;
+}
+
+/* Estilos para diagramas de flujo */
+.mdp-flow-diagram {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+}
+
+/* Estilos para tablas de datos */
+.mdp-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.mdp-data-table th,
+.mdp-data-table td {
+    border: 1px solid var(--mdp-border);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.mdp-data-table th {
+    background-color: var(--mdp-primary);
+    color: white;
+}
+
+/* Estilos para notas al margen */
+.mdp-side-note {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--mdp-accent);
+    padding: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+}
+
+/* Estilos para resaltar texto importante */
+.mdp-highlight {
+    background-color: #fff3cd;
+    padding: 0.2rem 0.4rem;
+    border-radius: 2px;
+}
+
+/* Estilos para botones de acción */
+.mdp-action-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--mdp-accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.mdp-action-button:hover {
+    background-color: var(--mdp-link-hover);
+}
+
+/* Estilos para formularios */
+.mdp-form {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mdp-form-group {
+    margin-bottom: 1rem;
+}
+
+.mdp-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--mdp-text);
+}
+
+.mdp-form-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--mdp-border);
+    border-radius: 4px;
+}
+
+/* Estilos para mensajes de estado */
+.mdp-status {
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.mdp-status-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.mdp-status-error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.mdp-status-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+/* Estilos para tooltips */
+.mdp-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.mdp-tooltip .mdp-tooltip-text {
+    visibility: hidden;
+    background-color: var(--mdp-primary);
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.mdp-tooltip:hover .mdp-tooltip-text {
+    visibility: visible;
+    opacity: 1;
+} 
