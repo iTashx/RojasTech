@@ -14,9 +14,6 @@ const MDP = {
     init() {
         this.setupEventListeners();
         this.checkAuthentication();
-        if (!this.state.isAuthenticated) {
-            this.showLoginForm();
-        }
         this.updateLastAccess();
         this.setupNavigation();
     },
@@ -53,8 +50,10 @@ const MDP = {
     checkAuthentication() {
         const token = localStorage.getItem('mdp_token');
         if (token) {
+            console.log("Token encontrado, validando...");
             this.validateToken(token);
         } else {
+            console.log("No hay token, mostrando formulario de login.");
             this.showLoginForm();
         }
     },
@@ -63,13 +62,15 @@ const MDP = {
         // Aquí iría la lógica de validación del token (si fuera un token real)
         // Por ahora, solo verificamos si el token existe
         if (token) {
+            console.log("Token válido (simulado), autenticado.");
             this.state.isAuthenticated = true;
             this.hideLoginForm();
             this.showContent(); // Mostrar contenedor principal del contenido
-            this.showDocumentation(); // Mostrar la sección de documentación
+            // No llamar a showDocumentation() aquí, se hace al navegar si es necesario
             this.hideAdminSection(); // Ocultar la sección de administración por defecto
-            // this.loadContent(); // Cargar contenido específico si es necesario
+            // this.loadContent(); // Cargar contenido específico si es necesario (si tuvieras navegación interna)
         } else {
+            console.log("Token inválido (simulado) o expirado.");
              this.state.isAuthenticated = false;
              this.showLoginForm();
              this.hideContent(); // Ocultar contenido si el token no es válido
@@ -87,13 +88,15 @@ const MDP = {
             const token = this.generateToken();
             localStorage.setItem('mdp_token', token);
             this.state.isAuthenticated = true;
+            console.log("Login exitoso.");
             this.hideLoginForm();
             this.showContent(); // Mostrar contenedor principal del contenido
-            this.showDocumentation(); // Mostrar la sección de documentación
+             this.showDocumentation(); // Llamar a showDocumentation() aquí después de showContent()
             this.hideAdminSection(); // Ocultar la sección de administración por defecto
             // this.loadContent(); // Cargar contenido específico si es necesario
             this.showSuccess('Inicio de sesión exitoso.'); // Mostrar mensaje de éxito
         } else {
+            console.warn("Login fallido.");
             this.showError('Credenciales inválidas.');
         }
     },
@@ -206,6 +209,10 @@ const MDP = {
         const loginDiv = document.getElementById('mdp-login');
         if (loginDiv) {
             loginDiv.style.display = 'block';
+            // Asegurarse de que todo el contenido del MDP esté oculto al mostrar el login
+            this.hideContent(); 
+            this.hideAdminSection();
+             this.hideDocumentation();
         }
     },
 
@@ -221,6 +228,10 @@ const MDP = {
         const contentDiv = document.getElementById('mdp-content');
         if (contentDiv) {
             contentDiv.style.display = 'block';
+             // Dentro del contenido, ocultar todas las secciones por defecto, excepto quizás una introductoria si existiera
+             // document.querySelectorAll('#mdp-content .mdp-section').forEach(s => s.style.display = 'none');
+             // Asegurarse de que la sección de documentación esté visible después de mostrar el contenido
+            //  this.showDocumentation(); // Esta llamada se moverá al handler de login exitoso
         }
     },
 
@@ -235,7 +246,22 @@ const MDP = {
     showDocumentation() {
         const docSection = document.querySelector('.mdp-documentation');
         if (docSection) {
-            docSection.style.display = 'block';
+            // Cargar el contenido de MDP.md y mostrarlo (esto mostrará markdown plano sin un parser)
+             // Eliminar el fetch aquí y asumir que el contenido ya está en el HTML o se manejará de otra forma
+             // Para propósitos de demostración sin parser, simplemente asegurar visibilidad si hay contenido HTML
+             docSection.style.display = 'block';
+
+            //  fetch('/RojasTech/docs/MDP.md') // Usar la ruta relativa a la raíz del repositorio/GitHub Pages
+            //     .then(response => response.text())
+            //     .then(markdownText => {
+            //         docSection.innerHTML = `<pre>${escapeHTML(markdownText)}</pre>`; // Envuelve en <pre> para mantener formato básico
+            //         docSection.style.display = 'block';
+            //     })
+            //     .catch(error => {
+            //         console.error('Error loading MDP documentation:', error);
+            //         docSection.innerHTML = '<p>Error al cargar la documentación.</p>';
+            //         docSection.style.display = 'block';
+            //     });
         }
     },
 
@@ -336,15 +362,13 @@ function loadConfig() {
 }
 
 // Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     loadConfig();
     MDP.init();
 
-    // Asegurarse de que la sección de administración esté oculta al cargar la página
+    // Eliminar estas llamadas de ocultación explícitas, MDP.init() y showLoginForm() lo manejarán
     // MDP.hideAdminSection(); // Comentado para depuración
-    // Asegurarse de que la sección de documentación esté oculta al cargar la página
     // MDP.hideDocumentation(); // Comentado para depuración
-    // Asegurarse de que el contenido principal esté oculto al cargar la página
     // MDP.hideContent(); // Comentado para depuración
 
     // Configurar listeners para el formulario de administración (dentro del contenido del MDP)
@@ -375,4 +399,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-}); 
+});
+
+// Añadir una función de utilidad para escapar HTML si es necesario (para mostrar markdown como texto)
+function escapeHTML(str) {
+    return str.replace(/[&<>"]/g, function(match) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;'
+        }[match];
+    });
+} 
