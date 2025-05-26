@@ -131,6 +131,10 @@
                     <h2><i class="fas fa-file-contract me-2"></i> Nuevo/Editar Contrato</h2>
                     <form id="contract-form" class="g-3">
                         <div class="contract-form-grid">
+                            <div class="form-group col-span-2">
+                                <label for="select-contract-to-edit">Seleccionar Contrato para Editar:</label>
+                                <select id="select-contract-to-edit" class="form-select"><option value="">-- Seleccione un Contrato --</option></select>
+                            </div>
                             <div class="form-group">
                                 <label for="numero-proveedor">Número de Proveedor:</label>
                                 <input type="text" id="numero-proveedor" class="form-control" required>
@@ -427,6 +431,23 @@
                                     </tr>
                                 </thead>
                                 <tbody id="hes-partidas-table-body">
+                                    <tr>
+                                        <td>${partidas.indexOf(partida) + 1}</td>
+                                        <td>${partida.descripcion}</td>
+                                        <td>${partida.umd}</td>
+                                        <td>${partida.precioUnitario.toFixed(2)}</td>
+                                        <td>${partida.cantidad}</td>
+                                        <td>${executedAmountForPartida.toFixed(2)}</td>
+                                        <td>${availableQuantity.toFixed(2)}</td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <button class="btn btn-outline-secondary decrement-hes-cantidad" type="button"><i class="fas fa-minus"></i></button>
+                                                <input type="number" class="form-control hes-cantidad-ejecutar text-center" min="0" max="${availableQuantity}" step="0.01" value="0.00">
+                                                <button class="btn btn-outline-secondary increment-hes-cantidad" type="button"><i class="fas fa-plus"></i></button>
+                                            </div>
+                                        </td>
+                                        <td><span class="hes-partida-total">0.00</span></td>
+                                    </tr>
                                     </tbody>
                             </table>
                         </div>
@@ -579,6 +600,7 @@
                             <option value="pie">Pastel</option>
                             <option value="doughnut">Dona</option>
                         </select>
+                        <button class="btn btn-info" id="export-chart-png"><i class="fas fa-chart-pie"></i> Exportar PNG</button>
                     </div>
                 </section>
 

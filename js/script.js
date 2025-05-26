@@ -121,6 +121,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentContractId = null; // Para edición de contratos
     let currentHesId = null; // Para edición de HES
 
+    // Nuevos elementos para editar contrato desde selector
+    const selectContractToEdit = document.getElementById('select-contract-to-edit');
+
     // --- Función para mostrar mensajes emergentes (Toasts) ---
     function showToast(message, type = 'success') {
         const toastContainer = document.getElementById('toast-container');
@@ -438,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (contractData.numeroSICAC) {
                     const existingContract = await db.contracts.where({ numeroSICAC: contractData.numeroSICAC }).first();
                     if (existingContract) {
-                        showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}.`, "error");
+                        showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}. Por favor, edite el contrato existente o use otro número.`, "error");
                         return; // Detener el proceso si hay duplicado
                     }
                 }
@@ -564,59 +567,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const contractId = parseInt(targetBtn.dataset.id);
 
         if (targetBtn.classList.contains('edit-contract-btn')) {
-            const contract = await db.contracts.get(contractId);
-            if (contract) {
-                document.getElementById('numero-proveedor').value = contract.numeroProveedor || '';
-                document.getElementById('fecha-firma-contrato').value = contract.fechaFirmaContrato || '';
-                document.getElementById('fecha-creado').value = contract.fechaCreado || new Date().toISOString().split('T')[0];
-                document.getElementById('fecha-inicio').value = contract.fechaInicio || '';
-                document.getElementById('fecha-terminacion').value = contract.fechaTerminacion || '';
-                periodoCulminacionInput.value = contract.periodoCulminacion !== undefined ? contract.periodoCulminacion : '';
-                document.getElementById('numero-sicac').value = contract.numeroSICAC || '';
-                document.getElementById('division-area').value = contract.divisionArea || '';
-                document.getElementById('eemn').value = contract.eemn || '';
-                document.getElementById('region').value = contract.region || '';
-                document.getElementById('naturaleza-contratacion').value = contract.naturalezaContratacion || '';
-                document.getElementById('linea-servicio').value = contract.lineaServicio || '';
-                document.getElementById('no-peticion-oferta').value = contract.noPeticionOferta || '';
-                modalidadContratacionSelect.value = contract.modalidadContratacion || 'Obra';
-                document.getElementById('regimen-laboral').value = contract.regimenLaboral || '';
-                document.getElementById('objeto-contractual').value = contract.objetoContractual || '';
-                document.getElementById('fecha-cambio-alcance').value = contract.fechaCambioAlcance || '';
-                montoOriginalInput.value = contract.montoOriginal !== undefined ? contract.montoOriginal.toFixed(2) : '0.00';
-                montoModificadoInput.value = contract.montoModificado !== undefined ? contract.montoModificado.toFixed(2) : '0.00';
-                montoTotalContratoInput.value = contract.montoTotalContrato !== undefined ? contract.montoTotalContrato.toFixed(2) : '0.00';
-                document.getElementById('numero-contrato-interno').value = contract.numeroContratoInterno || '';
-                document.getElementById('observaciones').value = contract.observaciones || '';
-                document.getElementById('estatus-contrato').value = contract.estatusContrato || 'Activo';
-                document.getElementById('moneda').value = contract.moneda || 'USD';
-                
-                partidasTableBody.innerHTML = '';
-                const partidas = await db.partidas.where({ contractId: contractId }).toArray();
-                partidas.forEach((p, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><input type="text" class="form-control" name="descripcion" value="${p.descripcion || ''}"></td>
-                        <td><input type="number" class="form-control" name="cantidad" value="${p.cantidad || 1}" min="1"></td>
-                        <td><input type="text" class="form-control" name="umd" value="${p.umd || ''}"></td>
-                        <td><input type="number" class="form-control" name="precioUnitario" value="${p.precioUnitario || 0.00}" step="0.01"></td>
-                        <td><span class="total-partida">${(p.total || 0).toFixed(2)}</span></td>
-                        <td><button type="button" class="btn btn-danger btn-sm remove-partida-btn"><i class="fas fa-trash"></i></button></td>
-                    `;
-                    partidasTableBody.appendChild(row);
-                });
-                updateContractPartidaTotals();
-                calculatePeriodoCulminacion();
-
-                currentContractId = contractId;
-                showToast("Contrato cargado para edición.", "info");
-                tabButtons.forEach(btn => {
-                    if (btn.getAttribute('data-target') === 'new-edit-contract') {
-                        btn.click();
-                    }
-                });
-            }
+            // Cargar contrato para edición usando la nueva función
+            cargarContratoParaEdicion(contractId);
         } else if (targetBtn.classList.contains('delete-contract-btn')) {
             if (confirm('¿Está seguro de que desea enviar este contrato a la papelera?')) {
                 try {
@@ -659,6 +611,116 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+    // Cargar contrato en el formulario de edición
+    async function cargarContratoParaEdicion(contractId) {
+        if (!contractId) return; // No hacer nada si no hay ID
+        try {
+            const contract = await db.contracts.get(contractId);
+            if (contract) {
+                currentContractId = contractId; // Establecer el ID del contrato actual
+                // Rellenar todos los campos del formulario con los datos del contrato
+                document.getElementById('numero-proveedor').value = contract.numeroProveedor || '';
+                document.getElementById('fecha-firma-contrato').value = contract.fechaFirmaContrato || '';
+                document.getElementById('fecha-creado').value = contract.fechaCreado || new Date().toISOString().split('T')[0];
+                document.getElementById('fecha-inicio').value = contract.fechaInicio || '';
+                document.getElementById('fecha-terminacion').value = contract.fechaTerminacion || '';
+                periodoCulminacionInput.value = contract.periodoCulminacion !== undefined ? contract.periodoCulminacion : '';
+                document.getElementById('numero-sicac').value = contract.numeroSICAC || '';
+                document.getElementById('division-area').value = contract.divisionArea || '';
+                document.getElementById('eemn').value = contract.eemn || '';
+                document.getElementById('region').value = contract.region || '';
+                document.getElementById('naturaleza-contratacion').value = contract.naturalezaContratacion || '';
+                document.getElementById('linea-servicio').value = contract.lineaServicio || '';
+                document.getElementById('no-peticion-oferta').value = contract.noPeticionOferta || '';
+                modalidadContratacionSelect.value = contract.modalidadContratacion || 'Obra';
+                document.getElementById('regimen-laboral').value = contract.regimenLaboral || '';
+                document.getElementById('objeto-contractual').value = contract.objetoContractual || '';
+                document.getElementById('fecha-cambio-alcance').value = contract.fechaCambioAlcance || '';
+                montoOriginalInput.value = contract.montoOriginal !== undefined ? contract.montoOriginal.toFixed(2) : '0.00';
+                montoModificadoInput.value = contract.montoModificado !== undefined ? contract.montoModificado.toFixed(2) : '0.00';
+                montoTotalContratoInput.value = contract.montoTotalContrato !== undefined ? contract.montoTotalContrato.toFixed(2) : '0.00';
+                document.getElementById('numero-contrato-interno').value = contract.numeroContratoInterno || '';
+                document.getElementById('observaciones').value = contract.observaciones || '';
+                document.getElementById('estatus-contrato').value = contract.estatusContrato || 'Activo';
+                document.getElementById('moneda').value = contract.moneda || 'USD';
+
+                // Cargar partidas asociadas
+                partidasTableBody.innerHTML = ''; // Limpiar partidas actuales
+                const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+                partidas.forEach((p, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><input type="text" class="form-control" name="descripcion" value="${p.descripcion || ''}"></td>
+                        <td><input type="number" class="form-control" name="cantidad" value="${p.cantidad || 1}" min="1"></td>
+                        <td><input type="text" class="form-control" name="umd" value="${p.umd || ''}"></td>
+                        <td><input type="number" class="form-control" name="precioUnitario" value="${p.precioUnitario || 0.00}" step="0.01"></td>
+                        <td><span class="total-partida">${(p.total || 0).toFixed(2)}</span></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-partida-btn"><i class="fas fa-trash"></i></button></td>
+                    `;
+                    partidasTableBody.appendChild(row);
+                });
+                updateContractPartidaTotals(); // Recalcular totales
+                calculatePeriodoCulminacion(); // Recalcular período de culminación
+
+                // Cargar archivos adjuntos
+                const archivos = await recuperarArchivos(contractId, 'contrato');
+                mostrarArchivosAdjuntos(archivos, 'archivos-contrato'); // Mostrar archivos adjuntos
+                if (archivos.length > 0) {
+                     document.getElementById('adjuntar-archivos-info').textContent = 
+                         `${archivos.length} archivo(s) adjunto(s)`;
+                 } else {
+                      document.getElementById('adjuntar-archivos-info').textContent = 'Ningún archivo seleccionado';
+                 }
+
+                showToast("Contrato cargado para edición.", "info");
+
+                // Cambiar a la pestaña de Nuevo/Editar Contrato
+                tabButtons.forEach(btn => {
+                    if (btn.getAttribute('data-target') === 'new-edit-contract') {
+                        btn.click();
+                    }
+                });
+
+            } else {
+                showToast("Contrato no encontrado.", "error");
+            }
+        } catch (error) {
+            console.error("Error al cargar contrato para edición:", error);
+            showToast("Error al cargar contrato para edición: " + error.message, "error");
+        }
+    }
+
+    // Poblar selector de contratos para edición y cargar al cambiar
+    async function populateContractEditSelect() {
+         const selectElement = document.getElementById('select-contract-to-edit');
+         if (!selectElement) return; // Asegurarse de que el elemento existe
+
+         selectElement.innerHTML = '<option value="">-- Seleccione un Contrato --</option>';
+         const contracts = await db.contracts.toArray();
+         contracts.forEach(contract => {
+             const option = document.createElement('option');
+             option.value = contract.id;
+             option.textContent = `${contract.numeroSICAC || 'Sin SICAC'} (${contract.numeroProveedor || 'Sin Proveedor'})`;
+             selectElement.appendChild(option);
+         });
+
+         // Event listener para cargar el contrato seleccionado
+         selectElement.addEventListener('change', (e) => {
+             const contractId = parseInt(e.target.value);
+             if (contractId) {
+                 cargarContratoParaEdicion(contractId);
+             } else {
+                 // Si selecciona la opción por defecto, limpiar el formulario
+                 clearContractFormBtn.click();
+             }
+         });
+    }
+
+    // Llama a populateContractEditSelect cuando se carga la pestaña de edición
+    document.querySelector('[data-target="new-edit-contract"]').addEventListener('click', populateContractEditSelect);
+
 
     // --- Lógica de Gestión de HES ---
 
