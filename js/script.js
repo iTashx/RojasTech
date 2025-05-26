@@ -434,6 +434,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 contractId = currentContractId;
                 showToast("Contrato actualizado exitosamente.", "success");
             } else {
+                // Validar N° SICAC duplicado solo al crear un nuevo contrato
+                if (contractData.numeroSICAC) {
+                    const existingContract = await db.contracts.where({ numeroSICAC: contractData.numeroSICAC }).first();
+                    if (existingContract) {
+                        showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}.`, "error");
+                        return; // Detener el proceso si hay duplicado
+                    }
+                }
                 contractId = await db.contracts.add(contractData);
                 showToast("Contrato guardado exitosamente.", "success");
             }
@@ -736,15 +744,51 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let cantidadEjecutar = parseFloat(input.value) || 0;
             if (cantidadEjecutar < 0) cantidadEjecutar = 0;
-            if (cantidadEjecutar > availableQuantity) {
-                cantidadEjecutar = availableQuantity; // Limitar a la cantidad disponible
-                input.value = availableQuantity.toFixed(2);
-                showToast(`La cantidad a ejecutar no puede exceder la cantidad disponible (${availableQuantity.toFixed(2)}).`, "warning");
-            }
+            // La validación de max se hace en el evento click del botón y se limita el valor aquí.
+            // Si escriben un número mayor, simplemente se usará el valor ingresado hasta que se presione un botón o se guarde.
+            // Se puede añadir una validación más estricta aquí si es necesario.
+
             input.value = cantidadEjecutar.toFixed(2); // Formatear el valor
 
             updateHesPartidaTotals(row);
         }
+    });
+
+    // Event listeners para los nuevos botones de incremento/decremento
+    hesPartidasTableBody.addEventListener('click', (e) => {
+        const targetBtn = e.target.closest('button');
+        if (!targetBtn) return;
+
+        // Asegurarse de que el clic fue en uno de los botones +/- dentro de un input-group
+        if (!targetBtn.classList.contains('increment-hes-cantidad') && !targetBtn.classList.contains('decrement-hes-cantidad')) {
+            return; // Salir si no es uno de los botones que nos interesa
+        }
+
+        const row = targetBtn.closest('tr');
+        const input = row.querySelector('.hes-cantidad-ejecutar');
+        const availableQuantity = parseFloat(row.children[6].textContent); // Cantidad Disponible
+        const step = parseFloat(input.step) || 0.01; // Usar el step del input, default 0.01
+
+        let currentValue = parseFloat(input.value) || 0;
+
+        if (targetBtn.classList.contains('increment-hes-cantidad')) {
+            currentValue += step;
+        } else if (targetBtn.classList.contains('decrement-hes-cantidad')) {
+            currentValue -= step;
+        }
+
+        // Asegurarse de que el valor esté dentro de los límites
+        if (currentValue < 0) currentValue = 0;
+        // Limitar al máximo disponible, permitiendo un pequeño margen por decimales
+        if (currentValue > availableQuantity + 0.001) currentValue = availableQuantity;
+
+        input.value = currentValue.toFixed(2); // Formatear y actualizar el input
+        updateHesPartidaTotals(row); // Actualizar totales
+
+        // Disparar evento input en el campo numérico después de actualizar su valor
+        // Esto asegura que el event listener 'input' en el campo se active y haga sus validaciones/actualizaciones si es necesario
+        const inputEvent = new Event('input', { bubbles: true });
+        input.dispatchEvent(inputEvent);
     });
 
     // Calcula el total de la partida HES y los totales de la HES
@@ -1045,7 +1089,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalExecutedAmount += hes.totalHes || 0;
         }
 
-        const financialAdvancePercentage = totalContractAmount > 0 ? (totalExecutedAmount / totalContractAmount) * 100 : 0;
+        let financialAdvancePercentage = totalContractAmount > 0 ? (totalExecutedAmount / totalContractAmount) * 100 : 0;
+
+        // Limitar porcentajes a 100%
+        physicalAdvancePercentage = Math.min(physicalAdvancePercentage, 100);
+        financialAdvancePercentage = Math.min(financialAdvancePercentage, 100);
 
         return {
             physicalAdvancePercentage: physicalAdvancePercentage,
@@ -1793,6 +1841,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function exportAvanceToPDF(tipo) {
+        console.log(`Intentando exportar a PDF para tipo: ${tipo}`); // Log para depuración
         let data = [];
         let columns = [];
         let filename = '';
@@ -1861,7 +1910,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (data.length > 0) {
-            const { jsPDF } = window.jspdf;
+            const { jsPDF } = window.jspdf; // Obtener referencia aquí
+            if (!jsPDF) {
+                console.error("Librería jsPDF no cargada.");
+                showToast("Error al generar PDF: librería no disponible.", "error");
+                return;
+            }
             const doc = new jsPDF('landscape'); // Usar landscape para más columnas
 
             doc.autoTable({
@@ -1890,6 +1944,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- RESUMEN GRÁFICO: SELECTORES Y RENDERIZADO ---
     async function renderGraficosSelectores() {
+        console.log("Renderizando selectores de gráficos..."); // Log para depuración
         const contratos = await db.contracts.toArray();
         const selectContrato = document.getElementById('graficos-contrato-select');
         const selectTipo = document.getElementById('graficos-tipo-select');
@@ -1907,8 +1962,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function renderResumenGrafico(contratoId, tipo) {
+        console.log(`Renderizando gráfico para contrato ${contratoId} y tipo ${tipo}...`); // Log para depuración
         const contract = await db.contracts.get(contratoId);
-        if (!contract) return;
+        if (!contract) {
+            console.warn(`Contrato con ID ${contratoId} no encontrado.`); // Log de advertencia
+            return;
+        }
         const partidas = await db.partidas.where({ contractId: contratoId }).toArray();
         const hesList = await db.hes.where({ contractId: contratoId }).toArray();
         // Avance físico y financiero por partida
@@ -1974,6 +2033,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } : {}
             }
         });
+        // Agregar botón de exportar imagen
+        const exportPngButton = document.getElementById('export-chart-png');
+        if (exportPngButton) {
+            exportPngButton.onclick = () => exportChartAsPng(window.resumenGraficoInstance, contract.numeroSICAC || contract.numeroProveedor || 'grafico');
+        }
+    }
+
+    // Función para exportar el gráfico como PNG
+    function exportChartAsPng(chartInstance, filename) {
+        if (!chartInstance) {
+            showToast("No hay gráfico para exportar.", "warning");
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = `${filename}.png`;
+        link.href = chartInstance.toBase64Image();
+        link.click();
+        showToast("Gráfico exportado como PNG.", "success");
     }
 
     // --- MODALIDAD DINÁMICA MEJORADA ---
