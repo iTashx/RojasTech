@@ -437,24 +437,21 @@ h2 i {
 .form-group.modalidad-dinamica {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 15px;
+    gap: 8px;
+    margin-bottom: 0;
+    grid-column: span 2;
 }
 .form-group.modalidad-dinamica label {
-    min-width: 170px;
+    min-width: 160px;
     margin-bottom: 0;
     font-weight: 500;
     color: #444;
 }
-.form-group.modalidad-dinamica select {
+.form-group.modalidad-dinamica select,
+.form-group.modalidad-dinamica input[type="text"] {
     min-width: 120px;
     max-width: 180px;
-}
-.form-group.modalidad-dinamica input[type="text"] {
-    min-width: 110px;
-    max-width: 150px;
-    padding: 6px 10px;
-    font-size: 0.95rem;
+    flex: 1 1 0;
 }
 .form-group.modalidad-dinamica .btn {
     padding: 6px 10px;
@@ -464,26 +461,61 @@ h2 i {
     display: flex;
     align-items: center;
 }
-.form-group.modalidad-dinamica .btn i {
-    margin: 0;
+
+/* Slider/carrusel controles visibles */
+#contracts-slider .carousel-control-prev,
+#contracts-slider .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.1);
+    border-radius: 50%;
+    color: #007bff;
+    z-index: 2;
+}
+#contracts-slider .carousel-control-prev-icon,
+#contracts-slider .carousel-control-next-icon {
+    background-size: 70% 70%;
+}
+
+/* Botones de exportar en avance físico y financiero */
+.export-buttons-avance {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: flex-end;
+}
+
+/* Selectores en resumen gráfico */
+.graficos-selectores {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+.graficos-selectores select {
+    min-width: 180px;
+    max-width: 250px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
 @media (max-width: 768px) {
     .form-group.modalidad-dinamica {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
+        grid-column: span 2;
     }
-    .form-group.modalidad-dinamica label {
-        min-width: unset;
+    .graficos-selectores {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
     }
-    .form-group.modalidad-dinamica select,
-    .form-group.modalidad-dinamica input[type="text"] {
-        min-width: unset;
-        max-width: unset;
-        width: 100%;
-    }
-    .form-group.modalidad-dinamica .btn {
-        width: 100%;
-        justify-content: center;
+    .export-buttons-avance {
+        flex-direction: column;
+        gap: 5px;
+        align-items: stretch;
     }
 }

@@ -1552,7 +1552,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
     }
 
-    // --- Slider y Resumen General Dinámico ---
+    // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
     async function renderContractsSlider() {
         const sliderInner = document.getElementById('contracts-slider-inner');
         const contracts = await db.contracts.toArray();
@@ -1573,45 +1573,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             sliderInner.appendChild(card);
         });
-        // Actualizar los recuadros con el primer contrato
         if (contracts.length > 0) {
             updateSummaryByContract(contracts[0]);
         }
     }
 
-    function formatMonto(monto) {
-        if (!monto) return '0,00';
-        return monto.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function calcularDiasVencimiento(fechaTerminacion) {
-        if (!fechaTerminacion) return '-';
-        const hoy = new Date();
-        const fin = new Date(fechaTerminacion);
-        const diff = Math.ceil((fin - hoy) / (1000 * 60 * 60 * 24));
-        return diff >= 0 ? diff : 0;
-    }
-
-    async function updateSummaryByContract(contract) {
-        document.getElementById('total-contract-amount').textContent = `USD ${formatMonto(contract.montoTotalContrato)}`;
-        const expiryList = document.getElementById('contracts-expiry-list');
-        expiryList.innerHTML = `<li><strong>Fecha Terminación:</strong> ${contract.fechaTerminacion || '-'}<br><strong>Días restantes:</strong> ${calcularDiasVencimiento(contract.fechaTerminacion)}</li>`;
-        let avanceFinanciero = 0;
-        let avanceFisico = 0;
-        if (typeof calculateContractAdvances === 'function') {
-            const avances = await calculateContractAdvances(contract.id);
-            avanceFinanciero = avances.financialAdvancePercentage || 0;
-            avanceFisico = avances.physicalAdvancePercentage || 0;
-        }
-        document.getElementById('financial-progress-bar').style.width = avanceFinanciero + '%';
-        document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', avanceFinanciero);
-        document.getElementById('financial-progress-label').textContent = avanceFinanciero.toFixed(1) + '%';
-        document.getElementById('physical-progress-bar').style.width = avanceFisico + '%';
-        document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', avanceFisico);
-        document.getElementById('physical-progress-label').textContent = avanceFisico.toFixed(1) + '%';
-    }
-
-    // Evento para cambiar de contrato en el slider
     const contractsSlider = document.getElementById('contracts-slider');
     if (contractsSlider) {
         contractsSlider.addEventListener('slid.bs.carousel', async function (e) {
@@ -1623,44 +1589,228 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Llamar al renderizado del slider al cargar la pestaña de resumen general
-    const resumenTabBtn = document.querySelector('[data-target="general-summary"]');
-    if (resumenTabBtn) {
-        resumenTabBtn.addEventListener('click', async () => {
-            await renderContractsSlider();
+    // --- EXPORTAR EN AVANCE FÍSICO Y FINANCIERO ---
+    async function exportAvanceToExcel(tipo) {
+        let data = [];
+        let filename = '';
+        if (tipo === 'fisico') {
+            const contractId = parseInt(document.getElementById('physical-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const partidas = await db.partidas.where({ contractId }).toArray();
+            for (const p of partidas) {
+                const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+                data.push({
+                    'Descripción': p.descripcion,
+                    'Cantidad Contrato': p.cantidad,
+                    'Cantidad Ejecutada': ejecutada,
+                    'Avance (%)': p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) : '0.00'
+                });
+            }
+            filename = `AvanceFisico_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`;
+        } else if (tipo === 'financiero') {
+            const contractId = parseInt(document.getElementById('financial-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const hesList = await db.hes.where({ contractId }).toArray();
+            for (const hes of hesList) {
+                data.push({
+                    'No. HES': hes.noHes,
+                    'Fecha Inicio': hes.fechaInicioHes,
+                    'Fecha Final': hes.fechaFinalHes,
+                    'Total HES': hes.totalHes,
+                    'Estatus': hes.aprobado
+                });
+            }
+            filename = `AvanceFinanciero_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`;
+        }
+        if (data.length > 0) {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Avance');
+            XLSX.writeFile(wb, filename);
+            showToast('Exportado a Excel.', 'success');
+        }
+    }
+
+    async function exportAvanceToPDF(tipo) {
+        let data = [];
+        let columns = [];
+        let filename = '';
+        if (tipo === 'fisico') {
+            const contractId = parseInt(document.getElementById('physical-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const partidas = await db.partidas.where({ contractId }).toArray();
+            for (const p of partidas) {
+                const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+                data.push([
+                    p.descripcion,
+                    p.cantidad,
+                    ejecutada,
+                    p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) : '0.00'
+                ]);
+            }
+            columns = ['Descripción', 'Cantidad Contrato', 'Cantidad Ejecutada', 'Avance (%)'];
+            filename = `AvanceFisico_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+        } else if (tipo === 'financiero') {
+            const contractId = parseInt(document.getElementById('financial-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const hesList = await db.hes.where({ contractId }).toArray();
+            for (const hes of hesList) {
+                data.push([
+                    hes.noHes,
+                    hes.fechaInicioHes,
+                    hes.fechaFinalHes,
+                    hes.totalHes,
+                    hes.aprobado
+                ]);
+            }
+            columns = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+            filename = `AvanceFinanciero_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+        }
+        if (data.length > 0) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({ head: [columns], body: data });
+            doc.save(filename);
+            showToast('Exportado a PDF.', 'success');
+        }
+    }
+
+    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
+    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico'));
+    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
+    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero'));
+
+    // --- RESUMEN GRÁFICO: SELECTORES Y RENDERIZADO ---
+    async function renderGraficosSelectores() {
+        const contratos = await db.contracts.toArray();
+        const selectContrato = document.getElementById('graficos-contrato-select');
+        const selectTipo = document.getElementById('graficos-tipo-select');
+        selectContrato.innerHTML = '';
+        contratos.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.numeroSICAC || c.numeroProveedor || 'Sin Nombre';
+            selectContrato.appendChild(opt);
+        });
+        selectTipo.value = 'bar';
+        if (contratos.length > 0) {
+            renderResumenGrafico(contratos[0].id, 'bar');
+        }
+    }
+
+    document.getElementById('graficos-contrato-select')?.addEventListener('change', (e) => {
+        const contratoId = parseInt(e.target.value);
+        const tipo = document.getElementById('graficos-tipo-select').value;
+        renderResumenGrafico(contratoId, tipo);
+    });
+    document.getElementById('graficos-tipo-select')?.addEventListener('change', (e) => {
+        const tipo = e.target.value;
+        const contratoId = parseInt(document.getElementById('graficos-contrato-select').value);
+        renderResumenGrafico(contratoId, tipo);
+    });
+
+    async function renderResumenGrafico(contratoId, tipo) {
+        const contract = await db.contracts.get(contratoId);
+        if (!contract) return;
+        const partidas = await db.partidas.where({ contractId: contratoId }).toArray();
+        const hesList = await db.hes.where({ contractId: contratoId }).toArray();
+        // Avance físico y financiero por partida
+        const labels = partidas.map(p => p.descripcion);
+        const fisico = [];
+        const financiero = [];
+        for (const p of partidas) {
+            const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+            fisico.push(p.cantidad > 0 ? (ejecutada / p.cantidad) * 100 : 0);
+            // Financiero: suma de totalPartidaHes de todas las HES para esa partida
+            let totalFin = 0;
+            for (const hes of hesList) {
+                const hesPartidas = await db.hesPartidas.where({ hesId: hes.id, contractPartidaId: p.id }).toArray();
+                for (const hp of hesPartidas) {
+                    totalFin += hp.totalPartidaHes || 0;
+                }
+            }
+            financiero.push(contract.montoTotalContrato > 0 ? (totalFin / contract.montoTotalContrato) * 100 : 0);
+        }
+        // Renderizar el gráfico
+        const ctx = document.getElementById('contractStatusChart').getContext('2d');
+        if (window.resumenGraficoInstance) window.resumenGraficoInstance.destroy();
+        let chartType = tipo;
+        if (tipo === 'doughnut') chartType = 'doughnut';
+        if (tipo === 'pie') chartType = 'pie';
+        if (tipo === 'bar') chartType = 'bar';
+        if (tipo === 'line') chartType = 'line';
+        window.resumenGraficoInstance = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Avance Físico (%)',
+                        data: fisico,
+                        backgroundColor: '#17a2b8',
+                        borderColor: '#138496',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Avance Financiero (%)',
+                        data: financiero,
+                        backgroundColor: '#28a745',
+                        borderColor: '#218838',
+                        fill: false,
+                        yAxisID: 'y',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Resumen Gráfico del Contrato' }
+                },
+                scales: chartType === 'bar' || chartType === 'line' ? {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Porcentaje (%)' }
+                    }
+                } : {}
+            }
         });
     }
-    // Si la pestaña está activa al cargar, renderizar
-    if (document.getElementById('general-summary').classList.contains('active')) {
-        renderContractsSlider();
+
+    // Inicializar selectores de gráficos al cargar la pestaña
+    const resumenGraficoTabBtn = document.querySelector('[data-target="graphic-summary"]');
+    if (resumenGraficoTabBtn) {
+        resumenGraficoTabBtn.addEventListener('click', async () => {
+            await renderGraficosSelectores();
+        });
+    }
+    if (document.getElementById('graphic-summary').classList.contains('active')) {
+        renderGraficosSelectores();
     }
 
-    // --- Modalidades de Contratación Dinámicas ---
-    const modalidadSelect = document.getElementById('modalidad-contratacion');
-    const nuevaModalidadInput = document.getElementById('nueva-modalidad');
-    const agregarModalidadBtn = document.getElementById('agregar-modalidad');
-    const eliminarModalidadBtn = document.getElementById('eliminar-modalidad');
-
-    const MODALIDADES_KEY = 'modalidades_contratacion';
-    const MODALIDADES_DEFAULT = ['Obra', 'Servicio', 'Suministro'];
-
+    // --- MODALIDAD DINÁMICA MEJORADA ---
     function getModalidades() {
-        const data = localStorage.getItem(MODALIDADES_KEY);
+        const data = localStorage.getItem('modalidades_contratacion');
         if (data) {
             try {
                 const arr = JSON.parse(data);
                 if (Array.isArray(arr) && arr.length > 0) return arr;
             } catch {}
         }
-        return [...MODALIDADES_DEFAULT];
+        return ['Obra', 'Servicio', 'Suministro'];
     }
-
     function setModalidades(arr) {
-        localStorage.setItem(MODALIDADES_KEY, JSON.stringify(arr));
+        localStorage.setItem('modalidades_contratacion', JSON.stringify(arr));
     }
-
     function renderModalidadesSelect() {
         const modalidades = getModalidades();
+        const modalidadSelect = document.getElementById('modalidad-contratacion');
         modalidadSelect.innerHTML = '';
         modalidades.forEach(m => {
             const opt = document.createElement('option');
@@ -1669,27 +1819,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             modalidadSelect.appendChild(opt);
         });
     }
-
-    agregarModalidadBtn.addEventListener('click', () => {
-        const nueva = nuevaModalidadInput.value.trim();
+    document.getElementById('agregar-modalidad')?.addEventListener('click', () => {
+        const nueva = document.getElementById('nueva-modalidad').value.trim();
         if (!nueva) return;
         let modalidades = getModalidades();
         if (!modalidades.includes(nueva)) {
             modalidades.push(nueva);
             setModalidades(modalidades);
             renderModalidadesSelect();
-            modalidadSelect.value = nueva;
-            nuevaModalidadInput.value = '';
+            document.getElementById('modalidad-contratacion').value = nueva;
+            document.getElementById('nueva-modalidad').value = '';
             showToast('Modalidad agregada.', 'success');
         } else {
             showToast('La modalidad ya existe.', 'warning');
         }
     });
-
-    eliminarModalidadBtn.addEventListener('click', () => {
-        const actual = modalidadSelect.value;
+    document.getElementById('eliminar-modalidad')?.addEventListener('click', () => {
+        const actual = document.getElementById('modalidad-contratacion').value;
         let modalidades = getModalidades();
-        if (MODALIDADES_DEFAULT.includes(actual)) {
+        if (['Obra', 'Servicio', 'Suministro'].includes(actual)) {
             showToast('No puedes eliminar una modalidad predeterminada.', 'warning');
             return;
         }
@@ -1698,7 +1846,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderModalidadesSelect();
         showToast('Modalidad eliminada.', 'info');
     });
-
-    // Inicializar el select al cargar
     renderModalidadesSelect();
 });
