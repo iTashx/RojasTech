@@ -119,6 +119,7 @@ body {
 
 /* Sección de administración */
 .mdp-admin-section {
+    display: none; /* Ocultar por defecto */
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid var(--mdp-border-color);

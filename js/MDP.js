@@ -13,6 +13,7 @@ const MDP = {
     // Inicialización
     init() {
         this.setupEventListeners();
+        this.setupAddUserButton();
         this.checkAuthentication();
         this.updateLastAccess();
         this.setupNavigation();
@@ -229,6 +230,18 @@ const MDP = {
         successDiv.textContent = message;
         document.body.appendChild(successDiv);
         setTimeout(() => successDiv.remove(), 3000);
+    },
+
+    // Event listener para el botón Añadir Usuario
+    setupAddUserButton() {
+        const addButton = document.getElementById('add-user-btn');
+        const adminSection = document.getElementById('mdp-admin-section');
+        if (addButton && adminSection) {
+            addButton.addEventListener('click', () => {
+                adminSection.style.display = 'block'; // Mostrar la sección
+                addButton.style.display = 'none'; // Ocultar el botón después de clic (opcional)
+            });
+        }
     }
 };
 
