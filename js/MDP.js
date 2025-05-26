@@ -14,6 +14,9 @@ const MDP = {
     init() {
         this.setupEventListeners();
         this.checkAuthentication();
+        if (!this.state.isAuthenticated) {
+            this.showLoginForm();
+        }
         this.updateLastAccess();
         this.setupNavigation();
     },
