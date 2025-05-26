@@ -484,6 +484,8 @@ footer a:hover {
     flex-grow: 1;
     margin-left: 250px;
     padding: var(--ayuda-spacing-md);
+    position: relative;
+    z-index: 1;
 }
 
 .help-section {

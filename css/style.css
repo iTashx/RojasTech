@@ -313,44 +313,46 @@ h2 i {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .main-container {
-        flex-direction: column;
+        flex-direction: column; /* Apila el sidebar y el contenido */
     }
 
     .sidebar {
-        width: 100%;
-        padding: 10px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Ocupa todo el ancho */
+        height: auto; /* Altura automática */
+        padding: 10px 20px; /* Ajusta el padding */
+        position: static; /* Elimina el posicionamiento fijo en móviles */
+        box-shadow: none; /* Elimina la sombra en móviles */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Añade un separador */
     }
 
     .sidebar .nav {
-        flex-direction: row;
-        overflow-x: auto; /* Permite scroll horizontal para botones */
-        white-space: nowrap;
-        justify-content: space-between;
+        flex-direction: row; /* Muestra los items de navegación en fila */
+        overflow-x: auto; /* Permite scroll horizontal si hay muchos items */
+        white-space: nowrap; /* Evita que los items se envuelvan */
+        padding-bottom: 10px; /* Espacio inferior si hay scrollbar */
     }
 
     .sidebar .nav-link {
-        padding: 10px;
-        font-size: 0.85rem;
-        flex-shrink: 0; /* Evita que los botones se encojan demasiado */
-        text-align: center;
-        flex-direction: column; /* Icono arriba, texto abajo */
+        flex-shrink: 0; /* Evita que los links se encojan */
+        padding: 8px 15px; /* Ajusta el padding de los links */
+        border-left: none; /* Elimina el borde izquierdo en móviles */
+        border-bottom: 3px solid transparent; /* Borde inferior para indicar activo */
+        transition: background-color 0.3s ease, border-bottom-color 0.3s ease;
     }
 
     .sidebar .nav-link i {
-        margin-right: 0;
-        margin-bottom: 5px;
+        margin-right: 5px; /* Reduce el margen del icono */
     }
 
     .sidebar .nav-link.active {
-        border-left: none;
-        border-bottom: 3px solid var(--primary-color);
-        padding-left: 10px; /* Restablecer padding-left */
+        border-bottom-color: var(--primary-color); /* Color del borde inferior activo */
+        background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil para activo */
+        padding-left: 15px; /* Mantiene el padding */
     }
 
     .content {
-        margin: 10px;
-        padding: 15px;
+        margin: 10px; /* Reduce los márgenes */
+        padding: 15px; /* Ajusta el padding */
     }
 
     .header .logo h1 {
@@ -358,30 +360,48 @@ h2 i {
     }
 
     .summary-cards {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Apila las tarjetas en una sola columna */
     }
 
     .contract-form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Apila los campos del formulario */
     }
 
     .contract-form-grid .col-span-2 {
-        grid-column: span 1;
+        grid-column: span 1; /* Asegura que ocupen una sola columna */
     }
 
     .filter-container {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column; /* Apila los grupos de filtro */
+        gap: 10px; /* Espacio entre grupos */
     }
 
     .filter-buttons {
-        flex-direction: column;
-        gap: 5px;
+        justify-content: center; /* Centra los botones de filtro */
     }
-    
+
     .export-buttons {
-        flex-direction: column;
-        gap: 5px;
+        flex-direction: column; /* Apila los botones de exportar */
+        gap: 10px;
+    }
+
+    .export-buttons button {
+        width: 100%; /* Botones de exportar ocupan todo el ancho */
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .button-group button {
+        min-width: unset; /* Elimina el ancho mínimo fijo */
+        width: 100%; /* Ocupa todo el ancho */
+        margin-bottom: 10px; /* Espacio entre botones apilados */
+    }
+
+    .button-group button:last-child {
+        margin-bottom: 0;
     }
 }
 

@@ -431,23 +431,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="hes-partidas-table-body">
-                                    <tr>
-                                        <td>${partidas.indexOf(partida) + 1}</td>
-                                        <td>${partida.descripcion}</td>
-                                        <td>${partida.umd}</td>
-                                        <td>${partida.precioUnitario.toFixed(2)}</td>
-                                        <td>${partida.cantidad}</td>
-                                        <td>${executedAmountForPartida.toFixed(2)}</td>
-                                        <td>${availableQuantity.toFixed(2)}</td>
-                                        <td>
-                                            <div class="input-group input-group-sm">
-                                                <button class="btn btn-outline-secondary decrement-hes-cantidad" type="button"><i class="fas fa-minus"></i></button>
-                                                <input type="number" class="form-control hes-cantidad-ejecutar text-center" min="0" max="${availableQuantity}" step="0.01" value="0.00">
-                                                <button class="btn btn-outline-secondary increment-hes-cantidad" type="button"><i class="fas fa-plus"></i></button>
-                                            </div>
-                                        </td>
-                                        <td><span class="hes-partida-total">0.00</span></td>
-                                    </tr>
+                                    
                                     </tbody>
                             </table>
                         </div>

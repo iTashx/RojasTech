@@ -155,36 +155,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Cargar datos específicos al cambiar de pestaña
             try {
-                if (targetId === 'contract-list') {
-                    await loadContractList();
-                } else if (targetId === 'general-summary') {
-                    await updateSummaryCards();
+            if (targetId === 'contract-list') {
+                await loadContractList();
+            } else if (targetId === 'general-summary') {
+                await updateSummaryCards();
                     await renderContractsSlider(); // Asegurar que el slider se recargue si se vuelve a la pestaña
-                } else if (targetId === 'new-edit-contract') {
-                    if (!currentContractId) {
-                        document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
-                    }
-                } else if (targetId === 'hes-management') {
-                    await populateContractSelect(hesContractSelect);
-                    await loadHesList();
-                    if (!currentHesId) { // Solo setear fecha de creación si es nueva HES
-                        hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
-                    }
-                } else if (targetId === 'trash-can') {
-                    await loadTrashCan();
-                } else if (targetId === 'physical-advance') {
-                    await populateContractSelect(physicalAdvanceContractSelect);
-                    physicalAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
-                } else if (targetId === 'financial-advance') {
-                    await populateContractSelect(financialAdvanceContractSelect);
-                    financialAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
-                } else if (targetId === 'graphic-summary') {
-                    await renderCharts();
+            } else if (targetId === 'new-edit-contract') {
+                if (!currentContractId) {
+                    document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
+                }
+            } else if (targetId === 'hes-management') {
+                await populateContractSelect(hesContractSelect);
+                await loadHesList();
+                if (!currentHesId) { // Solo setear fecha de creación si es nueva HES
+                    hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
+                }
+            } else if (targetId === 'trash-can') {
+                await loadTrashCan();
+            } else if (targetId === 'physical-advance') {
+                await populateContractSelect(physicalAdvanceContractSelect);
+                physicalAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+            } else if (targetId === 'financial-advance') {
+                await populateContractSelect(financialAdvanceContractSelect);
+                financialAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+            } else if (targetId === 'graphic-summary') {
+                await renderCharts();
                     await renderGraficosSelectores();
-                } else if (targetId === 'reports') {
-                    await populateContractSelect(reportContractSelect);
-                    reportDetails.style.display = 'none';
-                    reportHesDetailView.style.display = 'none';
+            } else if (targetId === 'reports') {
+                await populateContractSelect(reportContractSelect);
+                reportDetails.style.display = 'none';
+                reportHesDetailView.style.display = 'none';
                 }
             } catch (error) {
                 console.error(`Error al cargar pestaña ${targetId}:`, error);
@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('observaciones').value = contract.observaciones || '';
                 document.getElementById('estatus-contrato').value = contract.estatusContrato || 'Activo';
                 document.getElementById('moneda').value = contract.moneda || 'USD';
-
+                
                 // Cargar partidas asociadas
                 partidasTableBody.innerHTML = ''; // Limpiar partidas actuales
                 const partidas = await db.partidas.where({ contractId: contractId }).toArray();
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 showToast("Contrato no encontrado.", "error");
             }
-        } catch (error) {
+                } catch (error) {
             console.error("Error al cargar contrato para edición:", error);
             showToast("Error al cargar contrato para edición: " + error.message, "error");
         }
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', async () => {
              } else {
                  // Si selecciona la opción por defecto, limpiar el formulario
                  clearContractFormBtn.click();
-             }
+            }
          });
     }
 
