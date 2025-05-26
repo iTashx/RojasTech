@@ -422,7 +422,7 @@ h2 i {
     background-color: var(--dark-blue-sidebar) !important;
 }
 
-/* Para los switches de checkbox. */
+/* Para los switches de checkbox */
 .form-check.form-switch {
     display: flex;
     align-items: center;
@@ -465,18 +465,14 @@ h2 i {
 /* Slider/carrusel controles visibles y compactos */
 #contracts-slider .carousel-control-prev,
 #contracts-slider .carousel-control-next {
-    width: 40px;
-    height: 40px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.1);
-    border-radius: 50%;
-    color: #007bff;
-    z-index: 2;
+    width: 5%;
+    opacity: 0.8;
+    transition: opacity 0.15s ease;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente oscuro */
 }
 #contracts-slider .carousel-control-prev-icon,
 #contracts-slider .carousel-control-next-icon {
-    background-size: 70% 70%;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e"); /* Iconos blancos */
 }
 #contracts-slider-inner .carousel-item .card {
     border: 2px solid #e3e3e3;
