@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
-    db.version(4).stores({
-        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,montoTotalContrato,estatusContrato',
+    db.version(3).stores({
+        contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
         partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
         hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
         hesPartidas: '++id,hesId,contractPartidaId,descripcion,cantidadOriginal,cantidadEjecutada,umd,precioUnitario,totalPartidaHes',
@@ -229,33 +229,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function updateSummaryCards() {
         try {
             const allContracts = await db.contracts.toArray();
-            // Solo actualizar si los elementos existen (estamos en la pestaña de resumen)
-            const activeContractsEl = document.getElementById('active-contracts');
-            if (activeContractsEl) {
-                activeContractsEl.textContent = allContracts.filter(c => c.estatusContrato === 'Activo').length;
-            }
+            document.getElementById('active-contracts').textContent = allContracts.filter(c => c.estatusContrato === 'Activo').length;
             
-            const totalContractAmountEl = document.getElementById('total-contract-amount');
-            if (totalContractAmountEl) {
-                 const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
-                 totalContractAmountEl.textContent = `USD ${totalAmount.toFixed(2)}`;
-            }
+            const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
+            document.getElementById('total-contract-amount').textContent = `USD ${totalAmount.toFixed(2)}`;
 
-            const expiringContractsEl = document.getElementById('expiring-contracts');
-            if (expiringContractsEl) {
-                const thirtyDaysFromNow = new Date();
-                thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-                const expiringContracts = allContracts.filter(c => 
-                    c.fechaTerminacion && new Date(c.fechaTerminacion) <= thirtyDaysFromNow && new Date(c.fechaTerminacion) >= new Date()
-                ).length;
-                expiringContractsEl.textContent = expiringContracts;
-            }
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            const expiringContracts = allContracts.filter(c => 
+                c.fechaTerminacion && new Date(c.fechaTerminacion) <= thirtyDaysFromNow && new Date(c.fechaTerminacion) >= new Date()
+            ).length;
+            document.getElementById('expiring-contracts').textContent = expiringContracts;
 
-            const totalModalitiesEl = document.getElementById('total-modalities');
-            if (totalModalitiesEl) {
-                 const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
-                 totalModalitiesEl.textContent = modalities.size;
-            }
+            const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
+            document.getElementById('total-modalities').textContent = modalities.size;
 
         } catch (error) {
             console.error("Error al actualizar tarjetas de resumen:", error);
@@ -263,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Función para actualizar el resumen basado en el contrato seleccionado en el slider
+    // Nueva función para actualizar el resumen basado en el contrato seleccionado en el slider
     async function updateSummaryByContract(contract) {
         try {
             if (!contract) return;
@@ -438,35 +425,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             )
         };
 
-        // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
-        const cleanedContractData = {
-            numeroProveedor: contractData.numeroProveedor,
-            fechaFirmaContrato: contractData.fechaFirmaContrato,
-            fechaCreado: contractData.fechaCreado,
-            fechaInicio: contractData.fechaInicio,
-            fechaTerminacion: contractData.fechaTerminacion,
-            periodoCulminacion: contractData.periodoCulminacion,
-            numeroSICAC: contractData.numeroSICAC,
-            divisionArea: contractData.divisionArea,
-            eemn: contractData.eemn,
-            region: contractData.region,
-            naturalezaContratacion: contractData.naturalezaContratacion,
-            lineaServicio: contractData.lineaServicio,
-            noPeticionOferta: contractData.noPeticionOferta,
-            modalidadContratacion: contractData.modalidadContratacion,
-            regimenLaboral: contractData.regimenLaboral,
-            objetoContractual: contractData.objetoContractual,
-            fechaCambioAlcance: contractData.fechaCambioAlcance,
-            montoOriginal: contractData.montoOriginal,
-            montoModificado: contractData.montoModificado,
-            montoTotalContrato: contractData.montoTotalContrato,
-            numeroContratoInterno: contractData.numeroContratoInterno,
-            observaciones: contractData.observaciones,
-            estatusContrato: contractData.estatusContrato,
-            moneda: contractData.moneda
-            // No incluir archivosAdjuntos aquí, se manejan por separado
-        };
-
         if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
             showToast("Por favor, complete los campos obligatorios: N° Proveedor, Fecha Firma, Fecha Inicio y Fecha Terminación.", "warning");
             return;
@@ -475,7 +433,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             let contractId;
             if (currentContractId) {
-                await db.contracts.update(currentContractId, cleanedContractData);
+                await db.contracts.update(currentContractId, contractData);
                 contractId = currentContractId;
                 showToast("Contrato actualizado exitosamente.", "success");
             } else {
@@ -487,12 +445,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         return; // Detener el proceso si hay duplicado
                     }
                 }
-                contractId = await db.contracts.add(cleanedContractData);
+                contractId = await db.contracts.add(contractData);
                 showToast("Contrato guardado exitosamente.", "success");
             }
 
             // Guardar partidas asociadas al contrato
-            await db.partidas.where({ contractId: contractId }).delete(); // Eliminar partidas existentes para actualizar
+            await db.partidas.where({ contractId: contractId }).delete();
             const partidaRows = partidasTableBody.querySelectorAll('tr');
             for (const row of partidaRows) {
                 const partida = {
@@ -506,19 +464,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await db.partidas.add(partida);
             }
             
-            // Manejar archivos adjuntos
-            const archivosInput = document.getElementById('adjuntar-archivos');
-            if (archivosInput.files.length > 0) {
-                await guardarArchivos(contractId, 'contrato', archivosInput.files);
-            } else if (currentContractId) {
-                // Si no se seleccionaron nuevos archivos al actualizar, pero había archivos antes,
-                // podrías querer mantenerlos o tener una forma de eliminarlos. Por ahora, si
-                // no se seleccionan nuevos, se eliminan los viejos. Si quieres mantenerlos, 
-                // necesitarías una lógica diferente aquí (ej. no borrar si no se suben nuevos).
-                // Para esta corrección, si no subes nuevos, se borran los viejos para esa entidadId/entidadTipo.
-                 await db.archivos.where({ entidadId: contractId, entidadTipo: 'contrato' }).delete();
-            }
-
             clearContractFormBtn.click();
             loadContractList();
             tabButtons.forEach(btn => {
@@ -528,8 +473,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            console.log("Se ha capturado un error al guardar/actualizar el contrato:", error);
-            showToast("Ocurrió un error al guardar/actualizar el contrato.", "error");
+            console.error("Error al guardar/actualizar el contrato:", error);
+            showToast("Error al guardar/actualizar el contrato: " + error.message, "error");
         }
     });
 
