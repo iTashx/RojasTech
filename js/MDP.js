@@ -2,293 +2,127 @@
 
 // Configuración inicial
 const MDP = {
-    // Estado de la aplicación
+    // Estado de la aplicación (ya no necesitamos estado de autenticación)
     state: {
         currentSection: null,
         searchQuery: '',
-        isAuthenticated: false,
-        lastAccess: null
+        // isAuthenticated: false, // Eliminado
+        // lastAccess: null // Eliminado
     },
 
     // Inicialización
     init() {
-        this.setupEventListeners();
-        this.checkAuthentication();
-        this.updateLastAccess();
-        this.setupNavigation();
+        // Ya no necesitamos event listeners de login o admin
+        // this.setupEventListeners(); 
+        // Ya no necesitamos checkAuthentication
+        // this.checkAuthentication();
+        // Ya no necesitamos updateLastAccess
+        // this.updateLastAccess();
+        // setupNavigation() es opcional si no tienes navegación interna en el MDP. Si sí, descomentar.
+        // this.setupNavigation(); 
+
+        // Mostrar el contenido principal y la documentación directamente
+        this.showContent(); 
+        this.showDocumentation(); 
+        
+        // Cargar el contenido inicial si usas navegación interna (basado en hash)
+        // this.loadContent(); 
     },
 
-    // Configuración de eventos
+    // Configuración de eventos (vacío o con solo navegación interna si aplica)
     setupEventListeners() {
-        // Navegación
-        document.querySelectorAll('.mdp-nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.navigateToSection(e.target.getAttribute('href').substring(1));
-            });
-        });
+        // Si tienes navegación interna en el MDP (ej: enlaces ancla dentro de MDP.md), configúrala aquí.
+        // document.querySelectorAll('.mdp-nav a').forEach(link => {
+        //     link.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         this.navigateToSection(e.target.getAttribute('href').substring(1));
+        //     });
+        // });
 
-        // Búsqueda
+        // Búsqueda (si quieres mantener la funcionalidad de búsqueda)
         const searchInput = document.getElementById('mdp-search');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
                 this.handleSearch(e.target.value);
             });
         }
-
-        // Autenticación
-        const loginForm = document.getElementById('mdp-login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleLogin(e.target);
-            });
-        }
     },
 
-    // Autenticación
-    checkAuthentication() {
-        const token = localStorage.getItem('mdp_token');
-        if (token) {
-            console.log("Token encontrado, validando...");
-            this.validateToken(token);
-        } else {
-            console.log("No hay token, mostrando formulario de login.");
-            this.showLoginForm();
-        }
-    },
+    // Autenticación (eliminada)
+    // checkAuthentication() {},
+    // validateToken(token) {},
+    // handleLogin(form) {},
+    // generateToken() {},
 
-    validateToken(token) {
-        // Aquí iría la lógica de validación del token (si fuera un token real)
-        // Por ahora, solo verificamos si el token existe
-        if (token) {
-            console.log("Token válido (simulado), autenticado.");
-            this.state.isAuthenticated = true;
-            this.hideLoginForm();
-            this.showContent(); // Mostrar contenedor principal del contenido
-            // No llamar a showDocumentation() aquí, se hace al navegar si es necesario
-            this.hideAdminSection(); // Ocultar la sección de administración por defecto
-            // this.loadContent(); // Cargar contenido específico si es necesario (si tuvieras navegación interna)
-        } else {
-            console.log("Token inválido (simulado) o expirado.");
-             this.state.isAuthenticated = false;
-             this.showLoginForm();
-             this.hideContent(); // Ocultar contenido si el token no es válido
-        }
-    },
-
-    handleLogin(form) {
-        const username = form.querySelector('[name="mdp-username"]').value;
-        const password = form.querySelector('[name="mdp-password"]').value;
-
-        // Verificar credenciales
-        console.log("Intentando iniciar sesión con usuario:", username, "y contraseña:", password);
-        console.log("Credenciales esperadas:", MDPConfig.credentials);
-        if (username === MDPConfig.credentials.username && password === MDPConfig.credentials.password) {
-            const token = this.generateToken();
-            localStorage.setItem('mdp_token', token);
-            this.state.isAuthenticated = true;
-            console.log("Login exitoso.");
-            this.hideLoginForm();
-            this.showContent(); // Mostrar contenedor principal del contenido
-             this.showDocumentation(); // Llamar a showDocumentation() aquí después de showContent()
-            this.hideAdminSection(); // Ocultar la sección de administración por defecto
-            // this.loadContent(); // Cargar contenido específico si es necesario
-            this.showSuccess('Inicio de sesión exitoso.'); // Mostrar mensaje de éxito
-        } else {
-            console.warn("Login fallido.");
-            this.showError('Credenciales inválidas.');
-        }
-    },
-
-    generateToken() {
-        return 'mdp_' + Math.random().toString(36).substr(2);
-    },
-
-    // Navegación
+    // Navegación (solo si tienes navegación interna)
     setupNavigation() {
-        const sections = document.querySelectorAll('.mdp-section');
-        sections.forEach(section => {
-            const id = section.id;
-            const navItem = document.querySelector(`.mdp-nav a[href="#${id}"]`);
-            if (navItem) {
-                navItem.addEventListener('click', () => {
-                    this.navigateToSection(id);
-                });
-            }
-        });
+        // Implementación si hay navegación interna dentro del MDP
     },
 
     navigateToSection(sectionId) {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            // Ocultar todas las secciones
-            document.querySelectorAll('.mdp-section').forEach(s => {
-                s.style.display = 'none';
-            });
-
-            // Mostrar la sección seleccionada
-            section.style.display = 'block';
-
-            // Actualizar estado
-            this.state.currentSection = sectionId;
-
-            // Actualizar URL
-            history.pushState(null, '', `#${sectionId}`);
-
-            // Actualizar navegación
-            this.updateNavigation();
-        }
+         // Implementación si hay navegación interna dentro del MDP
     },
 
     updateNavigation() {
-        document.querySelectorAll('.mdp-nav a').forEach(link => {
-            const href = link.getAttribute('href').substring(1);
-            if (href === this.state.currentSection) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
+         // Implementación si hay navegación interna dentro del MDP
     },
 
     // Búsqueda
     handleSearch(query) {
-        this.state.searchQuery = query.toLowerCase();
-        const sections = document.querySelectorAll('.mdp-section');
-        
-        sections.forEach(section => {
-            const content = section.textContent.toLowerCase();
-            const isVisible = content.includes(this.state.searchQuery);
-            section.style.display = isVisible ? 'block' : 'none';
-        });
+         // Implementación si quieres mantener la funcionalidad de búsqueda
+         this.state.searchQuery = query.toLowerCase();
+         const docContent = document.querySelector('.mdp-documentation');
+         if (docContent) {
+            // Esto es una búsqueda básica en el texto visible.
+            // Para una búsqueda más robusta, necesitarías cargar el contenido original de MDP.md
+            // y buscar dentro de él, o usar un parser de markdown.
+            const content = docContent.textContent.toLowerCase();
+            // Lógica para resaltar o filtrar (puede ser compleja sin un parser de markdown)
+            console.log("Buscando en MDP:", this.state.searchQuery);
+         }
     },
 
     // Gestión de contenido
-    loadContent() {
-        // Cargar el contenido inicial
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-            this.navigateToSection(hash);
-        } else {
-            this.navigateToSection('introduccion');
-        }
-    },
-
-    // Utilidades
-    updateLastAccess() {
-        this.state.lastAccess = new Date();
-        localStorage.setItem('mdp_last_access', this.state.lastAccess.toISOString());
-    },
-
-    showError(message) {
-        const errorDiv = document.getElementById('mdp-error');
-        if (errorDiv) {
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            setTimeout(() => {
-                errorDiv.style.display = 'none';
-                errorDiv.textContent = '';
-            }, 3000);
-        }
-    },
-
-    showSuccess(message) {
-        const successDiv = document.getElementById('mdp-success');
-        if (successDiv) {
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-            setTimeout(() => {
-                successDiv.style.display = 'none';
-                successDiv.textContent = '';
-            }, 3000);
-        }
-    },
-
-    showLoginForm() {
-        const loginDiv = document.getElementById('mdp-login');
-        if (loginDiv) {
-            loginDiv.style.display = 'block';
-            // Asegurarse de que todo el contenido del MDP esté oculto al mostrar el login
-            this.hideContent(); 
-            this.hideAdminSection();
-             this.hideDocumentation();
-        }
-    },
-
-    hideLoginForm() {
-        const loginDiv = document.getElementById('mdp-login');
-        if (loginDiv) {
-            loginDiv.style.display = 'none';
-        }
-    },
-
-    // Nuevas funciones para mostrar/ocultar contenido principal
     showContent() {
         const contentDiv = document.getElementById('mdp-content');
         if (contentDiv) {
             contentDiv.style.display = 'block';
-             // Dentro del contenido, ocultar todas las secciones por defecto, excepto quizás una introductoria si existiera
-             // document.querySelectorAll('#mdp-content .mdp-section').forEach(s => s.style.display = 'none');
-             // Asegurarse de que la sección de documentación esté visible después de mostrar el contenido
-            //  this.showDocumentation(); // Esta llamada se moverá al handler de login exitoso
         }
     },
 
     hideContent() {
-        const contentDiv = document.getElementById('mdp-content');
-        if (contentDiv) {
-            contentDiv.style.display = 'none';
-        }
+         // Ya no debería ser necesario ocultar el contenido principal
+        // const contentDiv = document.getElementById('mdp-content');
+        // if (contentDiv) {
+        //     contentDiv.style.display = 'none';
+        // }
     },
 
-    // Nuevas funciones para mostrar/ocultar secciones específicas del MDP
     showDocumentation() {
         const docSection = document.querySelector('.mdp-documentation');
         if (docSection) {
-            // Cargar el contenido de MDP.md y mostrarlo (esto mostrará markdown plano sin un parser)
-             // Eliminar el fetch aquí y asumir que el contenido ya está en el HTML o se manejará de otra forma
-             // Para propósitos de demostración sin parser, simplemente asegurar visibilidad si hay contenido HTML
+             // Asumiendo que el contenido de MDP.md ya está insertado en el HTML (como hicimos antes)
+             // simplemente asegúrate de que la sección esté visible.
              docSection.style.display = 'block';
 
-            //  fetch('/RojasTech/docs/MDP.md') // Usar la ruta relativa a la raíz del repositorio/GitHub Pages
-            //     .then(response => response.text())
-            //     .then(markdownText => {
-            //         docSection.innerHTML = `<pre>${escapeHTML(markdownText)}</pre>`; // Envuelve en <pre> para mantener formato básico
-            //         docSection.style.display = 'block';
-            //     })
-            //     .catch(error => {
-            //         console.error('Error loading MDP documentation:', error);
-            //         docSection.innerHTML = '<p>Error al cargar la documentación.</p>';
-            //         docSection.style.display = 'block';
-            //     });
+            // Si decides cargar el contenido de MDP.md dinámicamente (como intentamos antes con fetch),
+            // la lógica de fetch iría aquí. Por ahora, asumimos que el HTML ya tiene el contenido.
         }
     },
 
     hideDocumentation() {
         const docSection = document.querySelector('.mdp-documentation');
         if (docSection) {
-            docSection.style.display = 'none';
+            docSection.style.display = 'none'; // Ocultar si es necesario en el futuro (ej: para búsqueda con resaltado)
         }
     },
 
-    showAdminSection() {
-        const adminSection = document.querySelector('.mdp-admin-section');
-        if (adminSection) {
-            adminSection.style.display = 'block';
-        }
-    },
+    showAdminSection() {},
+    hideAdminSection() {},
 
-    hideAdminSection() {
-        const adminSection = document.querySelector('.mdp-admin-section');
-        if (adminSection) {
-            adminSection.style.display = 'none';
-        }
-    },
-
-    // Exportación de documentación
+    // Exportación de documentación (mantener si son útiles)
     exportDocumentation(format = 'pdf') {
-        const content = document.querySelector('.mdp-content').innerHTML;
+        const content = document.querySelector('.mdp-documentation').innerHTML; // Exportar el contenido de la documentación
         
         switch (format) {
             case 'pdf':
@@ -304,8 +138,9 @@ const MDP = {
     },
 
     exportToPDF(content) {
-        // Implementar exportación a PDF
-        console.log('Exportando a PDF...');
+        console.log('Exportando contenido de documentación a PDF...');
+        // Implementar exportación a PDF (requiere librería como jsPDF, ya incluida en index.html pero no en MDP.html)
+        // Necesitarías incluir jsPDF en MDP.html también o encontrar otra forma.
     },
 
     exportToHTML(content) {
@@ -313,102 +148,37 @@ const MDP = {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'documentacion.html';
+        a.download = 'documentacion_mdp.html'; // Nombre de archivo
         a.click();
         URL.revokeObjectURL(url);
+        console.log('Contenido de documentación exportado a HTML.');
     },
 
     exportToMarkdown(content) {
-        // Implementar conversión a Markdown
-        console.log('Exportando a Markdown...');
+        console.log('Exportando contenido de documentación a Markdown...');
+        // Esto es complejo sin un parser. Necesitarías convertir el HTML de vuelta a Markdown.
+        // Podrías considerar mantener MDP.md como fuente y exportar ese archivo directamente (si es accesible) o usar una librería.
     }
 };
 
-// Configuración inicial del MDP
-const MDPConfig = {
-    credentials: {
-        username: 'itash',
-        password: 'angel1008'
-    },
-    lastUpdate: new Date().toISOString()
-};
+// Configuración inicial del MDP (Ya no necesitamos credenciales o lógica de guardado/carga de config)
+const MDPConfig = {}; // Objeto vacío o con otra info si es necesaria
 
-// Función para verificar credenciales
-function checkCredentials(username, password) {
-    return username === MDPConfig.credentials.username && 
-           password === MDPConfig.credentials.password;
-}
-
-// Función para actualizar credenciales
-function updateCredentials(newUsername, newPassword) {
-    MDPConfig.credentials.username = newUsername;
-    MDPConfig.credentials.password = newPassword;
-    MDPConfig.lastUpdate = new Date().toISOString();
-    saveConfig();
-    return true;
-}
-
-// Función para guardar la configuración
-function saveConfig() {
-    localStorage.setItem('MDPConfig', JSON.stringify(MDPConfig));
-}
-
-// Función para cargar la configuración
-function loadConfig() {
-    const savedConfig = localStorage.getItem('MDPConfig');
-    if (savedConfig) {
-        Object.assign(MDPConfig, JSON.parse(savedConfig));
-    }
-}
+// Funciones de autenticación y administración (eliminadas o vacías)
+// function checkCredentials(username, password) { return false; }
+// function updateCredentials(newUsername, newPassword) { return false; }
+// function saveConfig() {}
+// function loadConfig() {}
 
 // Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', async () => {
-    loadConfig();
+document.addEventListener('DOMContentLoaded', () => {
+    // loadConfig(); // Ya no es necesario cargar config de credenciales
     MDP.init();
 
-    // Eliminar estas llamadas de ocultación explícitas, MDP.init() y showLoginForm() lo manejarán
-    // MDP.hideAdminSection(); // Comentado para depuración
-    // MDP.hideDocumentation(); // Comentado para depuración
-    // MDP.hideContent(); // Comentado para depuración
-
-    // Configurar listeners para el formulario de administración (dentro del contenido del MDP)
-    const adminForm = document.getElementById('mdp-admin-form');
-    if (adminForm) {
-        adminForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newUsernameInput = document.getElementById('new-username');
-            const newPasswordInput = document.getElementById('new-password');
-            const confirmPasswordInput = document.getElementById('confirm-password');
-
-            const newUsername = newUsernameInput.value;
-            const newPassword = newPasswordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            if (newPassword !== confirmPassword) {
-                MDP.showError('Las contraseñas no coinciden.');
-                return;
-            }
-
-            if (updateCredentials(newUsername, newPassword)) {
-                MDP.showSuccess('Credenciales actualizadas exitosamente.');
-                // Limpiar formulario de administración
-                adminForm.reset();
-            } else {
-                // Esto no debería ocurrir con la lógica actual, pero es un fallback
-                MDP.showError('Error al actualizar credenciales.');
-            }
-        });
-    }
+    // El formulario de administración y login ya no existen, por lo que no necesitamos listeners aquí.
+    // const adminForm = document.getElementById('mdp-admin-form');
+    // if (adminForm) { /* ... */ }
 });
 
-// Añadir una función de utilidad para escapar HTML si es necesario (para mostrar markdown como texto)
-function escapeHTML(str) {
-    return str.replace(/[&<>"]/g, function(match) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;'
-        }[match];
-    });
-} 
+// Eliminar la función escapeHTML si no se usa para mostrar markdown crudo
+// function escapeHTML(str) { /* ... */ } 

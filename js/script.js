@@ -1,13 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     loadConfig();
-    MDP.init();
-
-    // Asegurarse de que la sección de administración esté oculta al cargar la página
-    // MDP.hideAdminSection(); // Comentado para depuración
-    // Asegurarse de que la sección de documentación esté oculta al cargar la página
-    // MDP.hideDocumentation(); // Comentado para depuración
-    // Asegurarse de que el contenido principal esté oculto al cargar la página
-    // MDP.hideContent(); // Comentado para depuración
+    // Asegurarse de que el MDP se inicialice antes de intentar usar sus funciones
+    if (typeof MDP !== 'undefined' && MDP.init) {
+        MDP.init();
+    }
 
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
