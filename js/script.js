@@ -593,11 +593,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (confirm('¿Está seguro de que desea enviar este contrato a la papelera?')) {
                 try {
                     const contractToDelete = await db.contracts.get(contractId);
+                    const relatedPartidas = await db.partidas.where({ contractId: contractId }).toArray();
                     // Mover a la papelera en lugar de eliminar directamente
                     await db.trash.add({
                         originalId: contractId,
                         type: 'contract',
-                        data: contractToDelete,
+                        data: { ...contractToDelete, partidas: relatedPartidas }, // Incluir partidas en los datos guardados
                         deletedAt: new Date().toISOString()
                     });
                     await db.contracts.delete(contractId);
@@ -1478,7 +1479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     const trashItem = await db.trash.get(trashItemId);
                     if (itemType === 'contract') {
-                        await db.contracts.add(trashItem.data); // Restaurar contrato
+                        await db.contracts.add(trashItem.data); // Restaurar contrato (los datos ahora incluyen partidas)
                         // También restaurar sus partidas si las guardamos en la papelera con él
                         // Por ahora, asumimos que se eliminaron y tendrían que recrearse o guardar una copia
                         // más profunda en la papelera. Para esta versión, solo restauramos el contrato.
@@ -1487,9 +1488,54 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const originalPartidas = await db.partidas.where({ contractId: trashItem.originalId }).toArray();
                         for (const partida of originalPartidas) {
                             partida.id = undefined; // Quitar ID para que Dexie asigne uno nuevo
-                            partida.contractId = trashItem.data.id; // Asignar el nuevo ID del contrato restaurado
+                            partida.contractId = await db.contracts.add(trashItem.data); // Obtener el ID del contrato restaurado
                             await db.partidas.add(partida);
                         }
+                        // Restaurar las partidas que estaban guardadas *dentro* del objeto data en la papelera
+                        if (trashItem.data.partidas && Array.isArray(trashItem.data.partidas)) {
+                            const restoredContract = await db.contracts.get(trashItem.originalId); // Obtener el contrato restaurado por su originalId
+                            if (restoredContract) {
+                                for (const partida of trashItem.data.partidas) {
+                                    // Eliminar la partida original de la papelera (si estaba allí como item separado)
+                                    const partidaInTrash = await db.trash.where({ type: 'partida', originalId: partida.id }).first();
+                                    if (partidaInTrash) await db.trash.delete(partidaInTrash.id);
+
+                                    partida.id = undefined; // Asegurar nuevo ID
+                                    partida.contractId = restoredContract.id; // Asignar al contrato restaurado
+                                    await db.partidas.add(partida);
+                                }
+                            } else {
+                                console.error("Contrato restaurado no encontrado para adjuntar partidas.");
+                            }
+                        }
+                        // Si las HES relacionadas se movieron a la papelera, también restaurarlas aquí
+                        const relatedHesInTrash = await db.trash.where({ type: 'hes', data: { contractId: trashItem.originalId } }).toArray();
+                        for (const hesItem of relatedHesInTrash) {
+                            // Verificar si el contrato al que pertenece la HES existe (ya debería existir si restauramos el contrato)
+                            const contractExists = await db.contracts.get(hesItem.data.contractId);
+                            if (contractExists) {
+                                // Restaurar la HES
+                                await db.hes.add(hesItem.data);
+                                // Restaurar las partidas de la HES si estaban guardadas en los datos de la HES en la papelera
+                                if (hesItem.data.hesPartidas && Array.isArray(hesItem.data.hesPartidas)) {
+                                    const restoredHes = await db.hes.get(hesItem.originalId); // Obtener la HES restaurada por su originalId
+                                    if (restoredHes) {
+                                        for (const hesPartida of hesItem.data.hesPartidas) {
+                                            hesPartida.id = undefined; // Asegurar nuevo ID
+                                            hesPartida.hesId = restoredHes.id; // Asignar a la HES restaurada
+                                            await db.hesPartidas.add(hesPartida);
+                                        }
+                                    } else {
+                                        console.error("HES restaurada no encontrada para adjuntar partidas.");
+                                    }
+                                }
+                                // Eliminar la HES de la papelera
+                                await db.trash.delete(hesItem.id);
+                            } else {
+                                console.warn(`Contrato (${hesItem.data.contractId}) para HES (${hesItem.data.noHes}) en papelera no encontrado. No se restaurará la HES.`);
+                            }
+                        }
+
                     } else if (itemType === 'hes') {
                         // Antes de restaurar HES, verificar si su contrato original existe.
                         const contractExists = await db.contracts.get(trashItem.data.contractId);
@@ -1905,12 +1951,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('eliminar-modalidad')?.addEventListener('click', () => {
         const actual = document.getElementById('modalidad-contratacion').value;
-        let modalidades = getModalidades();
-        if (['Obra', 'Servicio', 'Suministro'].includes(actual)) {
-            showToast('No puedes eliminar una modalidad predeterminada.', 'warning');
-            return;
-        }
-        modalidades = modalidades.filter(m => m !== actual);
+        if (!actual) return; // No hacer nada si no hay modalidad seleccionada
+        let modalidades = getModalidades().filter(m => m !== actual);
         setModalidades(modalidades);
         renderModalidadesSelect();
         showToast('Modalidad eliminada.', 'info');
