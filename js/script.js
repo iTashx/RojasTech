@@ -499,8 +499,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            console.error("Error al guardar/actualizar el contrato:", error);
-            showToast("Error al guardar/actualizar el contrato: " + error.message, "error");
+            console.log("Se ha capturado un error al guardar/actualizar el contrato:", error);
+            showToast("Ocurrió un error al guardar/actualizar el contrato.", "error");
         }
     });
 
