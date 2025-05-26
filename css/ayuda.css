@@ -25,6 +25,13 @@
 
     --border-radius: 8px;
     --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    --help-primary: #2c3e50;
+    --help-secondary: #34495e;
+    --help-accent: #3498db;
+    --help-background: #f8f9fa;
+    --help-text: #2c3e50;
+    --help-border: #e9ecef;
 }
 
 * {
@@ -301,4 +308,340 @@ footer a:hover {
     .card ul, .card ol {
         padding-left: var(--spacing-md);
     }
+}
+
+/* Estilos específicos de ayuda.html */
+.section-title {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
+.feature-box {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-3px);
+}
+
+.code-example {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    overflow-x: auto;
+}
+
+.help-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.help-section {
+    margin-bottom: 30px;
+}
+
+.help-section h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.help-section h3 {
+    color: #34495e;
+    margin-top: 25px;
+}
+
+.help-section ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.help-section li {
+    margin-bottom: 10px;
+}
+
+.help-section li:before {
+    content: "•";
+    color: #3498db;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.help-image {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.help-note {
+    background-color: #f8f9fa;
+    border-left: 4px solid #3498db;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+/* Estilos para la documentación de ayuda */
+
+/* Layout principal */
+.help-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    min-height: 100vh;
+    background-color: var(--help-background);
+}
+
+/* Navegación */
+.help-nav {
+    background-color: var(--help-primary);
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.help-nav-header {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+}
+
+.help-nav-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.help-nav-header p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin: 0.5rem 0 0;
+}
+
+.help-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.help-nav li {
+    margin: 0.5rem 0;
+}
+
+.help-nav a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.help-nav a:hover {
+    background-color: var(--help-accent);
+}
+
+/* Contenido principal */
+.help-content {
+    margin-left: 250px;
+    padding: 2rem;
+    max-width: 1200px;
+}
+
+/* Secciones */
+.help-section {
+    margin-bottom: 3rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.help-section h2 {
+    color: var(--help-primary);
+    border-bottom: 2px solid var(--help-accent);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.help-section h3 {
+    color: var(--help-secondary);
+    margin: 1.5rem 0 1rem;
+}
+
+/* Contenedor de imágenes */
+.help-image-container {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.help-image {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--help-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.image-caption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--help-secondary);
+    font-style: italic;
+}
+
+/* Listas */
+.help-section ul,
+.help-section ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+.help-section li {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+/* Notas y advertencias */
+.help-note {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.help-warning {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .help-container {
+        grid-template-columns: 1fr;
+    }
+
+    .help-nav {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    .help-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .help-section {
+        padding: 1rem;
+    }
+}
+
+/* Animaciones */
+.help-section {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para código */
+.help-code {
+    background-color: #f8f9fa;
+    border: 1px solid var(--help-border);
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+/* Estilos para tablas */
+.help-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.help-table th,
+.help-table td {
+    border: 1px solid var(--help-border);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.help-table th {
+    background-color: var(--help-primary);
+    color: white;
+}
+
+.help-table tr:nth-child(even) {
+    background-color: var(--help-background);
+}
+
+/* Estilos para botones */
+.help-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--help-accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.help-button:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos para tooltips */
+.help-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.help-tooltip .tooltip-text {
+    visibility: hidden;
+    background-color: var(--help-primary);
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.help-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
