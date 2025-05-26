@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
-    db.version(1).stores({
+    db.version(2).stores({
         contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
         partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
         hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const faHesListBody = document.getElementById('fa-hes-list-body');
 
     // Elementos de resumen gráfico
-    let contractStatusChartInstance, contractModalityChartInstance;
+    let contractStatusChartInstance = null, contractModalityChartInstance = null;
     const contractStatusChartCanvas = document.getElementById('contractStatusChart');
     const contractModalityChartCanvas = document.getElementById('contractModalityChart');
 
