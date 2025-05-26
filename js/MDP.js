@@ -53,6 +53,20 @@ const MDP = {
         this.state.isAuthenticated = true;
         this.hideLoginForm(); // Asegurarse de que el formulario de login esté oculto
         this.loadContent(); // Cargar el contenido directamente
+ 
+
+ 
+ 
+
+        const token = localStorage.getItem('mdp_token');
+        if (token) {
+            this.validateToken(token);
+        } else {
+            this.showLoginForm();
+        }
+ 
+ 
+ 
     },
 
     validateToken(token) {

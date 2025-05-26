@@ -27,6 +27,7 @@ body {
 .header {
     background-color: var(--light-blue-header); /* Aplicando el nuevo color */
     color: white;
+
     padding: 15px 20px; /* Ajustar padding horizontal */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -41,6 +42,27 @@ body {
 .header .logo {
     flex-grow: 1; /* Permitir que el logo ocupe espacio flexible */
     text-align: center; /* Centrar el texto e icono dentro del logo div */
+ 
+
+
+    padding: 15px 0; /* Aumentar padding vertical */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .d-flex {
+    flex-wrap: wrap;
+    /* Alinea los elementos al inicio */
+    justify-content: flex-start;
+    gap: 30px; /* Aumentar espacio entre elementos */
+
+ 
+    gap: 30px; /* Aumentar espacio entre elementos */
+
+    gap: 20px; /* Espacio entre el grupo del logo y los botones */
+ 
+    align-items: center; /* Asegura la alineación vertical */
+ 
+>>>>>>> ec39ae14daea85a21751baf7994f76fa6bd09458
 }
 
 .header .logo h1 {
@@ -647,6 +669,10 @@ h2 i {
 #hes-total {
     color: #28a745;
     font-size: 1.1em;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ec39ae14daea85a21751baf7994f76fa6bd09458
 }
 
 /* Layout principal */
@@ -669,4 +695,9 @@ h2 i {
 /* Contenido principal */
 .help-content {
     /* ... estilos de padding, margin, etc. ... */
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 42fab69ef3ca542a74d904819e0cc721dec99672
+>>>>>>> ec39ae14daea85a21751baf7994f76fa6bd09458
 }

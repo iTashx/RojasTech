@@ -263,7 +263,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+ 
     // Función para actualizar el resumen basado en el contrato seleccionado en el slider
+
+    // Nueva función para actualizar el resumen basado en el contrato seleccionado en el slider
+ 
     async function updateSummaryByContract(contract) {
         try {
             if (!contract) return;
