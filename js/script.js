@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     if (document.getElementById('graphic-summary').classList.contains('active')) {
-        renderGraficosSelectores();
+        renderGraficosSelectores(); // Llamada inicial si es la pestaña activa al cargar
     }
 
     // --- Funciones para Resumen General ---
@@ -1958,4 +1958,159 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Modalidad eliminada.', 'info');
     });
     renderModalidadesSelect();
+
+    // Exportar Informe de Contrato Individual a Excel
+    document.getElementById('export-report-excel-btn')?.addEventListener('click', async () => {
+        const contractId = parseInt(document.getElementById('report-contract-select').value);
+        if (!contractId) {
+            showToast("Seleccione un contrato para exportar el informe.", "warning");
+            return;
+        }
+        const contract = await db.contracts.get(contractId);
+        if (!contract) return;
+
+        const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+        const hesList = await db.hes.where({ contractId: contractId }).toArray();
+
+        const data = [];
+        // Información general del contrato
+        data.push({ 'Informe de Contrato Individual': contract.numeroSICAC || contract.numeroProveedor });
+        data.push({ 'Monto Total Contrato': `${contract.montoTotalContrato ? contract.montoTotalContrato.toFixed(2) : '0.00'} ${contract.moneda || 'USD'}` });
+        let totalConsumedAmount = 0;
+        for (const hes of hesList) { totalConsumedAmount += hes.totalHes || 0; }
+        data.push({ 'Monto Consumido por HES': `${totalConsumedAmount.toFixed(2)} ${contract.moneda || 'USD'}` });
+        data.push({ 'Monto Restante del Contrato': `${(contract.montoTotalContrato - totalConsumedAmount).toFixed(2)} ${contract.moneda || 'USD'}` });
+        data.push({}); // Fila vacía para separar
+
+        // Partidas del Contrato y Consumo
+        data.push({ 'Partidas del Contrato y Consumo': '' });
+        const partidasHeaders = ['Descripción', 'Cantidad Original', 'Cantidad Consumida', 'Cantidad Restante', 'Monto Consumido', 'Monto Restante'];
+        data.push(partidasHeaders.reduce((obj, header) => { obj[header] = header; return obj; }, {})); // Añadir encabezados
+        for (const partida of partidas) {
+            const executedInHES = await getExecutedQuantityForContractPartida(partida.id);
+            const remainingQuantity = partida.cantidad - executedInHES;
+            const consumedAmount = executedInHES * partida.precioUnitario;
+            const remainingAmount = remainingQuantity * partida.precioUnitario;
+            data.push({
+                'Descripción': partida.descripcion,
+                'Cantidad Original': `${partida.cantidad} ${partida.umd}`,
+                'Cantidad Consumida': `${executedInHES.toFixed(2)} ${partida.umd}`,
+                'Cantidad Restante': `${remainingQuantity.toFixed(2)} ${partida.umd}`,
+                'Monto Consumido': `${consumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`,
+                'Monto Restante': `${remainingAmount.toFixed(2)} ${contract.moneda || 'USD'}`
+            });
+        }
+        data.push({}); // Fila vacía para separar
+
+        // HES Asociadas a este Contrato
+        data.push({ 'HES Asociadas a este Contrato': '' });
+        const hesHeaders = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+        data.push(hesHeaders.reduce((obj, header) => { obj[header] = header; return obj; }, {})); // Añadir encabezados
+        if (hesList.length === 0) {
+            data.push({ 'No hay HES asociadas a este contrato.': '' });
+        } else {
+            hesList.forEach(hes => {
+                data.push({
+                    'No. HES': hes.noHes,
+                    'Fecha Inicio': hes.fechaInicioHes,
+                    'Fecha Final': hes.fechaFinalHes,
+                    'Total HES': hes.totalHes.toFixed(2),
+                    'Estatus': hes.aprobado
+                });
+            });
+        }
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Informe Contrato");
+        XLSX.writeFile(wb, `Informe_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`);
+        showToast("Informe exportado a Excel.", "success");
+    });
+
+    // Exportar Informe de Contrato Individual a PDF
+    document.getElementById('export-report-pdf-btn')?.addEventListener('click', async () => {
+        const contractId = parseInt(document.getElementById('report-contract-select').value);
+        if (!contractId) {
+            showToast("Seleccione un contrato para exportar el informe.", "warning");
+            return;
+        }
+        const contract = await db.contracts.get(contractId);
+        if (!contract) return;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        let yOffset = 15;
+        doc.text(`Informe de Contrato Individual: ${contract.numeroSICAC || contract.numeroProveedor}`, 10, yOffset);
+        yOffset += 10;
+        doc.text(`Monto Total Contrato: ${contract.montoTotalContrato ? contract.montoTotalContrato.toFixed(2) : '0.00'} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 7;
+        const hesList = await db.hes.where({ contractId: contractId }).toArray();
+        let totalConsumedAmount = 0;
+        for (const hes of hesList) { totalConsumedAmount += hes.totalHes || 0; }
+        doc.text(`Monto Consumido por HES: ${totalConsumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 7;
+        doc.text(`Monto Restante del Contrato: ${(contract.montoTotalContrato - totalConsumedAmount).toFixed(2)} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 15;
+
+        doc.text('Partidas del Contrato y Consumo:', 10, yOffset);
+        yOffset += 5;
+        const partidasTableColumn = ['Descripción', 'Cantidad Original', 'Cantidad Consumida', 'Cantidad Restante', 'Monto Consumido', 'Monto Restante'];
+        const partidasTableRows = [];
+        const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+        for (const partida of partidas) {
+            const executedInHES = await getExecutedQuantityForContractPartida(partida.id);
+            const remainingQuantity = partida.cantidad - executedInHES;
+            const consumedAmount = executedInHES * partida.precioUnitario;
+            const remainingAmount = remainingQuantity * partida.precioUnitario;
+            partidasTableRows.push([
+                partida.descripcion,
+                `${partida.cantidad} ${partida.umd}`,
+                `${executedInHES.toFixed(2)} ${partida.umd}`,
+                `${remainingQuantity.toFixed(2)} ${partida.umd}`,
+                `${consumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`,
+                `${remainingAmount.toFixed(2)} ${contract.moneda || 'USD'}`
+            ]);
+        }
+        doc.autoTable({
+            head: [partidasTableColumn],
+            body: partidasTableRows,
+            startY: yOffset,
+            styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+            headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' },
+            margin: { top: 15, bottom: 10, left: 10, right: 10 },
+             didDrawPage: function(data) { yOffset = data.cursor.y; }
+        });
+
+        yOffset += 10; // Espacio después de la tabla
+        doc.text('HES Asociadas a este Contrato:', 10, yOffset);
+        yOffset += 5;
+        const hesTableColumn = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+        const hesTableRows = [];
+        if (hesList.length === 0) {
+            hesTableRows.push(['No hay HES asociadas a este contrato.', '', '', '', '']);
+        } else {
+            hesList.forEach(hes => {
+                hesTableRows.push([
+                    hes.noHes,
+                    hes.fechaInicioHes,
+                    hes.fechaFinalHes,
+                    hes.totalHes.toFixed(2),
+                    hes.aprobado
+                ]);
+            });
+        }
+        doc.autoTable({
+            head: [hesTableColumn],
+            body: hesTableRows,
+            startY: yOffset,
+            styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+            headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' },
+            margin: { top: 15, bottom: 10, left: 10, right: 10 },
+             didDrawPage: function(data) { yOffset = data.cursor.y; }
+        });
+
+        doc.save(`Informe_${contract.numeroSICAC || contract.numeroProveedor}.pdf`);
+        showToast("Informe exportado a PDF.", "success");
+    });
 });

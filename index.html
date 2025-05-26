@@ -588,6 +588,13 @@
                         <select id="report-contract-select" class="form-select mb-3">
                             <option value="">Seleccione un Contrato</option>
                         </select>
+                        
+                        <!-- Botones de Exportar para Informes -->
+                        <div class="export-buttons-report mb-3">
+                            <button class="btn btn-info" id="export-report-excel-btn"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+                            <button class="btn btn-danger" id="export-report-pdf-btn"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                        </div>
+
                         <div id="report-details" class="card p-3" style="display:none;">
                             <h5>Contrato: <span id="report-contract-sicac"></span></h5>
                             <p>Monto Total Contrato: <span id="report-contract-total"></span></p>
