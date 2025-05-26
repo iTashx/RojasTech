@@ -31,6 +31,13 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.header .d-flex {
+    flex-wrap: wrap;
+    /* Ajusta la alineación cuando los elementos se envuelven */
+    align-items: center; /* Alinea verticalmente */
+    gap: 10px; /* Espacio entre elementos (logo y botones) */
+}
+
 .header .logo h1 {
     font-size: 1.8rem;
     font-weight: 600;

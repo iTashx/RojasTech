@@ -72,10 +72,11 @@ const MDP = {
 
         // Aquí iría la lógica de autenticación real
         // Por ahora, solo verificamos credenciales básicas
-        if (username === 'admin' && password === 'admin') {
+        if (username === 'itash' && password === 'angel1008') {
             const token = this.generateToken();
             localStorage.setItem('mdp_token', token);
             this.state.isAuthenticated = true;
+            this.showSuccess('Inicio de sesión correcto');
             this.hideLoginForm();
             this.loadContent();
         } else {
@@ -220,14 +221,22 @@ const MDP = {
     exportToMarkdown(content) {
         // Implementar conversión a Markdown
         console.log('Exportando a Markdown...');
+    },
+
+    showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'mdp-status mdp-status-success';
+        successDiv.textContent = message;
+        document.body.appendChild(successDiv);
+        setTimeout(() => successDiv.remove(), 3000);
     }
 };
 
 // Configuración inicial del MDP
 const MDPConfig = {
     credentials: {
-        username: 'admin',
-        password: 'admin'
+        username: 'itash',
+        password: 'angel1008'
     },
     lastUpdate: new Date().toISOString()
 };
