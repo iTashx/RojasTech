@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     loadConfig();
     // Asegurarse de que el MDP se inicialice antes de intentar usar sus funciones
-    if (typeof MDP !== 'undefined' && MDP.init) {
-        MDP.init();
-    }
+    // if (typeof MDP !== 'undefined' && MDP.init) {
+    //     MDP.init();
+    // }
 
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
@@ -149,27 +149,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.showToast = showToast; // Hacerla global
 
     // --- Manejar Pestañas (Secciones) ---
+    // Asegurar que los event listeners para todas las pestañas se adjunten
     tabButtons.forEach(button => {
+        console.log('Configurando listener para botón:', button.getAttribute('data-target'));
         button.addEventListener('click', async () => {
             const targetId = button.getAttribute('data-target');
+            console.log('Clic en botón de pestaña:', targetId);
             
             sections.forEach(section => section.classList.remove('active'));
             document.getElementById(targetId).classList.add('active');
+            console.log('Pestaña activada:', targetId);
             
             tabButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
+            console.log('Clase active actualizada en botones.');
 
             // Cargar datos específicos al cambiar de pestaña
             try {
+                console.log('Intentando cargar datos para:', targetId);
             if (targetId === 'contract-list') {
                 await loadContractList();
+                console.log('loadContractList completado.');
             } else if (targetId === 'general-summary') {
                 await updateSummaryCards();
+                console.log('updateSummaryCards completado.');
                     await renderContractsSlider(); // Asegurar que el slider se recargue si se vuelve a la pestaña
+                    console.log('renderContractsSlider completado.');
             } else if (targetId === 'new-edit-contract') {
                 if (!currentContractId) {
                     document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
                 }
+                await populateContractEditSelect(); // Asegurarse de cargar el selector de contratos para edición
             } else if (targetId === 'hes-management') {
                 await populateContractSelect(hesContractSelect);
                 await loadHesList();
@@ -198,6 +208,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Asegurar que la pestaña inicial esté activa y cargue su contenido
+    const initialTab = document.querySelector('.tab-btn.active');
+    if (initialTab) {
+        const targetId = initialTab.getAttribute('data-target');
+        console.log('Cargando pestaña inicial:', targetId);
+        document.getElementById(targetId).classList.add('active');
+        // Llamar a la lógica de carga de datos de la pestaña inicial si es necesario
+         if (targetId === 'general-summary') {
+             await updateSummaryCards();
+             await renderContractsSlider();
+         } else if (targetId === 'contract-list') {
+             await loadContractList();
+         } else if (targetId === 'new-edit-contract') {
+              document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
+             await populateContractEditSelect();
+         } else if (targetId === 'hes-management') {
+              await populateContractSelect(hesContractSelect);
+             await loadHesList();
+              hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
+         } else if (targetId === 'trash-can') {
+             await loadTrashCan();
+         } else if (targetId === 'physical-advance') {
+             await populateContractSelect(physicalAdvanceContractSelect);
+             physicalAdvanceDetails.style.display = 'none';
+         } else if (targetId === 'financial-advance') {
+             await populateContractSelect(financialAdvanceContractSelect);
+             financialAdvanceDetails.style.display = 'none';
+         } else if (targetId === 'graphic-summary') {
+              await renderCharts();
+             await renderGraficosSelectores();
+         } else if (targetId === 'reports') {
+              await populateContractSelect(reportContractSelect);
+             reportDetails.style.display = 'none';
+             reportHesDetailView.style.display = 'none';
+         }
+    }
 
     // Asegurar que los event listeners de exportación estén adjuntos después de que los elementos existan
     document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
