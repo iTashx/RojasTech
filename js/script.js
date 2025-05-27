@@ -872,13 +872,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let cantidadEjecutar = parseFloat(input.value) || 0;
             if (cantidadEjecutar < 0) cantidadEjecutar = 0;
-            // La validación de max se hace en el evento click del botón y se limita el valor aquí.
-            // Si escriben un número mayor, simplemente se usará el valor ingresado hasta que se presione un botón o se guarde.
-            // Se puede añadir una validación más estricta aquí si es necesario.
+            // Limitar al máximo disponible al escribir
+            if (cantidadEjecutar > availableQuantity) {
+                cantidadEjecutar = availableQuantity;
+                input.value = cantidadEjecutar.toFixed(2); // Actualizar el input si se excede el límite
+            }
 
-            input.value = cantidadEjecutar.toFixed(2); // Formatear el valor
+            // Asegurarse de que el valor tiene 2 decimales si es necesario
+            // Si el usuario está escribiendo y el número aún no está completo (ej. '12.'), no formatear todavía
+            if (!isNaN(cantidadEjecutar) && input.value.slice(-1) !== '.') {
+                input.value = cantidadEjecutar.toFixed(2);
+            }
 
-            updateHesPartidaTotals(row);
+            updateHesPartidaTotals(row); // Actualizar totales después de la validación/formato
         }
     });
 
@@ -1933,6 +1939,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (contracts.length > 0) {
             console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id); // Log
             updateSummaryByContract(contracts[0]);
+        }
+
+        // Inicializar el carrusel de Bootstrap explícitamente
+        if (contracts.length > 0 && document.getElementById('contracts-slider')) {
+            const carousel = new bootstrap.Carousel(document.getElementById('contracts-slider'), { interval: false }); // Puedes ajustar el intervalo si quieres auto-slide
+            console.log("Carrusel de Bootstrap inicializado."); // Log
         }
     }
 
