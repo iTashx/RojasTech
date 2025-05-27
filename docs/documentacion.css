@@ -248,7 +248,7 @@ footer {
 }
 
 footer a {
-    color: var(--accent-color);
+    color: white;
     text-decoration: none;
 }
 
@@ -257,24 +257,23 @@ footer a:hover {
 }
 
 .footer-text {
-    margin-top: 5px;
-    display: block;
+    margin: 0.5em 0;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
-        align-items: flex-start;
-        padding: var(--spacing-md) var(--spacing-sm);
+        text-align: center;
+        gap: var(--spacing-sm);
     }
 
     .header-buttons {
-        margin-top: var(--spacing-sm);
+        justify-content: center;
     }
 
     main {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md);
     }
 }
 
@@ -284,15 +283,12 @@ footer a:hover {
     }
 
     .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.9em;
     }
 
     .small-btn {
-        font-size: 0.75em;
-        display: inline-block;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: var(--spacing-xs);
     }
 
     .card h2 {
@@ -308,131 +304,42 @@ footer a:hover {
     }
 }
 
-/* Estilos específicos de ayuda.html */
-.section-title {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 10px;
-    margin-bottom: 20px;
-}
+/* Specific styles for Ayuda and Documentacion */
 
-.feature-box {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
-}
-
-.feature-box:hover {
-    transform: translateY(-3px);
-}
-
-.code-example {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 6px;
-    font-family: monospace;
-    overflow-x: auto;
-}
-
-.help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
-}
-
-.help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
-}
-
-.help-section ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.help-section li {
-    margin-bottom: 10px;
-}
-
-.help-section li:before {
-    content: "•";
-    color: #3498db;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 10px 0;
-}
-
-.help-note {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
-    padding: 15px;
-    margin: 15px 0;
-}
-
-/* Estilos para la documentación de ayuda */
-
-/* Layout principal */
+/* --- Help/Documentation Layout --- */
 .help-container {
     display: grid;
-    grid-template-columns: 250px 1fr;
+    grid-template-columns: 250px 1fr; /* Adjust sidebar width as needed */
     min-height: 100vh;
-    background-color: var(--help-background);
 }
 
-/* Navegación */
 .help-nav {
     background-color: var(--help-primary);
     color: white;
-    padding: 1rem;
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    overflow-y: auto;
+    padding: var(--spacing-md);
+    position: fixed; /* Fixed sidebar */
+    width: 250px; /* Same as grid template */
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scrollable if content overflows */
 }
 
 .help-nav-header {
     text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--help-secondary);
 }
 
 .help-nav-header h1 {
-    font-size: 1.5rem;
     margin: 0;
+    font-size: 1.8em;
+    color: white;
 }
 
 .help-nav-header p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin: 0.5rem 0 0;
+    margin: 0;
+    font-size: 1em;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .help-nav ul {
@@ -442,7 +349,7 @@ footer a:hover {
 }
 
 .help-nav li {
-    margin: 0.5rem 0;
+    margin-bottom: 0.5rem;
 }
 
 .help-nav a {
@@ -455,43 +362,55 @@ footer a:hover {
 }
 
 .help-nav a:hover {
-    background-color: var(--help-accent);
+    background-color: var(--help-secondary);
 }
 
-/* Contenido principal */
 .help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
+    margin-left: 250px; /* Same as sidebar width */
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-width: 1200px; /* Optional: set max width for content */
 }
 
-/* Secciones */
+/* --- Section Styles --- */
 .help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    background-color: white; /* Use white background for sections */
+    padding: var(--spacing-md);
+    border-radius: var(--help-radius); /* Use help-specific radius */
+    box-shadow: var(--help-shadow); /* Use help-specific shadow */
 }
 
 .help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    color: var(--help-primary); /* Use help-specific primary color for headings */
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
 }
 
 .help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
+    color: var(--help-secondary); /* Use help-specific secondary color for subheadings */
+    margin: 1.5rem 0 1rem; /* Adjust margins as needed */
+    font-size: 1.4rem;
 }
 
-/* Contenedor de imágenes */
+.help-section p {
+    margin-bottom: 1rem;
+}
+
+.help-section ul,
+.help-section ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.help-section li {
+    margin-bottom: 0.5rem;
+    /* You might want to add a custom list style */
+}
+
+/* --- Image Styles --- */
 .help-image-container {
-    margin: 2rem 0;
-    text-align: center;
+    text-align: center; /* Center images */
+    margin: 1rem 0;
 }
 
 .help-image {
@@ -499,94 +418,48 @@ footer a:hover {
     height: auto;
     border: 1px solid var(--help-border);
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: var(--help-shadow);
 }
 
 .image-caption {
+    display: block;
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--light-text-color);
     margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--help-secondary);
-    font-style: italic;
 }
 
-/* Listas */
-.help-section ul,
-.help-section ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
-}
+/* --- Specific Content Styles (Notes, Code, Tables, Buttons, Tooltips) --- */
 
-.help-section li {
-    margin: 0.5rem 0;
-    line-height: 1.5;
-}
-
-/* Notas y advertencias */
+/* Notes and Warnings */
 .help-note {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
+    background-color: #e8f4f8; /* Light blue */
+    border-left: 4px solid var(--help-accent);
     padding: 1rem;
     margin: 1rem 0;
+    border-radius: 4px;
 }
 
 .help-warning {
-    background-color: #fff3e0;
-    border-left: 4px solid #ff9800;
+    background-color: #fff3cd; /* Light yellow */
+    border-left: 4px solid #ffc107; /* Darker yellow */
     padding: 1rem;
     margin: 1rem 0;
+    border-radius: 4px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .help-container {
-        grid-template-columns: 1fr;
-    }
-
-    .help-nav {
-        position: static;
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-    }
-
-    .help-content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-
-    .help-section {
-        padding: 1rem;
-    }
-}
-
-/* Animaciones */
-.help-section {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Estilos para código */
+/* Code Blocks */
 .help-code {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* Light gray */
     border: 1px solid var(--help-border);
     border-radius: 4px;
     padding: 1rem;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    overflow-x: auto;
+    font-family: monospace; /* Monospaced font */
+    overflow-x: auto; /* Horizontal scroll for long lines */
     margin: 1rem 0;
 }
 
-/* Estilos para tablas */
+/* Tables */
 .help-table {
     width: 100%;
     border-collapse: collapse;
@@ -606,10 +479,10 @@ footer a:hover {
 }
 
 .help-table tr:nth-child(even) {
-    background-color: var(--help-background);
+    background-color: var(--help-background); /* Alternate row color */
 }
 
-/* Estilos para botones */
+/* Buttons */
 .help-button {
     display: inline-block;
     padding: 0.5rem 1rem;
@@ -618,15 +491,15 @@ footer a:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+    text-decoration: none; /* Remove underline from links */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 .help-button:hover {
-    background-color: #2980b9;
+    background-color: #2980b9; /* Darker accent color on hover */
 }
 
-/* Estilos para tooltips */
+/* Tooltips */
 .help-tooltip {
     position: relative;
     display: inline-block;
@@ -640,15 +513,51 @@ footer a:hover {
     padding: 0.5rem;
     border-radius: 4px;
     position: absolute;
-    z-index: 1;
-    bottom: 125%;
+    z-index: 1; /* Ensure tooltip is on top */
+    bottom: 125%; /* Position above the element */
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); /* Center the tooltip */
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s; /* Smooth fade-in */
 }
 
 .help-tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
 }
+
+/* --- Responsive Styles for Help/Documentation --- */
+@media (max-width: 768px) {
+    .help-container {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    }
+
+    .help-nav {
+        position: relative; /* Static position on smaller screens */
+        width: 100%; /* Full width */
+        margin-bottom: 1rem;
+        height: auto; /* Auto height */
+        overflow-y: visible; /* Remove scroll */
+    }
+
+    .help-content {
+        margin-left: 0; /* No margin on smaller screens */
+        padding: var(--spacing-md);
+    }
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.help-section {
+    animation: fadeIn 0.5s ease-out;
+} 

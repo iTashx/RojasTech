@@ -1,18 +1,20 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicialización de Dexie (base de datos local)
     const db = new Dexie('SigesconDB');
-    db.version(1).stores({
-        contracts: '++id,numeroProveedor,fechaFirmaContrato,montoTotalContrato,estatusContrato',
+    db.version(5).stores({
+        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,montoTotalContrato,estatusContrato,numeroSICAC', // Agregado numeroSICAC como índice
         partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
         hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
         hesPartidas: '++id,hesId,contractPartidaId,descripcion,cantidadOriginal,cantidadEjecutada,umd,precioUnitario,totalPartidaHes',
-        trash: '++id,originalId,type,data,deletedAt' // Para la papelera de reciclaje
+        trash: '++id,originalId,type,data,deletedAt',
+        archivos: '++id,entidadId,entidadTipo,nombre,tipo,tamano,fechaModificacion,contenido'
     });
 
     try {
         await db.open();
         console.log("Base de datos abierta exitosamente.");
         // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
+
     } catch (err) {
         console.error("Error al abrir la base de datos:", err);
         showToast("Error al cargar la base de datos local. " + err.message, "error");
@@ -94,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const faHesListBody = document.getElementById('fa-hes-list-body');
 
     // Elementos de resumen gráfico
-    let contractStatusChartInstance, contractModalityChartInstance;
+    let contractStatusChartInstance = null, contractModalityChartInstance = null;
     const contractStatusChartCanvas = document.getElementById('contractStatusChart');
     const contractModalityChartCanvas = document.getElementById('contractModalityChart');
 
@@ -118,6 +120,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentContractId = null; // Para edición de contratos
     let currentHesId = null; // Para edición de HES
+
+    // Nuevos elementos para editar contrato desde selector
+    const selectContractToEdit = document.getElementById('select-contract-to-edit');
 
     // --- Función para mostrar mensajes emergentes (Toasts) ---
     function showToast(message, type = 'success') {
@@ -149,61 +154,168 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.classList.add('active');
 
             // Cargar datos específicos al cambiar de pestaña
-            if (targetId === 'contract-list') {
-                await loadContractList();
-            } else if (targetId === 'general-summary') {
-                await updateSummaryCards();
-            } else if (targetId === 'new-edit-contract') {
-                if (!currentContractId) {
-                    document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
+            try {
+                if (targetId === 'contract-list') {
+                    await loadContractList();
+                } else if (targetId === 'general-summary') {
+                    await updateSummaryCards();
+                    await renderContractsSlider(); // Asegurar que el slider se recargue si se vuelve a la pestaña
+                } else if (targetId === 'new-edit-contract') {
+                    if (!currentContractId) {
+                        document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
+                    }
+                } else if (targetId === 'hes-management') {
+                    await populateContractSelect(hesContractSelect);
+                    await loadHesList();
+                    if (!currentHesId) { // Solo setear fecha de creación si es nueva HES
+                        hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
+                    }
+                } else if (targetId === 'trash-can') {
+                    await loadTrashCan();
+                } else if (targetId === 'physical-advance') {
+                    await populateContractSelect(physicalAdvanceContractSelect);
+                    physicalAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+                } else if (targetId === 'financial-advance') {
+                    await populateContractSelect(financialAdvanceContractSelect);
+                    financialAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
+                } else if (targetId === 'graphic-summary') {
+                    await renderCharts();
+                    await renderGraficosSelectores();
+                } else if (targetId === 'reports') {
+                    await populateContractSelect(reportContractSelect);
+                    reportDetails.style.display = 'none';
+                    reportHesDetailView.style.display = 'none';
                 }
-            } else if (targetId === 'hes-management') {
-                await populateContractSelect(hesContractSelect);
-                await loadHesList();
-                if (!currentHesId) { // Solo setear fecha de creación si es nueva HES
-                    hesFechaCreadoInput.value = new Date().toISOString().split('T')[0];
-                }
-            } else if (targetId === 'trash-can') {
-                await loadTrashCan();
-            } else if (targetId === 'physical-advance') {
-                await populateContractSelect(physicalAdvanceContractSelect);
-                physicalAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
-            } else if (targetId === 'financial-advance') {
-                await populateContractSelect(financialAdvanceContractSelect);
-                financialAdvanceDetails.style.display = 'none'; // Ocultar detalles al cambiar
-            } else if (targetId === 'graphic-summary') {
-                await renderCharts();
-            } else if (targetId === 'reports') {
-                await populateContractSelect(reportContractSelect);
-                reportDetails.style.display = 'none';
-                reportHesDetailView.style.display = 'none';
+            } catch (error) {
+                console.error(`Error al cargar pestaña ${targetId}:`, error);
+                showToast(`Error al cargar la sección.`, "error");
             }
         });
     });
+
+    // Asegurar que los event listeners de exportación estén adjuntos después de que los elementos existan
+    document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
+    document.getElementById('export-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('contratos'));
+
+    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
+    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico'));
+    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
+    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero'));
+
+    // Asegurar que los event listeners de gráficos estén adjuntos
+    document.getElementById('graficos-contrato-select')?.addEventListener('change', (e) => {
+        const contratoId = parseInt(e.target.value);
+        const tipo = document.getElementById('graficos-tipo-select').value;
+        renderResumenGrafico(contratoId, tipo);
+    });
+    document.getElementById('graficos-tipo-select')?.addEventListener('change', (e) => {
+        const tipo = e.target.value;
+        const contratoId = parseInt(document.getElementById('graficos-contrato-select').value);
+        renderResumenGrafico(contratoId, tipo);
+    });
+
+    // Inicializar selectores de gráficos si la pestaña está activa al inicio
+    const resumenGraficoTabBtn = document.querySelector('[data-target="graphic-summary"]');
+    if (resumenGraficoTabBtn) {
+        resumenGraficoTabBtn.addEventListener('click', async () => {
+            await renderGraficosSelectores();
+        });
+    }
+    if (document.getElementById('graphic-summary').classList.contains('active')) {
+        renderGraficosSelectores(); // Llamada inicial si es la pestaña activa al cargar
+    }
 
     // --- Funciones para Resumen General ---
     async function updateSummaryCards() {
         try {
             const allContracts = await db.contracts.toArray();
-            document.getElementById('active-contracts').textContent = allContracts.filter(c => c.estatusContrato === 'Activo').length;
+            // Solo actualizar si los elementos existen (estamos en la pestaña de resumen)
+            const activeContractsEl = document.getElementById('active-contracts');
+            if (activeContractsEl) {
+                activeContractsEl.textContent = allContracts.filter(c => c.estatusContrato === 'Activo').length;
+            }
             
-            const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
-            document.getElementById('total-contract-amount').textContent = `USD ${totalAmount.toFixed(2)}`;
+            const totalContractAmountEl = document.getElementById('total-contract-amount');
+            if (totalContractAmountEl) {
+                 const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
+                 totalContractAmountEl.textContent = `USD ${totalAmount.toFixed(2)}`;
+            }
 
-            const thirtyDaysFromNow = new Date();
-            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-            const expiringContracts = allContracts.filter(c => 
-                c.fechaTerminacion && new Date(c.fechaTerminacion) <= thirtyDaysFromNow && new Date(c.fechaTerminacion) >= new Date()
-            ).length;
-            document.getElementById('expiring-contracts').textContent = expiringContracts;
+            const expiringContractsEl = document.getElementById('expiring-contracts');
+            if (expiringContractsEl) {
+                const thirtyDaysFromNow = new Date();
+                thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+                const expiringContracts = allContracts.filter(c => 
+                    c.fechaTerminacion && new Date(c.fechaTerminacion) <= thirtyDaysFromNow && new Date(c.fechaTerminacion) >= new Date()
+                ).length;
+                expiringContractsEl.textContent = expiringContracts;
+            }
 
-            const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
-            document.getElementById('total-modalities').textContent = modalities.size;
+            const totalModalitiesEl = document.getElementById('total-modalities');
+            if (totalModalitiesEl) {
+                 const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
+                 totalModalitiesEl.textContent = modalities.size;
+            }
 
         } catch (error) {
             console.error("Error al actualizar tarjetas de resumen:", error);
             showToast("Error al cargar resumen general.", "error");
         }
+    }
+
+    // Función para actualizar el resumen basado en el contrato seleccionado en el slider
+    async function updateSummaryByContract(contract) {
+        try {
+            if (!contract) return;
+
+            // Actualizar Monto Total Contratado (del contrato seleccionado)
+            document.getElementById('total-contract-amount').textContent = `USD ${formatMonto(contract.montoTotalContrato)}`;
+
+            // Actualizar Días para Vencimiento (solo para el contrato seleccionado)
+            const expiryList = document.getElementById('contracts-expiry-list');
+            expiryList.innerHTML = ''; // Limpiar lista anterior
+            if (contract.fechaTerminacion) {
+                const today = new Date();
+                const terminationDate = new Date(contract.fechaTerminacion + 'T00:00:00');
+                const diffTime = terminationDate.getTime() - today.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                const expiryItem = document.createElement('li');
+                expiryItem.textContent = `${contract.numeroSICAC || contract.numeroProveedor || 'Contrato'}: ${diffDays} días`;
+                expiryList.appendChild(expiryItem);
+            } else {
+                 const expiryItem = document.createElement('li');
+                 expiryItem.textContent = `${contract.numeroSICAC || contract.numeroProveedor || 'Contrato'}: Fecha de terminación no especificada`;
+                 expiryList.appendChild(expiryItem);
+            }
+
+            // Actualizar Avance Financiero y Físico (del contrato seleccionado)
+            const { physicalPercentage, financialPercentage } = await calculateContractAdvances(contract.id);
+
+            // Avance Financiero
+            const financialProgressBar = document.getElementById('financial-progress-bar');
+            const financialProgressLabel = document.getElementById('financial-progress-label');
+            financialProgressBar.style.width = `${financialPercentage}%`;
+            financialProgressBar.setAttribute('aria-valuenow', financialPercentage);
+            financialProgressLabel.textContent = `${financialPercentage.toFixed(2)}%`;
+
+            // Avance Físico
+            const physicalProgressBar = document.getElementById('physical-progress-bar');
+            const physicalProgressLabel = document.getElementById('physical-progress-label');
+            physicalProgressBar.style.width = `${physicalPercentage}%`;
+            physicalProgressBar.setAttribute('aria-valuenow', physicalPercentage);
+            physicalProgressLabel.textContent = `${physicalPercentage.toFixed(2)}%`;
+
+
+        } catch (error) {
+            console.error("Error al actualizar resumen por contrato:", error);
+            showToast("Error al cargar detalles del contrato.", "error");
+        }
+    }
+
+    // Función auxiliar para formatear monto a USD 32.000,00
+    function formatMonto(amount) {
+        if (amount === undefined || amount === null) return '0.00';
+        return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 
     // --- Lógica del Formulario Nuevo/Editar Contrato ---
@@ -294,6 +406,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     contractForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        // Deshabilitar el botón para evitar múltiples clics
+        saveContractBtn.disabled = true;
+
         const contractData = {
             numeroProveedor: document.getElementById('numero-proveedor').value,
             fechaFirmaContrato: document.getElementById('fecha-firma-contrato').value,
@@ -320,26 +435,71 @@ document.addEventListener('DOMContentLoaded', async () => {
             estatusContrato: document.getElementById('estatus-contrato').value,
             moneda: document.getElementById('moneda').value,
             // Los archivos adjuntos requieren manejo especial
+            archivosAdjuntos: await handleFileUpload(
+                document.getElementById('adjuntar-archivos'),
+                document.getElementById('adjuntar-archivos-info')
+            )
+        };
+
+        // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
+        const cleanedContractData = {
+            numeroProveedor: contractData.numeroProveedor,
+            fechaFirmaContrato: contractData.fechaFirmaContrato,
+            fechaCreado: contractData.fechaCreado,
+            fechaInicio: contractData.fechaInicio,
+            fechaTerminacion: contractData.fechaTerminacion,
+            periodoCulminacion: contractData.periodoCulminacion,
+            numeroSICAC: contractData.numeroSICAC,
+            divisionArea: contractData.divisionArea,
+            eemn: contractData.eemn,
+            region: contractData.region,
+            naturalezaContratacion: contractData.naturalezaContratacion,
+            lineaServicio: contractData.lineaServicio,
+            noPeticionOferta: contractData.noPeticionOferta,
+            modalidadContratacion: contractData.modalidadContratacion,
+            regimenLaboral: contractData.regimenLaboral,
+            objetoContractual: contractData.objetoContractual,
+            fechaCambioAlcance: contractData.fechaCambioAlcance,
+            montoOriginal: contractData.montoOriginal,
+            montoModificado: contractData.montoModificado,
+            montoTotalContrato: contractData.montoTotalContrato,
+            numeroContratoInterno: contractData.numeroContratoInterno,
+            observaciones: contractData.observaciones,
+            estatusContrato: contractData.estatusContrato,
+            moneda: contractData.moneda
+            // No incluir archivosAdjuntos aquí, se manejan por separado
         };
 
         if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
             showToast("Por favor, complete los campos obligatorios: N° Proveedor, Fecha Firma, Fecha Inicio y Fecha Terminación.", "warning");
+            saveContractBtn.disabled = false; // Habilitar si falla la validación inicial
             return;
         }
 
         try {
             let contractId;
             if (currentContractId) {
-                await db.contracts.update(currentContractId, contractData);
+                console.log("Operación: Actualizar", currentContractId);
+                await db.contracts.update(currentContractId, cleanedContractData);
                 contractId = currentContractId;
                 showToast("Contrato actualizado exitosamente.", "success");
             } else {
-                contractId = await db.contracts.add(contractData);
+                // Validar N° SICAC duplicado solo al crear un nuevo contrato
+                if (contractData.numeroSICAC) {
+                    const existingContract = await db.contracts.where({ numeroSICAC: contractData.numeroSICAC }).first();
+                    if (existingContract) {
+                        showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}. Por favor, edite el contrato existente o use otro número.`, "error");
+                        saveContractBtn.disabled = false; // Habilitar si hay duplicado de SICAC
+                        return;
+                    }
+                }
+                console.log("Operación: Añadir nuevo\n");
+                contractId = await db.contracts.add(cleanedContractData);
                 showToast("Contrato guardado exitosamente.", "success");
             }
 
             // Guardar partidas asociadas al contrato
-            await db.partidas.where({ contractId: contractId }).delete();
+            await db.partidas.where({ contractId: contractId }).delete(); // Eliminar partidas existentes para actualizar
             const partidaRows = partidasTableBody.querySelectorAll('tr');
             for (const row of partidaRows) {
                 const partida = {
@@ -353,6 +513,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await db.partidas.add(partida);
             }
             
+            // Manejar archivos adjuntos
+            const archivosInput = document.getElementById('adjuntar-archivos');
+            if (archivosInput.files.length > 0) {
+                await guardarArchivos(contractId, 'contrato', archivosInput.files);
+            } else if (currentContractId) {
+                // Si no se seleccionaron nuevos archivos al actualizar, pero había archivos antes,
+                // podrías querer mantenerlos o tener una forma de eliminarlos. Por ahora, si
+                // no se seleccionan nuevos, se eliminan los viejos. Si quieres mantenerlos, 
+                // necesitarías una lógica diferente aquí (ej. no borrar si no se suben nuevos).
+                // Para esta corrección, si no subes nuevos, se borran los viejos para esa entidadId/entidadTipo.
+                 await db.archivos.where({ entidadId: contractId, entidadTipo: 'contrato' }).delete();
+            }
+
             clearContractFormBtn.click();
             loadContractList();
             tabButtons.forEach(btn => {
@@ -362,25 +535,43 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            console.error("Error al guardar/actualizar el contrato:", error);
-            showToast("Error al guardar/actualizar el contrato: " + error.message, "error");
+            console.log("Se ha capturado un error al guardar/actualizar el contrato:", error);
+            showToast("Ocurrió un error al guardar/actualizar el contrato.", "error");
+        } finally {
+            // Habilitar el botón al finalizar (éxito, error o validación fallida)
+            saveContractBtn.disabled = false;
         }
     });
 
-    document.getElementById('adjuntar-archivos').addEventListener('change', (e) => {
-        const fileInput = e.target;
-        const infoSpan = document.getElementById('adjuntar-archivos-info');
-        if (fileInput.files.length > 0) {
-            infoSpan.textContent = `${fileInput.files.length} archivo(s) seleccionado(s)`;
+    // Función para manejar archivos adjuntos
+    async function handleFileUpload(fileInput, infoSpan) {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            const fileList = Array.from(files).map(file => ({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: file.lastModified
+            }));
+            infoSpan.textContent = `${files.length} archivo(s) seleccionado(s)`;
+            return fileList;
         } else {
             infoSpan.textContent = 'Ningún archivo seleccionado';
+            return [];
         }
+    }
+
+    // Modificar el event listener de adjuntar archivos en contratos
+    document.getElementById('adjuntar-archivos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(e.target, document.getElementById('adjuntar-archivos-info'));
+        // Aquí podrías guardar la lista de archivos en la base de datos o manejarla según necesites
     });
 
 
     // --- Lógica de Lista de Contratos ---
 
     async function loadContractList(filters = {}) {
+        console.log("Cargando lista de contratos con filtros:", filters); // Log para depuración
         contractListBody.innerHTML = '';
 
         let contracts = await db.contracts.toArray();
@@ -441,68 +632,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const contractId = parseInt(targetBtn.dataset.id);
 
         if (targetBtn.classList.contains('edit-contract-btn')) {
-            const contract = await db.contracts.get(contractId);
-            if (contract) {
-                document.getElementById('numero-proveedor').value = contract.numeroProveedor || '';
-                document.getElementById('fecha-firma-contrato').value = contract.fechaFirmaContrato || '';
-                document.getElementById('fecha-creado').value = contract.fechaCreado || new Date().toISOString().split('T')[0];
-                document.getElementById('fecha-inicio').value = contract.fechaInicio || '';
-                document.getElementById('fecha-terminacion').value = contract.fechaTerminacion || '';
-                periodoCulminacionInput.value = contract.periodoCulminacion !== undefined ? contract.periodoCulminacion : '';
-                document.getElementById('numero-sicac').value = contract.numeroSICAC || '';
-                document.getElementById('division-area').value = contract.divisionArea || '';
-                document.getElementById('eemn').value = contract.eemn || '';
-                document.getElementById('region').value = contract.region || '';
-                document.getElementById('naturaleza-contratacion').value = contract.naturalezaContratacion || '';
-                document.getElementById('linea-servicio').value = contract.lineaServicio || '';
-                document.getElementById('no-peticion-oferta').value = contract.noPeticionOferta || '';
-                modalidadContratacionSelect.value = contract.modalidadContratacion || 'Obra';
-                document.getElementById('regimen-laboral').value = contract.regimenLaboral || '';
-                document.getElementById('objeto-contractual').value = contract.objetoContractual || '';
-                document.getElementById('fecha-cambio-alcance').value = contract.fechaCambioAlcance || '';
-                montoOriginalInput.value = contract.montoOriginal !== undefined ? contract.montoOriginal.toFixed(2) : '0.00';
-                montoModificadoInput.value = contract.montoModificado !== undefined ? contract.montoModificado.toFixed(2) : '0.00';
-                montoTotalContratoInput.value = contract.montoTotalContrato !== undefined ? contract.montoTotalContrato.toFixed(2) : '0.00';
-                document.getElementById('numero-contrato-interno').value = contract.numeroContratoInterno || '';
-                document.getElementById('observaciones').value = contract.observaciones || '';
-                document.getElementById('estatus-contrato').value = contract.estatusContrato || 'Activo';
-                document.getElementById('moneda').value = contract.moneda || 'USD';
-                
-                partidasTableBody.innerHTML = '';
-                const partidas = await db.partidas.where({ contractId: contractId }).toArray();
-                partidas.forEach((p, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td><input type="text" class="form-control" name="descripcion" value="${p.descripcion || ''}"></td>
-                        <td><input type="number" class="form-control" name="cantidad" value="${p.cantidad || 1}" min="1"></td>
-                        <td><input type="text" class="form-control" name="umd" value="${p.umd || ''}"></td>
-                        <td><input type="number" class="form-control" name="precioUnitario" value="${p.precioUnitario || 0.00}" step="0.01"></td>
-                        <td><span class="total-partida">${(p.total || 0).toFixed(2)}</span></td>
-                        <td><button type="button" class="btn btn-danger btn-sm remove-partida-btn"><i class="fas fa-trash"></i></button></td>
-                    `;
-                    partidasTableBody.appendChild(row);
-                });
-                updateContractPartidaTotals();
-                calculatePeriodoCulminacion();
-
-                currentContractId = contractId;
-                showToast("Contrato cargado para edición.", "info");
-                tabButtons.forEach(btn => {
-                    if (btn.getAttribute('data-target') === 'new-edit-contract') {
-                        btn.click();
-                    }
-                });
-            }
+            // Cargar contrato para edición usando la nueva función
+            cargarContratoParaEdicion(contractId);
         } else if (targetBtn.classList.contains('delete-contract-btn')) {
             if (confirm('¿Está seguro de que desea enviar este contrato a la papelera?')) {
                 try {
                     const contractToDelete = await db.contracts.get(contractId);
+                    const relatedPartidas = await db.partidas.where({ contractId: contractId }).toArray();
                     // Mover a la papelera en lugar de eliminar directamente
                     await db.trash.add({
                         originalId: contractId,
                         type: 'contract',
-                        data: contractToDelete,
+                        data: { ...contractToDelete, partidas: relatedPartidas }, // Incluir partidas en los datos guardados
                         deletedAt: new Date().toISOString()
                     });
                     await db.contracts.delete(contractId);
@@ -536,6 +677,116 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Cargar contrato en el formulario de edición
+    async function cargarContratoParaEdicion(contractId) {
+        if (!contractId) return; // No hacer nada si no hay ID
+        try {
+            const contract = await db.contracts.get(contractId);
+            if (contract) {
+                currentContractId = contractId; // Establecer el ID del contrato actual
+                // Rellenar todos los campos del formulario con los datos del contrato
+                document.getElementById('numero-proveedor').value = contract.numeroProveedor || '';
+                document.getElementById('fecha-firma-contrato').value = contract.fechaFirmaContrato || '';
+                document.getElementById('fecha-creado').value = contract.fechaCreado || new Date().toISOString().split('T')[0];
+                document.getElementById('fecha-inicio').value = contract.fechaInicio || '';
+                document.getElementById('fecha-terminacion').value = contract.fechaTerminacion || '';
+                periodoCulminacionInput.value = contract.periodoCulminacion !== undefined ? contract.periodoCulminacion : '';
+                document.getElementById('numero-sicac').value = contract.numeroSICAC || '';
+                document.getElementById('division-area').value = contract.divisionArea || '';
+                document.getElementById('eemn').value = contract.eemn || '';
+                document.getElementById('region').value = contract.region || '';
+                document.getElementById('naturaleza-contratacion').value = contract.naturalezaContratacion || '';
+                document.getElementById('linea-servicio').value = contract.lineaServicio || '';
+                document.getElementById('no-peticion-oferta').value = contract.noPeticionOferta || '';
+                modalidadContratacionSelect.value = contract.modalidadContratacion || 'Obra';
+                document.getElementById('regimen-laboral').value = contract.regimenLaboral || '';
+                document.getElementById('objeto-contractual').value = contract.objetoContractual || '';
+                document.getElementById('fecha-cambio-alcance').value = contract.fechaCambioAlcance || '';
+                montoOriginalInput.value = contract.montoOriginal !== undefined ? contract.montoOriginal.toFixed(2) : '0.00';
+                montoModificadoInput.value = contract.montoModificado !== undefined ? contract.montoModificado.toFixed(2) : '0.00';
+                montoTotalContratoInput.value = contract.montoTotalContrato !== undefined ? contract.montoTotalContrato.toFixed(2) : '0.00';
+                document.getElementById('numero-contrato-interno').value = contract.numeroContratoInterno || '';
+                document.getElementById('observaciones').value = contract.observaciones || '';
+                document.getElementById('estatus-contrato').value = contract.estatusContrato || 'Activo';
+                document.getElementById('moneda').value = contract.moneda || 'USD';
+
+                // Cargar partidas asociadas
+                partidasTableBody.innerHTML = ''; // Limpiar partidas actuales
+                const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+                partidas.forEach((p, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td><input type="text" class="form-control" name="descripcion" value="${p.descripcion || ''}"></td>
+                        <td><input type="number" class="form-control" name="cantidad" value="${p.cantidad || 1}" min="1"></td>
+                        <td><input type="text" class="form-control" name="umd" value="${p.umd || ''}"></td>
+                        <td><input type="number" class="form-control" name="precioUnitario" value="${p.precioUnitario || 0.00}" step="0.01"></td>
+                        <td><span class="total-partida">${(p.total || 0).toFixed(2)}</span></td>
+                        <td><button type="button" class="btn btn-danger btn-sm remove-partida-btn"><i class="fas fa-trash"></i></button></td>
+                    `;
+                    partidasTableBody.appendChild(row);
+                });
+                updateContractPartidaTotals(); // Recalcular totales
+                calculatePeriodoCulminacion(); // Recalcular período de culminación
+
+                // Cargar archivos adjuntos
+                const archivos = await recuperarArchivos(contractId, 'contrato');
+                mostrarArchivosAdjuntos(archivos, 'archivos-contrato'); // Mostrar archivos adjuntos
+                if (archivos.length > 0) {
+                     document.getElementById('adjuntar-archivos-info').textContent = 
+                         `${archivos.length} archivo(s) adjunto(s)`;
+                 } else {
+                      document.getElementById('adjuntar-archivos-info').textContent = 'Ningún archivo seleccionado';
+                 }
+
+                showToast("Contrato cargado para edición.", "info");
+
+                // Cambiar a la pestaña de Nuevo/Editar Contrato
+                tabButtons.forEach(btn => {
+                    if (btn.getAttribute('data-target') === 'new-edit-contract') {
+                        btn.click();
+                    }
+                });
+
+            } else {
+                showToast("Contrato no encontrado.", "error");
+            }
+        } catch (error) {
+            console.error("Error al cargar contrato para edición:", error);
+            showToast("Error al cargar contrato para edición: " + error.message, "error");
+        }
+    }
+
+    // Poblar selector de contratos para edición y cargar al cambiar
+    async function populateContractEditSelect() {
+         const selectElement = document.getElementById('select-contract-to-edit');
+         if (!selectElement) return; // Asegurarse de que el elemento existe
+
+         selectElement.innerHTML = '<option value="">-- Seleccione un Contrato --</option>';
+         const contracts = await db.contracts.toArray();
+         contracts.forEach(contract => {
+             const option = document.createElement('option');
+             option.value = contract.id;
+             option.textContent = `${contract.numeroSICAC || 'Sin SICAC'} (${contract.numeroProveedor || 'Sin Proveedor'})`;
+             selectElement.appendChild(option);
+         });
+
+         // Event listener para cargar el contrato seleccionado
+         selectElement.addEventListener('change', (e) => {
+             const contractId = parseInt(e.target.value);
+             if (contractId) {
+                 cargarContratoParaEdicion(contractId);
+             } else {
+                 // Si selecciona la opción por defecto, limpiar el formulario
+                 clearContractFormBtn.click();
+             }
+         });
+    }
+
+    // Llama a populateContractEditSelect cuando se carga la pestaña de edición
+    document.querySelector('[data-target="new-edit-contract"]').addEventListener('click', populateContractEditSelect);
+
+
     // --- Lógica de Gestión de HES ---
 
     // Poblar select de contratos para HES
@@ -554,7 +805,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     hesContractSelect.addEventListener('change', async () => {
         const contractId = parseInt(hesContractSelect.value);
         hesPartidasTableBody.innerHTML = '';
-        hesPartidasInfo.style.display = 'block'; // Mostrar mensaje informativo por defecto
+        hesPartidasInfo.style.display = 'block';
 
         if (!contractId) {
             hesPartidasInfo.textContent = 'Seleccione un contrato para cargar sus partidas.';
@@ -569,19 +820,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Calcular avance físico y financiero del contrato para verificar si está al 100%
+        // Calcular avance físico y financiero del contrato
         const { physicalAdvancePercentage, financialAdvancePercentage } = await calculateContractAdvances(contractId);
 
-        if (physicalAdvancePercentage >= 99.99 || financialAdvancePercentage >= 99.99) { // Usar 99.99 para evitar errores de coma flotante
-            hesPartidasInfo.textContent = `Este contrato ya ha alcanzado el 100% de avance físico o financiero. No se pueden crear más HES para él.`;
+        // Mostrar advertencia pero permitir edición
+        if (physicalAdvancePercentage >= 99.99 || financialAdvancePercentage >= 99.99) {
+            hesPartidasInfo.textContent = `Advertencia: Este contrato ha alcanzado el 100% de avance físico o financiero.`;
             hesPartidasInfo.classList.remove('alert-info');
-            hesPartidasInfo.classList.add('alert-danger');
-            saveHesBtn.disabled = true; // Deshabilitar guardar HES
-            return;
+            hesPartidasInfo.classList.add('alert-warning');
         } else {
-            hesPartidasInfo.classList.remove('alert-danger');
+            hesPartidasInfo.classList.remove('alert-warning');
             hesPartidasInfo.classList.add('alert-info');
-            saveHesBtn.disabled = false; // Habilitar guardar HES
         }
         
         const partidas = await db.partidas.where({ contractId: contractId }).toArray();
@@ -590,14 +839,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         
-        hesPartidasInfo.style.display = 'none'; // Ocultar mensaje si hay partidas
+        hesPartidasInfo.style.display = 'none';
 
         for (const partida of partidas) {
-            const executedAmountForPartida = await getExecutedQuantityForContractPartida(partida.id);
+            const executedAmountForPartida = await getExecutedQuantityForContractPartida(partida.id, currentHesId);
             const availableQuantity = partida.cantidad - executedAmountForPartida;
 
             const row = document.createElement('tr');
-            row.dataset.contractPartidaId = partida.id; // Almacena el ID de la partida del contrato
+            row.dataset.contractPartidaId = partida.id;
             row.innerHTML = `
                 <td>${partidas.indexOf(partida) + 1}</td>
                 <td>${partida.descripcion}</td>
@@ -611,7 +860,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             hesPartidasTableBody.appendChild(row);
         }
-        updateHesPartidaTotals(); // Calcular totales iniciales
+        updateHesPartidaTotals();
     });
 
     // Delegación de eventos para input de cantidad a ejecutar en HES
@@ -623,15 +872,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let cantidadEjecutar = parseFloat(input.value) || 0;
             if (cantidadEjecutar < 0) cantidadEjecutar = 0;
+            // Limitar al máximo disponible al escribir
             if (cantidadEjecutar > availableQuantity) {
-                cantidadEjecutar = availableQuantity; // Limitar a la cantidad disponible
-                input.value = availableQuantity.toFixed(2);
-                showToast(`La cantidad a ejecutar no puede exceder la cantidad disponible (${availableQuantity.toFixed(2)}).`, "warning");
+                cantidadEjecutar = availableQuantity;
+                input.value = cantidadEjecutar.toFixed(2); // Actualizar el input si se excede el límite
             }
-            input.value = cantidadEjecutar.toFixed(2); // Formatear el valor
 
-            updateHesPartidaTotals(row);
+            // Asegurarse de que el valor tiene 2 decimales si es necesario
+            // Si el usuario está escribiendo y el número aún no está completo (ej. '12.'), no formatear todavía
+            if (!isNaN(cantidadEjecutar) && input.value.slice(-1) !== '.') {
+                input.value = cantidadEjecutar.toFixed(2);
+            }
+
+            updateHesPartidaTotals(row); // Actualizar totales después de la validación/formato
         }
+    });
+
+    // Event listeners para los nuevos botones de incremento/decremento
+    hesPartidasTableBody.addEventListener('click', (e) => {
+        const targetBtn = e.target.closest('button');
+        if (!targetBtn) return;
+
+        // Asegurarse de que el clic fue en uno de los botones +/- dentro de un input-group
+        if (!targetBtn.classList.contains('increment-hes-cantidad') && !targetBtn.classList.contains('decrement-hes-cantidad')) {
+            return; // Salir si no es uno de los botones que nos interesa
+        }
+
+        const row = targetBtn.closest('tr');
+        const input = row.querySelector('.hes-cantidad-ejecutar');
+        const availableQuantity = parseFloat(row.children[6].textContent); // Cantidad Disponible
+        const step = parseFloat(input.step) || 0.01; // Usar el step del input, default 0.01
+
+        let currentValue = parseFloat(input.value) || 0;
+
+        if (targetBtn.classList.contains('increment-hes-cantidad')) {
+            currentValue += step;
+        } else if (targetBtn.classList.contains('decrement-hes-cantidad')) {
+            currentValue -= step;
+        }
+
+        // Asegurarse de que el valor esté dentro de los límites
+        if (currentValue < 0) currentValue = 0;
+        // Limitar al máximo disponible, permitiendo un pequeño margen por decimales
+        if (currentValue > availableQuantity + 0.001) currentValue = availableQuantity;
+
+        input.value = currentValue.toFixed(2); // Formatear y actualizar el input
+        updateHesPartidaTotals(row); // Actualizar totales
+
+        // Disparar evento input en el campo numérico después de actualizar su valor
+        // Esto asegura que el event listener 'input' en el campo se active y haga sus validaciones/actualizaciones si es necesario
+        const inputEvent = new Event('input', { bubbles: true });
+        input.dispatchEvent(inputEvent);
     });
 
     // Calcula el total de la partida HES y los totales de la HES
@@ -703,7 +994,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             subTotalHes: parseFloat(hesSubtotalInput.value) || 0,
             gastosAdministrativosHes: parseFloat(hesGastosAdministrativosInput.value) || 0,
             totalHes: parseFloat(hesTotalInput.value) || 0,
-            // Anexos no se guardan directamente en Dexie
+            anexos: await handleFileUpload(
+                document.getElementById('hes-anexos'),
+                document.getElementById('hes-anexos-info')
+            )
         };
 
         if (!hesData.noHes || !hesData.fechaInicioHes || !hesData.fechaFinalHes) {
@@ -711,7 +1005,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Validación de que alguna partida tenga cantidad a ejecutar > 0
         const hesPartidaRows = hesPartidasTableBody.querySelectorAll('tr');
         let hasExecutedQuantity = false;
         const hesPartidasToSave = [];
@@ -726,12 +1019,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (cantidadEjecutada > 0) {
                 hasExecutedQuantity = true;
-                const executedAmountForPartida = await getExecutedQuantityForContractPartida(contractPartidaId, currentHesId); // Excluir la HES actual si estamos editando
+                const executedAmountForPartida = await getExecutedQuantityForContractPartida(contractPartidaId, currentHesId);
                 const availableQuantity = cantidadOriginalContract - executedAmountForPartida;
 
-                if (cantidadEjecutada > availableQuantity + 0.001) { // Pequeña tolerancia flotante
+                if (cantidadEjecutada > availableQuantity + 0.001) {
                     showToast(`La cantidad a ejecutar para la partida "${descripcion}" excede la cantidad disponible.`, "error");
-                    return; // Detener el guardado
+                    return;
                 }
 
                 hesPartidasToSave.push({
@@ -762,19 +1055,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast("HES guardada exitosamente.", "success");
             }
 
-            // Guardar partidas de la HES
-            await db.hesPartidas.where({ hesId: hesId }).delete(); // Eliminar antiguas partidas de la HES
+            await db.hesPartidas.where({ hesId: hesId }).delete();
             for (const hesPartida of hesPartidasToSave) {
-                hesPartida.hesId = hesId; // Asignar el ID de la HES
+                hesPartida.hesId = hesId;
                 await db.hesPartidas.add(hesPartida);
             }
 
             clearHesFormBtn.click();
             await loadHesList();
-            // Actualizar avances del contrato si el contrato está visible en la lista
-            await loadContractList(); // Recargar lista de contratos para actualizar avances
-            await updateSummaryCards(); // Recargar resumen
-            await populateContractSelect(hesContractSelect); // Recargar opciones del select
+            await loadContractList();
+            await updateSummaryCards();
+            await populateContractSelect(hesContractSelect);
         } catch (error) {
             console.error("Error al guardar/actualizar HES:", error);
             showToast("Error al guardar/actualizar HES: " + error.message, "error");
@@ -925,14 +1216,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalExecutedQuantity += executedInHES;
         }
 
-        const physicalAdvancePercentage = totalContractQuantity > 0 ? (totalExecutedQuantity / totalContractQuantity) * 100 : 0;
+        let physicalAdvancePercentage = totalContractQuantity > 0 ? (totalExecutedQuantity / totalContractQuantity) * 100 : 0;
 
         // Calcular avance financiero
         for (const hes of hesList) {
             totalExecutedAmount += hes.totalHes || 0;
         }
 
-        const financialAdvancePercentage = totalContractAmount > 0 ? (totalExecutedAmount / totalContractAmount) * 100 : 0;
+        let financialAdvancePercentage = totalContractAmount > 0 ? (totalExecutedAmount / totalContractAmount) * 100 : 0;
+
+        // Limitar porcentajes a 100%
+        physicalAdvancePercentage = Math.min(physicalAdvancePercentage, 100);
+        financialAdvancePercentage = Math.min(financialAdvancePercentage, 100);
 
         return {
             physicalAdvancePercentage: physicalAdvancePercentage,
@@ -1383,7 +1678,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     const trashItem = await db.trash.get(trashItemId);
                     if (itemType === 'contract') {
-                        await db.contracts.add(trashItem.data); // Restaurar contrato
+                        await db.contracts.add(trashItem.data); // Restaurar contrato (los datos ahora incluyen partidas)
                         // También restaurar sus partidas si las guardamos en la papelera con él
                         // Por ahora, asumimos que se eliminaron y tendrían que recrearse o guardar una copia
                         // más profunda en la papelera. Para esta versión, solo restauramos el contrato.
@@ -1392,9 +1687,54 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const originalPartidas = await db.partidas.where({ contractId: trashItem.originalId }).toArray();
                         for (const partida of originalPartidas) {
                             partida.id = undefined; // Quitar ID para que Dexie asigne uno nuevo
-                            partida.contractId = trashItem.data.id; // Asignar el nuevo ID del contrato restaurado
+                            partida.contractId = await db.contracts.add(trashItem.data); // Obtener el ID del contrato restaurado
                             await db.partidas.add(partida);
                         }
+                        // Restaurar las partidas que estaban guardadas *dentro* del objeto data en la papelera
+                        if (trashItem.data.partidas && Array.isArray(trashItem.data.partidas)) {
+                            const restoredContract = await db.contracts.get(trashItem.originalId); // Obtener el contrato restaurado por su originalId
+                            if (restoredContract) {
+                                for (const partida of trashItem.data.partidas) {
+                                    // Eliminar la partida original de la papelera (si estaba allí como item separado)
+                                    const partidaInTrash = await db.trash.where({ type: 'partida', originalId: partida.id }).first();
+                                    if (partidaInTrash) await db.trash.delete(partidaInTrash.id);
+
+                                    partida.id = undefined; // Asegurar nuevo ID
+                                    partida.contractId = restoredContract.id; // Asignar al contrato restaurado
+                                    await db.partidas.add(partida);
+                                }
+                            } else {
+                                console.error("Contrato restaurado no encontrado para adjuntar partidas.");
+                            }
+                        }
+                        // Si las HES relacionadas se movieron a la papelera, también restaurarlas aquí
+                        const relatedHesInTrash = await db.trash.where({ type: 'hes', data: { contractId: trashItem.originalId } }).toArray();
+                        for (const hesItem of relatedHesInTrash) {
+                            // Verificar si el contrato al que pertenece la HES existe (ya debería existir si restauramos el contrato)
+                            const contractExists = await db.contracts.get(hesItem.data.contractId);
+                            if (contractExists) {
+                                // Restaurar la HES
+                                await db.hes.add(hesItem.data);
+                                // Restaurar las partidas de la HES si estaban guardadas en los datos de la HES en la papelera
+                                if (hesItem.data.hesPartidas && Array.isArray(hesItem.data.hesPartidas)) {
+                                    const restoredHes = await db.hes.get(hesItem.originalId); // Obtener la HES restaurada por su originalId
+                                    if (restoredHes) {
+                                        for (const hesPartida of hesItem.data.hesPartidas) {
+                                            hesPartida.id = undefined; // Asegurar nuevo ID
+                                            hesPartida.hesId = restoredHes.id; // Asignar a la HES restaurada
+                                            await db.hesPartidas.add(hesPartida);
+                                        }
+                                    } else {
+                                        console.error("HES restaurada no encontrada para adjuntar partidas.");
+                                    }
+                                }
+                                // Eliminar la HES de la papelera
+                                await db.trash.delete(hesItem.id);
+                            } else {
+                                console.warn(`Contrato (${hesItem.data.contractId}) para HES (${hesItem.data.noHes}) en papelera no encontrado. No se restaurará la HES.`);
+                            }
+                        }
+
                     } else if (itemType === 'hes') {
                         // Antes de restaurar HES, verificar si su contrato original existe.
                         const contractExists = await db.contracts.get(trashItem.data.contractId);
@@ -1544,11 +1884,745 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Inicialización ---
     // Cargar la primera pestaña activa al inicio
+    // Mover la inicialización aquí para asegurar que los event listeners estén configurados
     const initialActiveTab = document.querySelector('.tab-btn.active');
     if (initialActiveTab) {
         initialActiveTab.click(); // Simula un clic para cargar el contenido inicial
     } else {
         // Fallback si no hay ninguna pestaña marcada como activa en HTML
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
+    }
+
+    // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
+    async function renderContractsSlider() {
+        console.log("Renderizando carrusel de contratos..."); // Log para depuración
+        const sliderInner = document.getElementById('contracts-slider-inner');
+        const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
+        sliderInner.innerHTML = '';
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+            // Ocultar controles si no hay contratos
+            document.querySelector('.carousel-control-prev').style.display = 'none';
+            document.querySelector('.carousel-control-next').style.display = 'none';
+            // Limpiar resumen si no hay contratos
+            document.getElementById('total-contract-amount').textContent = 'USD 0.00';
+            document.getElementById('contracts-expiry-list').innerHTML = '<li>No hay contratos próximos a vencer</li>';
+            document.getElementById('financial-progress-bar').style.width = '0%';
+            document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('financial-progress-label').textContent = '0%';
+            document.getElementById('physical-progress-bar').style.width = '0%';
+            document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('physical-progress-label').textContent = '0%';
+            return; // Salir si no hay contratos
+        }
+        // Mostrar controles si hay contratos
+        document.querySelector('.carousel-control-prev').style.display = '';
+        document.querySelector('.carousel-control-next').style.display = '';
+
+        contracts.forEach((contract, idx) => {
+            const isActive = idx === 0 ? 'active' : '';
+            const card = document.createElement('div');
+            card.className = `carousel-item ${isActive}`;
+            card.innerHTML = `
+                <div class="card">
+                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                </div>
+            `;
+            sliderInner.appendChild(card);
+        });
+        if (contracts.length > 0) {
+            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id); // Log
+            updateSummaryByContract(contracts[0]);
+        }
+
+        // Inicializar el carrusel de Bootstrap explícitamente
+        if (contracts.length > 0 && document.getElementById('contracts-slider')) {
+            const carousel = new bootstrap.Carousel(document.getElementById('contracts-slider'), { interval: false }); // Puedes ajustar el intervalo si quieres auto-slide
+            console.log("Carrusel de Bootstrap inicializado."); // Log
+        }
+    }
+
+    const contractsSlider = document.getElementById('contracts-slider');
+    if (contractsSlider) {
+        contractsSlider.addEventListener('slid.bs.carousel', async function (e) {
+            console.log("Evento slid.bs.carousel disparado. Index:", e.to); // Log para depuración
+            const idx = e.to;
+            const contracts = await db.contracts.toArray();
+            if (contracts[idx]) {
+                console.log("Actualizando resumen para contrato index:", idx, contracts[idx].id); // Log
+                updateSummaryByContract(contracts[idx]);
+            } else {
+                 console.warn("Contrato en index no encontrado:", idx); // Log de advertencia
+            }
+        });
+    }
+
+    // --- EXPORTAR EN AVANCE FÍSICO Y FINANCIERO ---
+    async function exportAvanceToExcel(tipo) {
+        let data = [];
+        let filename = '';
+        if (tipo === 'fisico') {
+            const contractId = parseInt(document.getElementById('physical-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const partidas = await db.partidas.where({ contractId }).toArray();
+            for (const p of partidas) {
+                const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+                data.push({
+                    'Descripción': p.descripcion,
+                    'Cantidad Contrato': p.cantidad,
+                    'Cantidad Ejecutada': ejecutada,
+                    'Avance (%)': p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) : '0.00'
+                });
+            }
+            filename = `AvanceFisico_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`;
+        } else if (tipo === 'financiero') {
+            const contractId = parseInt(document.getElementById('financial-advance-contract-select').value);
+            if (!contractId) return;
+            const contract = await db.contracts.get(contractId);
+            const hesList = await db.hes.where({ contractId }).toArray();
+            for (const hes of hesList) {
+                data.push({
+                    'No. HES': hes.noHes,
+                    'Fecha Inicio': hes.fechaInicioHes,
+                    'Fecha Final': hes.fechaFinalHes,
+                    'Total HES': hes.totalHes,
+                    'Estatus': hes.aprobado
+                });
+            }
+            filename = `AvanceFinanciero_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`;
+        }
+        if (data.length > 0) {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Avance');
+            XLSX.writeFile(wb, filename);
+            showToast('Exportado a Excel.', 'success');
+        }
+    }
+
+    async function exportAvanceToPDF(tipo) {
+        console.log(`Intentando exportar a PDF para tipo: ${tipo}`); // Log para depuración
+        let data = [];
+        let columns = [];
+        let filename = '';
+        let title = '';
+
+        if (tipo === 'fisico') {
+            const contractId = parseInt(document.getElementById('physical-advance-contract-select').value);
+            if (!contractId) { showToast("Seleccione un contrato para exportar el avance físico.", "warning"); return; }
+            const contract = await db.contracts.get(contractId);
+            const partidas = await db.partidas.where({ contractId }).toArray();
+            for (const p of partidas) {
+                const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+                data.push([
+                    p.descripcion,
+                    p.cantidad,
+                    ejecutada,
+                    p.cantidad > 0 ? ((ejecutada / p.cantidad) * 100).toFixed(2) + '%' : '0.00%'
+                ]);
+            }
+            columns = ['Descripción', 'Cantidad Contrato', 'Cantidad Ejecutada', 'Avance (%)'];
+            filename = `AvanceFisico_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+            title = `Avance Físico del Contrato ${contract.numeroSICAC || contract.numeroProveedor}`;
+
+        } else if (tipo === 'financiero') {
+            const contractId = parseInt(document.getElementById('financial-advance-contract-select').value);
+            if (!contractId) { showToast("Seleccione un contrato para exportar el avance financiero.", "warning"); return; }
+            const contract = await db.contracts.get(contractId);
+            const hesList = await db.hes.where({ contractId }).toArray();
+            for (const hes of hesList) {
+                data.push([
+                    hes.noHes,
+                    hes.fechaInicioHes,
+                    hes.fechaFinalHes,
+                    hes.totalHes.toFixed(2),
+                    hes.aprobado
+                ]);
+            }
+            columns = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+            filename = `AvanceFinanciero_${contract.numeroSICAC || contract.numeroProveedor}.pdf`;
+            title = `Avance Financiero del Contrato ${contract.numeroSICAC || contract.numeroProveedor}`;
+
+        } else if (tipo === 'contratos') {
+             const contracts = await db.contracts.toArray();
+             if (contracts.length === 0) { showToast("No hay datos para exportar a PDF.", "warning"); return; }
+
+             columns = [
+                 "N° Prov.", "N° SICAC", "Fecha Inicio", "Fecha Fin",
+                 "Monto Total", "Av. Físico", "Av. Financ.", "Estatus", "Modalidad"
+             ];
+             for (const c of contracts) {
+                 const { physicalAdvancePercentage, financialAdvancePercentage } = await calculateContractAdvances(c.id);
+                 data.push([
+                     c.numeroProveedor,
+                     c.numeroSICAC || '-',
+                     c.fechaInicio || '-',
+                     c.fechaTerminacion || '-',
+                     `${c.montoTotalContrato ? c.montoTotalContrato.toFixed(2) : '0.00'} ${c.moneda || 'USD'}`,
+                     `${physicalAdvancePercentage.toFixed(1)}%`,
+                     `${financialAdvancePercentage.toFixed(1)}%`,
+                     c.estatusContrato || '-',
+                     c.modalidadContratacion || '-'
+                 ]);
+             }
+             filename = "ListaContratos.pdf";
+             title = "Lista de Contratos";
+        }
+
+        if (data.length > 0) {
+            const { jsPDF } = window.jspdf; // Obtener referencia aquí
+            if (!jsPDF) {
+                console.error("Librería jsPDF no cargada.");
+                showToast("Error al generar PDF: librería no disponible.", "error");
+                return;
+            }
+            const doc = new jsPDF('landscape'); // Usar landscape para más columnas
+
+            doc.autoTable({
+                head: [columns],
+                body: data,
+                startY: 20,
+                styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+                headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' }, // Azul acero
+                margin: { top: 15, left: 10, right: 10, bottom: 10 },
+                didDrawPage: function(data) {
+                    doc.text(title, data.settings.margin.left, 10);
+                }
+            });
+            doc.save(filename);
+            showToast('Exportado a PDF.', 'success');
+        }
+    }
+
+    document.getElementById('export-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('contratos'));
+    document.getElementById('export-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('contratos')); // Lista Contratos
+
+    document.getElementById('export-physical-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('fisico'));
+    document.getElementById('export-physical-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('fisico')); // Avance Físico
+    document.getElementById('export-financial-excel-btn')?.addEventListener('click', () => exportAvanceToExcel('financiero'));
+    document.getElementById('export-financial-pdf-btn')?.addEventListener('click', () => exportAvanceToPDF('financiero')); // Avance Financiero
+
+    // --- RESUMEN GRÁFICO: SELECTORES Y RENDERIZADO ---
+    async function renderGraficosSelectores() {
+        console.log("Renderizando selectores de gráficos..."); // Log para depuración
+        const contratos = await db.contracts.toArray();
+        const selectContrato = document.getElementById('graficos-contrato-select');
+        const selectTipo = document.getElementById('graficos-tipo-select');
+        selectContrato.innerHTML = '';
+        contratos.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.numeroSICAC || c.numeroProveedor || 'Sin Nombre';
+            selectContrato.appendChild(opt);
+        });
+        selectTipo.value = 'bar';
+        if (contratos.length > 0) {
+            renderResumenGrafico(contratos[0].id, 'bar');
+        }
+    }
+
+    async function renderResumenGrafico(contratoId, tipo) {
+        console.log(`Renderizando gráfico para contrato ${contratoId} y tipo ${tipo}...`); // Log para depuración
+        const contract = await db.contracts.get(contratoId);
+        if (!contract) {
+            console.warn(`Contrato con ID ${contratoId} no encontrado.`); // Log de advertencia
+            return;
+        }
+        const partidas = await db.partidas.where({ contractId: contratoId }).toArray();
+        const hesList = await db.hes.where({ contractId: contratoId }).toArray();
+        // Avance físico y financiero por partida
+        const labels = partidas.map(p => p.descripcion);
+        const fisico = [];
+        const financiero = [];
+        for (const p of partidas) {
+            const ejecutada = await getExecutedQuantityForContractPartida(p.id);
+            fisico.push(p.cantidad > 0 ? (ejecutada / p.cantidad) * 100 : 0);
+            // Financiero: suma de totalPartidaHes de todas las HES para esa partida
+            let totalFin = 0;
+            for (const hes of hesList) {
+                const hesPartidas = await db.hesPartidas.where({ hesId: hes.id, contractPartidaId: p.id }).toArray();
+                for (const hp of hesPartidas) {
+                    totalFin += hp.totalPartidaHes || 0;
+                }
+            }
+            financiero.push(contract.montoTotalContrato > 0 ? (totalFin / contract.montoTotalContrato) * 100 : 0);
+        }
+        // Renderizar el gráfico
+        const ctx = document.getElementById('contractStatusChart').getContext('2d');
+        if (window.resumenGraficoInstance) window.resumenGraficoInstance.destroy();
+        let chartType = tipo;
+        if (tipo === 'doughnut') chartType = 'doughnut';
+        if (tipo === 'pie') chartType = 'pie';
+        if (tipo === 'bar') chartType = 'bar';
+        if (tipo === 'line') chartType = 'line';
+        window.resumenGraficoInstance = new Chart(ctx, {
+            type: chartType,
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Avance Físico (%)',
+                        data: fisico,
+                        backgroundColor: '#17a2b8',
+                        borderColor: '#138496',
+                        fill: false,
+                        yAxisID: 'y',
+                    },
+                    {
+                        label: 'Avance Financiero (%)',
+                        data: financiero,
+                        backgroundColor: '#28a745',
+                        borderColor: '#218838',
+                        fill: false,
+                        yAxisID: 'y',
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: 'Resumen Gráfico del Contrato' }
+                },
+                scales: chartType === 'bar' || chartType === 'line' ? {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Porcentaje (%)' }
+                    }
+                } : {}
+            }
+        });
+        // Agregar botón de exportar imagen
+        const exportPngButton = document.getElementById('export-chart-png');
+        if (exportPngButton) {
+            exportPngButton.onclick = () => exportChartAsPng(window.resumenGraficoInstance, contract.numeroSICAC || contract.numeroProveedor || 'grafico');
+        }
+    }
+
+    // Función para exportar el gráfico como PNG
+    function exportChartAsPng(chartInstance, filename) {
+        if (!chartInstance) {
+            showToast("No hay gráfico para exportar.", "warning");
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = `${filename}.png`;
+        link.href = chartInstance.toBase64Image();
+        link.click();
+        showToast("Gráfico exportado como PNG.", "success");
+    }
+
+    // --- MODALIDAD DINÁMICA MEJORADA ---
+    function getModalidades() {
+        const data = localStorage.getItem('modalidades_contratacion');
+        if (data) {
+            try {
+                const arr = JSON.parse(data);
+                if (Array.isArray(arr) && arr.length > 0) return arr;
+            } catch {}
+        }
+        return ['Obra', 'Servicio', 'Suministro'];
+    }
+    function setModalidades(arr) {
+        localStorage.setItem('modalidades_contratacion', JSON.stringify(arr));
+    }
+    function renderModalidadesSelect() {
+        const modalidades = getModalidades();
+        const modalidadSelect = document.getElementById('modalidad-contratacion');
+        modalidadSelect.innerHTML = '';
+        modalidades.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.textContent = m;
+            modalidadSelect.appendChild(opt);
+        });
+    }
+    document.getElementById('agregar-modalidad')?.addEventListener('click', () => {
+        const nueva = document.getElementById('nueva-modalidad').value.trim();
+        if (!nueva) return;
+        let modalidades = getModalidades();
+        if (!modalidades.includes(nueva)) {
+            modalidades.push(nueva);
+            setModalidades(modalidades);
+            renderModalidadesSelect();
+            document.getElementById('modalidad-contratacion').value = nueva;
+            document.getElementById('nueva-modalidad').value = '';
+            showToast('Modalidad agregada.', 'success');
+        } else {
+            showToast('La modalidad ya existe.', 'warning');
+        }
+    });
+    document.getElementById('eliminar-modalidad')?.addEventListener('click', () => {
+        const actual = document.getElementById('modalidad-contratacion').value;
+        if (!actual) return; // No hacer nada si no hay modalidad seleccionada
+        let modalidades = getModalidades().filter(m => m !== actual);
+        setModalidades(modalidades);
+        renderModalidadesSelect();
+        showToast('Modalidad eliminada.', 'info');
+    });
+    renderModalidadesSelect();
+
+    // Exportar Informe de Contrato Individual a Excel
+    document.getElementById('export-report-excel-btn')?.addEventListener('click', async () => {
+        const contractId = parseInt(document.getElementById('report-contract-select').value);
+        if (!contractId) {
+            showToast("Seleccione un contrato para exportar el informe.", "warning");
+            return;
+        }
+        const contract = await db.contracts.get(contractId);
+        if (!contract) return;
+
+        const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+        const hesList = await db.hes.where({ contractId: contractId }).toArray();
+
+        const data = [];
+        // Información general del contrato
+        data.push({ 'Informe de Contrato Individual': contract.numeroSICAC || contract.numeroProveedor });
+        data.push({ 'Monto Total Contrato': `${contract.montoTotalContrato ? contract.montoTotalContrato.toFixed(2) : '0.00'} ${contract.moneda || 'USD'}` });
+        let totalConsumedAmount = 0;
+        for (const hes of hesList) { totalConsumedAmount += hes.totalHes || 0; }
+        data.push({ 'Monto Consumido por HES': `${totalConsumedAmount.toFixed(2)} ${contract.moneda || 'USD'}` });
+        data.push({ 'Monto Restante del Contrato': `${(contract.montoTotalContrato - totalConsumedAmount).toFixed(2)} ${contract.moneda || 'USD'}` });
+        data.push({}); // Fila vacía para separar
+
+        // Partidas del Contrato y Consumo
+        data.push({ 'Partidas del Contrato y Consumo': '' });
+        const partidasHeaders = ['Descripción', 'Cantidad Original', 'Cantidad Consumida', 'Cantidad Restante', 'Monto Consumido', 'Monto Restante'];
+        data.push(partidasHeaders.reduce((obj, header) => { obj[header] = header; return obj; }, {})); // Añadir encabezados
+        for (const partida of partidas) {
+            const executedInHES = await getExecutedQuantityForContractPartida(partida.id);
+            const remainingQuantity = partida.cantidad - executedInHES;
+            const consumedAmount = executedInHES * partida.precioUnitario;
+            const remainingAmount = remainingQuantity * partida.precioUnitario;
+            data.push({
+                'Descripción': partida.descripcion,
+                'Cantidad Original': `${partida.cantidad} ${partida.umd}`,
+                'Cantidad Consumida': `${executedInHES.toFixed(2)} ${partida.umd}`,
+                'Cantidad Restante': `${remainingQuantity.toFixed(2)} ${partida.umd}`,
+                'Monto Consumido': `${consumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`,
+                'Monto Restante': `${remainingAmount.toFixed(2)} ${contract.moneda || 'USD'}`
+            });
+        }
+        data.push({}); // Fila vacía para separar
+
+        // HES Asociadas a este Contrato
+        data.push({ 'HES Asociadas a este Contrato': '' });
+        const hesHeaders = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+        data.push(hesHeaders.reduce((obj, header) => { obj[header] = header; return obj; }, {})); // Añadir encabezados
+        if (hesList.length === 0) {
+            data.push({ 'No hay HES asociadas a este contrato.': '' });
+        } else {
+            hesList.forEach(hes => {
+                data.push({
+                    'No. HES': hes.noHes,
+                    'Fecha Inicio': hes.fechaInicioHes,
+                    'Fecha Final': hes.fechaFinalHes,
+                    'Total HES': hes.totalHes.toFixed(2),
+                    'Estatus': hes.aprobado
+                });
+            });
+        }
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Informe Contrato");
+        XLSX.writeFile(wb, `Informe_${contract.numeroSICAC || contract.numeroProveedor}.xlsx`);
+        showToast("Informe exportado a Excel.", "success");
+    });
+
+    // Exportar Informe de Contrato Individual a PDF
+    document.getElementById('export-report-pdf-btn')?.addEventListener('click', async () => {
+        const contractId = parseInt(document.getElementById('report-contract-select').value);
+        if (!contractId) {
+            showToast("Seleccione un contrato para exportar el informe.", "warning");
+            return;
+        }
+        const contract = await db.contracts.get(contractId);
+        if (!contract) return;
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        let yOffset = 15;
+        doc.text(`Informe de Contrato Individual: ${contract.numeroSICAC || contract.numeroProveedor}`, 10, yOffset);
+        yOffset += 10;
+        doc.text(`Monto Total Contrato: ${contract.montoTotalContrato ? contract.montoTotalContrato.toFixed(2) : '0.00'} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 7;
+        const hesList = await db.hes.where({ contractId: contractId }).toArray();
+        let totalConsumedAmount = 0;
+        for (const hes of hesList) { totalConsumedAmount += hes.totalHes || 0; }
+        doc.text(`Monto Consumido por HES: ${totalConsumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 7;
+        doc.text(`Monto Restante del Contrato: ${(contract.montoTotalContrato - totalConsumedAmount).toFixed(2)} ${contract.moneda || 'USD'}`, 10, yOffset);
+        yOffset += 15;
+
+        doc.text('Partidas del Contrato y Consumo:', 10, yOffset);
+        yOffset += 5;
+        const partidasTableColumn = ['Descripción', 'Cantidad Original', 'Cantidad Consumida', 'Cantidad Restante', 'Monto Consumido', 'Monto Restante'];
+        const partidasTableRows = [];
+        const partidas = await db.partidas.where({ contractId: contractId }).toArray();
+        for (const partida of partidas) {
+            const executedInHES = await getExecutedQuantityForContractPartida(partida.id);
+            const remainingQuantity = partida.cantidad - executedInHES;
+            const consumedAmount = executedInHES * partida.precioUnitario;
+            const remainingAmount = remainingQuantity * partida.precioUnitario;
+            partidasTableRows.push([
+                partida.descripcion,
+                `${partida.cantidad} ${partida.umd}`,
+                `${executedInHES.toFixed(2)} ${partida.umd}`,
+                `${remainingQuantity.toFixed(2)} ${partida.umd}`,
+                `${consumedAmount.toFixed(2)} ${contract.moneda || 'USD'}`,
+                `${remainingAmount.toFixed(2)} ${contract.moneda || 'USD'}`
+            ]);
+        }
+        doc.autoTable({
+            head: [partidasTableColumn],
+            body: partidasTableRows,
+            startY: yOffset,
+            styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+            headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' },
+            margin: { top: 15, bottom: 10, left: 10, right: 10 },
+             didDrawPage: function(data) { yOffset = data.cursor.y; }
+        });
+
+        yOffset += 10; // Espacio después de la tabla
+        doc.text('HES Asociadas a este Contrato:', 10, yOffset);
+        yOffset += 5;
+        const hesTableColumn = ['No. HES', 'Fecha Inicio', 'Fecha Final', 'Total HES', 'Estatus'];
+        const hesTableRows = [];
+        if (hesList.length === 0) {
+            hesTableRows.push(['No hay HES asociadas a este contrato.', '', '', '', '']);
+        } else {
+            hesList.forEach(hes => {
+                hesTableRows.push([
+                    hes.noHes,
+                    hes.fechaInicioHes,
+                    hes.fechaFinalHes,
+                    hes.totalHes.toFixed(2),
+                    hes.aprobado
+                ]);
+            });
+        }
+        doc.autoTable({
+            head: [hesTableColumn],
+            body: hesTableRows,
+            startY: yOffset,
+            styles: { fontSize: 7, cellPadding: 1.5, overflow: 'linebreak' },
+            headStyles: { fillColor: [70, 130, 180], textColor: 255, fontStyle: 'bold' },
+            margin: { top: 15, bottom: 10, left: 10, right: 10 },
+             didDrawPage: function(data) { yOffset = data.cursor.y; }
+        });
+
+        doc.save(`Informe_${contract.numeroSICAC || contract.numeroProveedor}.pdf`);
+        showToast("Informe exportado a PDF.", "success");
+    });
+
+    // Modificar el event listener de anexos en HES
+    document.getElementById('hes-anexos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(e.target, document.getElementById('hes-anexos-info'));
+        // Aquí podrías guardar la lista de archivos en la base de datos o manejarla según necesites
+    });
+
+    // Función para guardar archivos en la base de datos
+    async function guardarArchivos(entidadId, entidadTipo, files) {
+        try {
+            // Primero eliminar archivos existentes para esta entidad
+            await db.archivos.where({ entidadId, entidadTipo }).delete();
+            
+            // Guardar los nuevos archivos
+            for (const file of files) {
+                const reader = new FileReader();
+                const contenido = await new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                
+                await db.archivos.add({
+                    entidadId,
+                    entidadTipo,
+                    nombre: file.name,
+                    tipo: file.type,
+                    tamano: file.size,
+                    fechaModificacion: file.lastModified,
+                    contenido
+                });
+            }
+            return true;
+        } catch (error) {
+            console.error('Error al guardar archivos:', error);
+            showToast('Error al guardar los archivos adjuntos', 'error');
+            return false;
+        }
+    }
+
+    // Función para recuperar archivos de la base de datos
+    async function recuperarArchivos(entidadId, entidadTipo) {
+        try {
+            const archivos = await db.archivos.where({ entidadId, entidadTipo }).toArray();
+            return archivos.map(archivo => ({
+                name: archivo.nombre,
+                type: archivo.tipo,
+                size: archivo.tamano,
+                lastModified: archivo.fechaModificacion,
+                content: archivo.contenido
+            }));
+        } catch (error) {
+            console.error('Error al recuperar archivos:', error);
+            showToast('Error al recuperar los archivos adjuntos', 'error');
+            return [];
+        }
+    }
+
+    // Modificar la función handleFileUpload para incluir el guardado
+    async function handleFileUpload(fileInput, infoSpan, entidadId, entidadTipo) {
+        const files = fileInput.files;
+        if (files.length > 0) {
+            const fileList = Array.from(files);
+            infoSpan.textContent = `${files.length} archivo(s) seleccionado(s)`;
+            
+            if (entidadId && entidadTipo) {
+                await guardarArchivos(entidadId, entidadTipo, fileList);
+            }
+            
+            return fileList.map(file => ({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: file.lastModified
+            }));
+        } else {
+            infoSpan.textContent = 'Ningún archivo seleccionado';
+            return [];
+        }
+    }
+
+    // Modificar los event listeners para incluir el guardado
+    document.getElementById('adjuntar-archivos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(
+            e.target, 
+            document.getElementById('adjuntar-archivos-info'),
+            currentContractId,
+            'contrato'
+        );
+    });
+
+    document.getElementById('hes-anexos').addEventListener('change', async (e) => {
+        const fileList = await handleFileUpload(
+            e.target, 
+            document.getElementById('hes-anexos-info'),
+            currentHesId,
+            'hes'
+        );
+    });
+
+    // Modificar la función de cargar contrato para incluir archivos
+    async function cargarContrato(contractId) {
+        // ... existing code ...
+        
+        // Cargar archivos adjuntos
+        const archivos = await recuperarArchivos(contractId, 'contrato');
+        if (archivos.length > 0) {
+            document.getElementById('adjuntar-archivos-info').textContent = 
+                `${archivos.length} archivo(s) adjunto(s)`;
+        }
+        
+        // ... rest of existing code ...
+    }
+
+    // Modificar la función de cargar HES para incluir archivos
+    async function cargarHES(hesId) {
+        // ... existing code ...
+        
+        // Cargar anexos
+        const archivos = await recuperarArchivos(hesId, 'hes');
+        if (archivos.length > 0) {
+            document.getElementById('hes-anexos-info').textContent = 
+                `${archivos.length} archivo(s) adjunto(s)`;
+        }
+        
+        // ... rest of existing code ...
+    }
+
+    // Función para descargar archivos adjuntos
+    async function descargarArchivo(archivo) {
+        try {
+            // Crear un enlace temporal
+            const link = document.createElement('a');
+            link.href = archivo.content;
+            link.download = archivo.name;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error al descargar archivo:', error);
+            showToast('Error al descargar el archivo', 'error');
+        }
+    }
+
+    // Función para mostrar la lista de archivos adjuntos
+    function mostrarArchivosAdjuntos(archivos, contenedorId) {
+        const contenedor = document.getElementById(contenedorId);
+        if (!contenedor) return;
+        
+        contenedor.innerHTML = '';
+        if (archivos.length === 0) {
+            contenedor.innerHTML = '<p class="text-muted">No hay archivos adjuntos</p>';
+            return;
+        }
+        
+        const lista = document.createElement('ul');
+        lista.className = 'list-group';
+        
+        archivos.forEach(archivo => {
+            const item = document.createElement('li');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center';
+            
+            const info = document.createElement('div');
+            info.innerHTML = `
+                <strong>${archivo.name}</strong>
+                <small class="text-muted ms-2">${(archivo.size / 1024).toFixed(2)} KB</small>
+            `;
+            
+            const boton = document.createElement('button');
+            boton.className = 'btn btn-sm btn-primary';
+            boton.innerHTML = '<i class="fas fa-download"></i>';
+            boton.onclick = () => descargarArchivo(archivo);
+            
+            item.appendChild(info);
+            item.appendChild(boton);
+            lista.appendChild(item);
+        });
+        
+        contenedor.appendChild(lista);
+    }
+
+    // Modificar las funciones de cargar para mostrar los archivos
+    async function cargarContrato(contractId) {
+        // ... existing code ...
+        
+        // Cargar y mostrar archivos adjuntos
+        const archivos = await recuperarArchivos(contractId, 'contrato');
+        mostrarArchivosAdjuntos(archivos, 'archivos-contrato');
+        
+        // ... rest of existing code ...
+    }
+
+    async function cargarHES(hesId) {
+        // ... existing code ...
+        
+        // Cargar y mostrar anexos
+        const archivos = await recuperarArchivos(hesId, 'hes');
+        mostrarArchivosAdjuntos(archivos, 'archivos-hes');
+        
+        // ... rest of existing code ...
     }
 });
