@@ -163,8 +163,6 @@ code {
 }
 
 /* Footer común */
-/* Comentado para usar el footer común */
-/*
 .footer {
     background-color: var(--primary-color);
     color: white;
@@ -245,8 +243,13 @@ code {
         overflow-x: auto;
     }
 
-    /* Asegurarse de que el footer use los estilos del archivo común */
-    /* .footer-content y .footer-section ahora vienen de components/footer.css */
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-section {
+        margin-bottom: 2rem;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -255,153 +258,35 @@ code {
     }
 
     .header h1 {
-        font-size: 1.2rem;
-    }
-
-    .doc-content {
-        padding: 0.8rem;
-    }
-
-    pre {
-        padding: 0.8rem;
-    }
-}
-*/
-
-/* Media Queries (manteniendo las media queries específicas de documentacion.css y añadiendo 1024px) */
-@media screen and (max-width: 1024px) {
-    .container {
-        padding: 15px;
-    }
-
-    .doc-content {
-        padding: 1.5rem;
-    }
-
-    .doc-nav ul {
-        flex-direction: column;
-        gap: 0.5rem; /* Reducir el espacio entre elementos de navegación */
-    }
-
-    .doc-nav a {
-        padding: 0.4rem 0.8rem; /* Ajustar padding */
-        font-size: 0.95rem;
-    }
-
-    .doc-section h2 {
-        font-size: 1.8rem;
-    }
-
-    .doc-section h3 {
         font-size: 1.3rem;
     }
 
-    .doc-table th,
-    .doc-table td {
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .header h1 {
-        font-size: 1.5rem;
-    }
-
     .doc-content {
-        padding: 1rem;
-    }
-
-    .doc-table {
-        display: block;
-        overflow-x: auto;
-    }
-
-     .doc-nav ul {
-        gap: 0.3rem; /* Reducir más el espacio */
-    }
-
-     .doc-nav a {
-        padding: 0.3rem 0.6rem; /* Ajustar padding */
-        font-size: 0.9rem;
-    }
-
-     .doc-section h2 {
-        font-size: 1.6rem;
-    }
-
-    .doc-section h3 {
-        font-size: 1.2rem;
-    }
-
-    .doc-table th,
-    .doc-table td {
-        padding: 0.5rem;
-        font-size: 0.85rem;
-    }
-
-    /* Asegurarse de que el footer use los estilos del archivo común */
-}
-
-@media screen and (max-width: 480px) {
-    .container {
-        padding: 10px;
-    }
-
-    .header h1 {
-        font-size: 1.2rem;
-    }
-
-    .doc-content {
-        padding: 0.8rem;
+        padding: 0.75rem;
     }
 
     pre {
-        padding: 0.8rem;
-    }
-
-     .doc-nav ul {
-         flex-direction: column;
-         gap: 0.5rem;
-     }
-
-     .doc-nav a {
-         text-align: center;
-         padding: 0.5rem 1rem; /* Restablecer padding para stacked items */
-         font-size: 1rem;
-     }
-
-      .doc-section h2 {
-        font-size: 1.4rem;
-    }
-
-    .doc-section h3 {
-        font-size: 1.1rem;
-    }
-
-    .doc-table th,
-    .doc-table td {
-        padding: 0.4rem;
-        font-size: 0.8rem;
+        padding: 0.75rem;
     }
 }
 
-/* Animaciones (manteniendo las animaciones específicas de documentacion.css) */
+/* Animaciones */
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .doc-section {
-    animation: fadeIn 0.5s ease-out;
+    animation: slideIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Utilidades (manteniendo las utilidades específicas de documentacion.css) */
+/* Utilidades */
 .text-center {
     text-align: center;
 }

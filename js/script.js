@@ -2,7 +2,7 @@ import { db, addSampleData } from './database.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar la base de datos (si es necesario, puedes llamar a addSampleData aquí)
-    await db.open();
+        await db.open();
     // await addSampleData(); // Descomentar para añadir datos de ejemplo
 
     // --- Elementos del DOM ---
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.classList.add('active', 'show');
-                button.classList.add('active');
+            button.classList.add('active');
             }
 
             // Cargar datos específicos al cambiar de pestaña
@@ -237,21 +237,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const totalContractAmountEl = document.getElementById('total-contract-amount');
             if (totalContractAmountEl) {
-                 const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
+            const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
                  totalContractAmountEl.textContent = `USD ${totalAmount.toFixed(2)}`;
             }
 
             const expiringContractsEl = document.getElementById('expiring-contracts');
             if (expiringContractsEl) {
                 // Contar contratos que vencen en 30 días para la tarjeta (si aplica)
-                const thirtyDaysFromNow = new Date();
-                thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-                const expiringContracts = allContracts.filter(c => 
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            const expiringContracts = allContracts.filter(c => 
                     { // Usar fechaTerminacionExtendida si existe, si no fechaTerminacion
                         const terminationDate = c.fechaTerminacionExtendida ? new Date(c.fechaTerminacionExtendida) : new Date(c.fechaTerminacion);
                         return terminationDate && terminationDate <= thirtyDaysFromNow && terminationDate >= new Date();
                     }
-                ).length;
+            ).length;
                 expiringContractsEl.textContent = expiringContracts;
             }
 
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const totalModalitiesEl = document.getElementById('total-modalities');
             if (totalModalitiesEl) {
-                 const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
+            const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
                  totalModalitiesEl.textContent = modalities.size;
             }
 
@@ -464,10 +464,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const observaciones = document.getElementById('observaciones').value;
         const estatusContrato = document.getElementById('estatus-contrato').value;
         const moneda = document.getElementById('moneda').value;
-        // Los archivos adjuntos requieren manejo especial
+            // Los archivos adjuntos requieren manejo especial
         const archivosAdjuntos = await handleFileUpload(
-            document.getElementById('adjuntar-archivos'),
-            document.getElementById('adjuntar-archivos-info')
+                document.getElementById('adjuntar-archivos'),
+                document.getElementById('adjuntar-archivos-info')
         );
 
         // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Para esta corrección, si no subes nuevos, se borran los viejos para esa entidadId/entidadTipo.
                  await db.archivos.where({ entidadId: contractId, entidadTipo: 'contrato' }).delete();
             }
-
+            
             clearContractFormBtn.click();
             loadContractList();
             tabButtons.forEach(btn => {
@@ -1133,7 +1133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     totalPartidaHes: partidaHes.totalPartidaHes,
                     montoAdicionalManual: partidaHes.montoAdicionalManual // Guardar el monto adicional manual
                  });
-             }
+            }
 
             clearHesFormBtn.click();
             await loadHesList();
@@ -1967,53 +1967,71 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector('.tab-btn[data-target="general-summary"]').click();
     }
 
-  async function renderContractsSlider() {
-    // ... (Tu código existente para obtener contratos, limpiar sliderInner y manejar contratos.length === 0) ...
+    // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
+    async function renderContractsSlider() {
+        try {
+        console.log("Renderizando carrusel de contratos..."); // Log para depuración
+            
+            // Verificar si el elemento del carrusel existe
+        const sliderInner = document.getElementById('contracts-slider-inner');
+            if (!sliderInner) {
+                console.error("Elemento del carrusel no encontrado");
+                return;
+            }
 
-    // --- Lógica para construir los slides (EJEMPLO) ---
-    contracts.forEach((contract, index) => {
-        const carouselItem = document.createElement('div');
-        carouselItem.classList.add('carousel-item');
-        if (index === 0) {
-            carouselItem.classList.add('active'); // El primer slide debe ser activo
-        }
-        carouselItem.innerHTML = `
-            <div class="card">
-                <h4>${contract.numeroSicac} - ${contract.nombreContrato}</h4>
-                <p>Monto: ${formatMonto(contract.montoContrato)}</p>
-                <p>Vencimiento: ${new Date(contract.fechaTerminacion).toLocaleDateString()}</p>
-                </div>
-        `;
-        sliderInner.appendChild(carouselItem);
-    });
+            // Verificar si Bootstrap está disponible
+            if (typeof bootstrap === 'undefined') {
+                console.error("Bootstrap no está cargado");
+                showToast("Error: Bootstrap no está cargado correctamente", "error");
+                return;
+            }
 
-    // --- Mostrar controles si hay contratos (si los ocultaste antes) ---
-    document.querySelector('.carousel-control-prev').style.display = ''; // O 'block'
-    document.querySelector('.carousel-control-next').style.display = ''; // O 'block'
+        const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
+            
+        sliderInner.innerHTML = '';
+            
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+                
+            // Ocultar controles si no hay contratos
+                const prevControl = document.querySelector('.carousel-control-prev');
+                const nextControl = document.querySelector('.carousel-control-next');
+                if (prevControl) prevControl.style.display = 'none';
+                if (nextControl) nextControl.style.display = 'none';
+                
+            // Limpiar resumen si no hay contratos
+                const elements = {
+                    'total-contract-amount': 'USD 0.00',
+                    'contracts-expiry-list': '<li>No hay contratos próximos a vencer</li>',
+                    'financial-progress-bar': '0%',
+                    'financial-progress-label': '0%',
+                    'physical-progress-bar': '0%',
+                    'physical-progress-label': '0%'
+                };
+                
+                Object.entries(elements).forEach(([id, value]) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        if (id.includes('progress-bar')) {
+                            element.style.width = value;
+                            element.setAttribute('aria-valuenow', 0);
+                        } else {
+                            element.innerHTML = value;
+                        }
+                    }
+                });
+                return;
+            }
 
-    // --- INICIALIZACIÓN DEL CARRUSEL ---
-    // Si usas Bootstrap 5 (con JavaScript):
-    const myCarouselElement = document.getElementById('tu-id-del-carrusel-padre-que-contiene-sliderInner'); // Asegúrate que sea el contenedor principal del carrusel
-    const carousel = new bootstrap.Carousel(myCarouselElement, {
-        interval: 5000, // Ajusta el intervalo
-        wrap: true // Para que el carrusel se repita
-    });
-
-    // O si usas Swiper (si tu HTML tiene un elemento con clase 'swiper-container' o similar):
-    // if (window.contractsSliderInstance) {
-    //     window.contractsSliderInstance.destroy(true, true); // Destruye la instancia anterior
-    // }
-    // window.contractsSliderInstance = new Swiper('.swiper-container', {
-    //     slidesPerView: 3,
-    //     spaceBetween: 30,
-    //     // ... otras opciones de Swiper ...
-    // });
-}
         // Mostrar controles si hay contratos
-        document.querySelector('.carousel-control-prev').style.display = '';
-        document.querySelector('.carousel-control-next').style.display = '';
+            const prevControl = document.querySelector('.carousel-control-prev');
+            const nextControl = document.querySelector('.carousel-control-next');
+            if (prevControl) prevControl.style.display = '';
+            if (nextControl) nextControl.style.display = '';
 
-        contracts.forEac(contract, idx) => {
+            // Crear slides para cada contrato
+        contracts.forEach((contract, idx) => {
             const isActive = idx === 0 ? 'active' : '';
             const card = document.createElement('div');
             card.className = `carousel-item ${isActive}`;
@@ -2028,16 +2046,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
             sliderInner.appendChild(card);
-        
-        if (contracts.length > 0) {
-            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id); // Log
-            updateSummaryByContract(contracts[0]);
-        }
+        });
 
-        // Inicializar el carrusel de Bootstrap explícitamente
-        if (contracts.length > 0 && document.getElementById('contracts-slider')) {
-            const carousel = new bootstrap.Carousel(document.getElementById('contracts-slider'), { interval: false }); // Puedes ajustar el intervalo si quieres auto-slide
-            console.log("Carrusel de Bootstrap inicializado."); // Log
+            // Actualizar resumen para el primer contrato
+        if (contracts.length > 0) {
+                console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id);
+                await updateSummaryByContract(contracts[0]);
+                renderFinancialTimeline(contracts[0]);
+            }
+
+            // Inicializar el carrusel de Bootstrap
+            const sliderElement = document.getElementById('contracts-slider');
+            if (sliderElement && contracts.length > 0) {
+                try {
+                    const carousel = new bootstrap.Carousel(sliderElement, { 
+                        interval: false,
+                        wrap: true
+                    });
+                    console.log("Carrusel de Bootstrap inicializado correctamente");
+                } catch (error) {
+                    console.error("Error al inicializar el carrusel:", error);
+                    showToast("Error al inicializar el carrusel", "error");
+                }
+            }
+        } catch (error) {
+            console.error("Error en renderContractsSlider:", error);
+            showToast("Error al cargar el carrusel de contratos", "error");
         }
     }
 
@@ -2273,8 +2307,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             chartData = {
                 type: 'line',
-                data: {
-                    labels: labels,
+            data: {
+                labels: labels,
                     datasets: [{
                         label: 'Monto Acumulado',
                         data: montosAcumulados,
@@ -2283,10 +2317,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         fill: true,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)'
                     }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
+            },
+            options: {
+                responsive: true,
+                plugins: {
                         title: {
                             display: true,
                             text: `Línea de Tiempo Financiera - ${contract.numeroSICAC || contract.numeroProveedor}`
@@ -2300,8 +2334,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
+                    y: {
+                        beginAtZero: true,
                             title: {
                                 display: true,
                                 text: `Monto (${contract.moneda || 'USD'})`
@@ -2327,10 +2361,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (exportPngButton) {
             exportPngButton.onclick = () => {
                 if (window.resumenGraficoInstance) {
-                    const link = document.createElement('a');
+        const link = document.createElement('a');
                     link.download = `grafico_${contract.numeroSICAC || contract.numeroProveedor || 'contrato'}.png`;
                     link.href = window.resumenGraficoInstance.toBase64Image();
-                    link.click();
+        link.click();
                 }
             };
         }
@@ -3209,7 +3243,244 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateSummaryCards(); // <-- Ahora dentro del listener
     renderContractsSlider(); // <-- Ahora dentro del listener
 
- // Cierre del event listener DOMContentLoaded (Asegúrate que este es el ÚNICO }}); al final)
+    // Sistema de Notificaciones
+    let notifications = [];
+
+    function addNotification(title, message, type = 'info') {
+        const notification = {
+            id: Date.now(),
+            title,
+            message,
+            type,
+            timestamp: new Date(),
+            read: false
+        };
+        
+        notifications.unshift(notification);
+        updateNotificationBadge();
+        renderNotifications();
+        saveNotifications();
+    }
+
+    function updateNotificationBadge() {
+        const unreadCount = notifications.filter(n => !n.read).length;
+        const badge = document.getElementById('notificationCount');
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+
+    function renderNotifications() {
+        const list = document.getElementById('notificationList');
+        list.innerHTML = '';
+        
+        notifications.forEach(notification => {
+            const li = document.createElement('li');
+            li.className = `notification-item ${notification.read ? 'read' : ''}`;
+            
+            const iconClass = getNotificationIcon(notification.type);
+            
+            li.innerHTML = `
+                <div class="notification-icon ${notification.type}">
+                    <i class="fas ${iconClass}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatNotificationTime(notification.timestamp)}</div>
+                </div>
+            `;
+            
+            li.addEventListener('click', () => markNotificationAsRead(notification.id));
+            list.appendChild(li);
+        });
+    }
+
+    function getNotificationIcon(type) {
+        switch(type) {
+            case 'error': return 'fa-exclamation-circle';
+            case 'warning': return 'fa-exclamation-triangle';
+            case 'success': return 'fa-check-circle';
+            default: return 'fa-info-circle';
+        }
+    }
+
+    function formatNotificationTime(timestamp) {
+        const now = new Date();
+        const diff = now - timestamp;
+        
+        if (diff < 60000) return 'Hace un momento';
+        if (diff < 3600000) return `Hace ${Math.floor(diff/60000)} minutos`;
+        if (diff < 86400000) return `Hace ${Math.floor(diff/3600000)} horas`;
+        return timestamp.toLocaleDateString();
+    }
+
+    function markNotificationAsRead(id) {
+        const notification = notifications.find(n => n.id === id);
+        if (notification) {
+            notification.read = true;
+            updateNotificationBadge();
+            saveNotifications();
+        }
+    }
+
+    function clearNotifications() {
+        notifications = [];
+        updateNotificationBadge();
+        renderNotifications();
+        saveNotifications();
+    }
+
+    function saveNotifications() {
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+    }
+
+    function loadNotifications() {
+        const saved = localStorage.getItem('notifications');
+        if (saved) {
+            notifications = JSON.parse(saved);
+            updateNotificationBadge();
+            renderNotifications();
+        }
+    }
+
+    // Línea de Tiempo Financiera
+    function renderFinancialTimeline(contract) {
+        const timeline = document.getElementById('financial-timeline');
+        timeline.innerHTML = '';
+        
+        if (!contract) return;
+        
+        const totalAmount = contract.montoTotalContrato;
+        const steps = 5; // Número de marcadores en la línea de tiempo
+        const stepAmount = totalAmount / (steps - 1);
+        
+        for (let i = 0; i < steps; i++) {
+            const amount = i * stepAmount;
+            const percentage = (i / (steps - 1)) * 100;
+            
+            const marker = document.createElement('div');
+            marker.className = 'timeline-marker';
+            marker.style.left = `${percentage}%`;
+            
+            const label = document.createElement('div');
+            label.className = 'timeline-label';
+            label.textContent = formatMonto(amount);
+            
+            marker.appendChild(label);
+            timeline.appendChild(marker);
+        }
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        loadNotifications();
+        
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+        });
+        
+        clearNotificationsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearNotifications();
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!notificationDropdown.contains(e.target) && !notificationBell.contains(e.target)) {
+                notificationDropdown.classList.remove('show');
+            }
+        });
+    });
+
+    // Modificar la función renderContractsSlider para incluir la línea de tiempo
+    async function renderContractsSlider() {
+        console.log("Renderizando carrusel de contratos...");
+        const sliderInner = document.getElementById('contracts-slider-inner');
+        const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length);
+        
+        sliderInner.innerHTML = '';
+        
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+            document.querySelector('.carousel-control-prev').style.display = 'none';
+            document.querySelector('.carousel-control-next').style.display = 'none';
+            document.getElementById('total-contract-amount').textContent = 'USD 0.00';
+            document.getElementById('contracts-expiry-list').innerHTML = '<li>No hay contratos próximos a vencer</li>';
+            document.getElementById('financial-progress-bar').style.width = '0%';
+            document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('financial-progress-label').textContent = '0%';
+            document.getElementById('physical-progress-bar').style.width = '0%';
+            document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('physical-progress-label').textContent = '0%';
+            return;
+        }
+        
+        // Mostrar controles si hay contratos
+        document.querySelector('.carousel-control-prev').style.display = '';
+        document.querySelector('.carousel-control-next').style.display = '';
+        
+        // Crear slides para cada contrato
+        contracts.forEach((contract, idx) => {
+            const isActive = idx === 0 ? 'active' : '';
+            const card = document.createElement('div');
+            card.className = `carousel-item ${isActive}`;
+            card.innerHTML = `
+                <div class="card">
+                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                </div>
+            `;
+            sliderInner.appendChild(card);
+        });
+        
+        // Actualizar resumen para el primer contrato
+        if (contracts.length > 0) {
+            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id);
+            await updateSummaryByContract(contracts[0]);
+            renderFinancialTimeline(contracts[0]);
+        }
+        
+        // Inicializar el carrusel de Bootstrap
+        const sliderElement = document.getElementById('contracts-slider');
+        if (sliderElement && contracts.length > 0) {
+            try {
+                const carousel = new bootstrap.Carousel(sliderElement, { 
+                    interval: false,
+                    wrap: true
+                });
+                
+                // Agregar evento para actualizar el resumen cuando cambie el slide
+                sliderElement.addEventListener('slid.bs.carousel', async (event) => {
+                    const activeIndex = event.to;
+                    const activeContract = contracts[activeIndex];
+                    await updateSummaryByContract(activeContract);
+                    renderFinancialTimeline(activeContract);
+                });
+                
+                console.log("Carrusel de Bootstrap inicializado correctamente");
+            } catch (error) {
+                console.error("Error al inicializar el carrusel:", error);
+                addNotification(
+                    "Error en el Carrusel",
+                    "No se pudo inicializar el carrusel de contratos. Por favor, recarga la página.",
+                    "error"
+                );
+            }
+        }
+    }
+
+    // ... existing code ...
+
+}); // Cierre del event listener DOMContentLoaded (Asegúrate que este es el ÚNICO }}); al final)
 
 // Funciones restantes del archivo (si las hay fuera del DOMContentLoaded)
-// ... existing code
+// ... existing code ...

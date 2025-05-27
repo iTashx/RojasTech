@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ayuda - Sistema de Gestión de Contratos</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/core/reset.css" />
+    <link rel="stylesheet" href="css/core/variables.css" />
+    <link rel="stylesheet" href="css/themes/theme-light.css" /> <!-- O theme-dark.css -->
+    <link rel="stylesheet" href="css/components/buttons.css" />
+    <link rel="stylesheet" href="css/components/forms.css" />
+    <link rel="stylesheet" href="css/components/tabs.css" />
+    <link rel="stylesheet" href="css/modules/notifications.css" />
+    <!-- Descomentar la siguiente línea y crear este archivo si necesitas estilos específicos para la página de ayuda -->
+    <!-- <link rel="stylesheet" href="css/pages/ayuda.css" /> -->
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <!-- Eliminar o comentar la siguiente línea si Bootstrap no es necesario -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-question-circle"></i> Ayuda del Sistema</h1>
+            <div class="notifications-icon">
+                <i class="fas fa-bell"></i>
+                <span class="notifications-counter">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="help-nav">
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#contratos">Gestión de Contratos</a></li>
+                <li><a href="#partidas">Gestión de Partidas</a></li>
+                <li><a href="#exportacion">Exportación</a></li>
+                <li><a href="#notificaciones">Notificaciones</a></li>
+                <li><a href="#faq">Preguntas Frecuentes</a></li>
+            </ul>
+        </nav>
+
+        <main class="help-content">
+            <section id="inicio" class="help-section">
+                <h2>Bienvenido al Sistema de Ayuda</h2>
+                <p>Este sistema le ayudará a gestionar sus contratos de manera eficiente. A continuación encontrará guías detalladas para cada funcionalidad.</p>
+                
+                <div class="quick-start">
+                    <h3>Inicio Rápido</h3>
+                    <ol>
+                        <li>Crear un nuevo contrato</li>
+                        <li>Agregar partidas al contrato</li>
+                        <li>Gestionar el estado del contrato</li>
+                        <li>Exportar reportes</li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="contratos" class="help-section">
+                <h2>Gestión de Contratos</h2>
+                
+                <h3>Crear un Nuevo Contrato</h3>
+                <ol>
+                    <li>Haga clic en "Nuevo Contrato"</li>
+                    <li>Complete los datos del proveedor</li>
+                    <li>Ingrese las fechas de inicio y fin</li>
+                    <li>Seleccione la modalidad de contratación</li>
+                    <li>Agregue las partidas necesarias</li>
+                    <li>Revise y guarde el contrato</li>
+                </ol>
+
+                <h3>Editar un Contrato Existente</h3>
+                <ol>
+                    <li>Busque el contrato en la lista</li>
+                    <li>Haga clic en "Editar"</li>
+                    <li>Modifique los campos necesarios</li>
+                    <li>Guarde los cambios</li>
+                </ol>
+
+                <div class="note">
+                    <strong>Nota:</strong> Los contratos en estado "Finalizado" no pueden ser editados.
+                </div>
+            </section>
+
+            <section id="partidas" class="help-section">
+                <h2>Gestión de Partidas</h2>
+                
+                <h3>Agregar Partidas</h3>
+                <ol>
+                    <li>Seleccione el contrato</li>
+                    <li>Haga clic en "Agregar Partida"</li>
+                    <li>Complete la descripción</li>
+                    <li>Ingrese cantidad y unidad de medida</li>
+                    <li>Especifique el precio unitario</li>
+                    <li>El sistema calculará automáticamente el total</li>
+                </ol>
+
+                <h3>Modificar Partidas</h3>
+                <ol>
+                    <li>Seleccione la partida a modificar</li>
+                    <li>Haga clic en "Editar"</li>
+                    <li>Actualice los datos necesarios</li>
+                    <li>Guarde los cambios</li>
+                </ol>
+
+                <div class="tip">
+                    <strong>Consejo:</strong> Use la función de copiar partidas para agilizar la creación de partidas similares.
+                </div>
+            </section>
+
+            <section id="exportacion" class="help-section">
+                <h2>Exportación de Datos</h2>
+                
+                <h3>Exportar a PDF</h3>
+                <ol>
+                    <li>Seleccione el contrato</li>
+                    <li>Haga clic en "Exportar"</li>
+                    <li>Elija "PDF" como formato</li>
+                    <li>Seleccione las secciones a incluir</li>
+                    <li>Haga clic en "Generar PDF"</li>
+                </ol>
+
+                <h3>Exportar a Excel</h3>
+                <ol>
+                    <li>Seleccione el contrato</li>
+                    <li>Haga clic en "Exportar"</li>
+                    <li>Elija "Excel" como formato</li>
+                    <li>Seleccione las columnas a incluir</li>
+                    <li>Haga clic en "Generar Excel"</li>
+                </ol>
+
+                <h3>Exportar a Imagen</h3>
+                <ol>
+                    <li>Seleccione el contrato</li>
+                    <li>Haga clic en "Exportar"</li>
+                    <li>Elija "Imagen" como formato</li>
+                    <li>Ajuste la calidad si es necesario</li>
+                    <li>Haga clic en "Generar Imagen"</li>
+                </ol>
+            </section>
+
+            <section id="notificaciones" class="help-section">
+                <h2>Sistema de Notificaciones</h2>
+                
+                <div id="notifications-container" class="notifications-container">
+                    <!-- El contenido se generará dinámicamente -->
+                </div>
+
+                <div class="notification-help">
+                    <h3>Tipos de Notificaciones</h3>
+                    <ul>
+                        <li><strong>Errores:</strong> Problemas críticos que requieren atención inmediata</li>
+                        <li><strong>Advertencias:</strong> Situaciones que podrían causar problemas</li>
+                        <li><strong>Información:</strong> Actualizaciones y mensajes del sistema</li>
+                    </ul>
+
+                    <h3>Cómo Usar las Notificaciones</h3>
+                    <ol>
+                        <li>Haga clic en el icono de campana para ver todas las notificaciones</li>
+                        <li>Use los filtros para ver tipos específicos de notificaciones</li>
+                        <li>Haga clic en "Ver detalles" para obtener más información</li>
+                        <li>Marque como leídas las notificaciones que ya ha revisado</li>
+                    </ol>
+
+                    <div class="notification-tips">
+                        <h4>Consejos</h4>
+                        <ul>
+                            <li>Revise regularmente las notificaciones para mantener su sistema actualizado</li>
+                            <li>Las notificaciones de error incluyen soluciones sugeridas</li>
+                            <li>Puede filtrar las notificaciones por tipo y estado</li>
+                            <li>Las notificaciones no leídas se marcan automáticamente</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="faq" class="help-section">
+                <h2>Preguntas Frecuentes</h2>
+                
+                <div class="faq-item">
+                    <h3>¿Cómo puedo recuperar un contrato eliminado?</h3>
+                    <p>Los contratos eliminados se pueden recuperar desde la papelera de reciclaje durante 30 días.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>¿Puedo modificar un contrato ya finalizado?</h3>
+                    <p>No, los contratos finalizados no pueden ser modificados. Debe crear una modificación de contrato.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>¿Cómo puedo hacer una copia de seguridad?</h3>
+                    <p>Use la función de exportación para guardar una copia de sus contratos en formato PDF o Excel.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>¿Qué hacer si olvidé mi contraseña?</h3>
+                    <p>Contacte al administrador del sistema para restablecer su contraseña.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 RojasTech. Todos los derechos reservados.</p>
+            <p>Para soporte técnico, contacte a: <a href="mailto:soporte@rojastech.com">soporte@rojastech.com</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Eliminar o comentar la siguiente línea si Bootstrap no es necesario -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script type="module">
+        import systemNotifications from './js/modules/notifications/SystemNotifications.js';
+
+        // Inicializar sistema de notificaciones
+        document.addEventListener('DOMContentLoaded', () => {
+            systemNotifications.init('notifications-container');
+
+            // Ejemplo de notificaciones
+            systemNotifications.addNotification({
+                type: 'error',
+                title: 'Error en el Módulo de Contratos',
+                message: 'No se pudo guardar el contrato',
+                details: 'El error ocurrió al intentar guardar el contrato #12345',
+                module: 'ContractManager',
+                solution: 'Verifique que todos los campos requeridos estén completos y que el servidor esté funcionando correctamente.'
+            });
+
+            systemNotifications.addNotification({
+                type: 'warning',
+                title: 'Contrato Próximo a Vencer',
+                message: 'El contrato #12345 vencerá en 7 días',
+                module: 'ContractManager'
+            });
+
+            systemNotifications.addNotification({
+                type: 'info',
+                title: 'Actualización del Sistema',
+                message: 'Se ha actualizado el módulo de notificaciones',
+                module: 'System'
+            });
+        });
+
+        // Event listener para el icono de notificaciones
+        document.querySelector('.notifications-icon').addEventListener('click', () => {
+            const container = document.getElementById('notifications-container');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>
