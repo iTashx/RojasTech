@@ -3231,10 +3231,9 @@ window.addEventListener('resize', () => {
     updateSummaryCards(); // <-- Ahora dentro del listener
     renderContractsSlider(); // <-- Ahora dentro del listener
 
-}); // Cierre del event listener DOMContentLoaded (Asegúrate que este es el ÚNICO }}); al final)
+ // Cierre del event listener DOMContentLoaded (Asegúrate que este es el ÚNICO }}); al final)
 
 // Funciones restantes del archivo (si las hay fuera del DOMContentLoaded)
 // ... existing code ...
 
-});
  
