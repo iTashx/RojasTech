@@ -27,8 +27,8 @@
     --help-primary: #2c3e50;
     --help-secondary: #34495e;
     --help-accent: #3498db;
-    --help-background: #f8f9fa;
     --help-text: #2c3e50;
+    --help-background: #f8f9fa;
     --help-border: #e9ecef;
 }
 
@@ -248,33 +248,29 @@ footer {
 }
 
 footer a {
-    color: var(--accent-color);
-    text-decoration: none;
-}
-
-footer a:hover {
+    color: white;
     text-decoration: underline;
 }
 
-.footer-text {
-    margin-top: 5px;
-    display: block;
+footer a:hover {
+    text-decoration: none;
 }
 
-/* Responsive Design */
+.footer-text {
+    margin-bottom: 0.5rem;
+}
+
+/* Media Queries para responsividad */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
         align-items: flex-start;
-        padding: var(--spacing-md) var(--spacing-sm);
     }
-
     .header-buttons {
         margin-top: var(--spacing-sm);
     }
-
     main {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md);
     }
 }
 
@@ -282,33 +278,25 @@ footer a:hover {
     header h1 {
         font-size: 1.5em;
     }
-
     .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
         width: 100%;
         justify-content: center;
-        margin-bottom: var(--spacing-sm);
     }
-
     .small-btn {
-        font-size: 0.75em;
-        display: inline-block;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        width: auto;
     }
-
     .card h2 {
         font-size: 1.3em;
     }
-
     .card h3 {
         font-size: 1.1em;
     }
-
     .card ul, .card ol {
         padding-left: var(--spacing-md);
     }
 }
 
-/* Estilos específicos de ayuda.html */
+/* Estilos específicos para la documentación y ayuda */
 .section-title {
     border-left: 4px solid var(--primary-color);
     padding-left: 10px;
@@ -336,35 +324,32 @@ footer a:hover {
 }
 
 .help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
+    padding: 20px;
 }
 
 .help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
+    color: var(--secondary-color);
+    margin-top: 20px;
+    margin-bottom: 15px;
 }
 
 .help-section ul {
-    list-style-type: none;
+    list-style: disc;
     padding-left: 20px;
 }
 
@@ -373,66 +358,65 @@ footer a:hover {
 }
 
 .help-section li:before {
-    content: "•";
-    color: #3498db;
-    font-weight: bold;
+    content: "\f111"; /* FontAwesome circle icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: var(--primary-color);
     display: inline-block;
     width: 1em;
-    margin-left: -1em;
+    margin-left: -1.5em;
 }
 
 .help-image {
     max-width: 100%;
     height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 10px 0;
+    display: block;
+    margin: 15px auto;
+    border: 1px solid var(--help-border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .help-note {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
+    background-color: #e9f7ef; /* Light green */
+    border-left: 5px solid var(--primary-color);
     padding: 15px;
-    margin: 15px 0;
+    margin: 20px 0;
+    border-radius: 5px;
 }
 
-/* Estilos para la documentación de ayuda */
+.help-note strong {
+    color: var(--primary-color);
+}
 
-/* Layout principal */
+/* Layout para ayuda con sidebar */
 .help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 100vh;
-    background-color: var(--help-background);
+    display: flex;
 }
 
-/* Navegación */
 .help-nav {
-    background-color: var(--help-primary);
-    color: white;
-    padding: 1rem;
-    position: fixed;
     width: 250px;
-    height: 100vh;
-    overflow-y: auto;
+    flex-shrink: 0;
+    background-color: var(--help-secondary);
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
 .help-nav-header {
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .help-nav-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 5px;
 }
 
 .help-nav-header p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin: 0.5rem 0 0;
+    font-size: 0.9em;
+    color: rgba(255,255,255,0.8);
 }
 
 .help-nav ul {
@@ -442,183 +426,95 @@ footer a:hover {
 }
 
 .help-nav li {
-    margin: 0.5rem 0;
+    margin-bottom: 10px;
 }
 
 .help-nav a {
-    color: white;
+    color: rgba(255,255,255,0.9);
     text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.2s ease;
     display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    padding: 5px 0;
 }
 
 .help-nav a:hover {
-    background-color: var(--help-accent);
+    color: var(--help-accent);
 }
 
-/* Contenido principal */
 .help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
+    flex-grow: 1;
+    padding: 20px;
+    background-color: var(--help-background);
 }
 
-/* Secciones */
 .help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
-.help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
-}
-
-/* Contenedor de imágenes */
-.help-image-container {
-    margin: 2rem 0;
-    text-align: center;
-}
-
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.image-caption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--help-secondary);
-    font-style: italic;
-}
-
-/* Listas */
-.help-section ul,
-.help-section ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
-}
-
-.help-section li {
-    margin: 0.5rem 0;
-    line-height: 1.5;
-}
-
-/* Notas y advertencias */
-.help-note {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.help-warning {
-    background-color: #fff3e0;
-    border-left: 4px solid #ff9800;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .help-container {
-        grid-template-columns: 1fr;
-    }
-
-    .help-nav {
-        position: static;
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-    }
-
-    .help-content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-
-    .help-section {
-        padding: 1rem;
-    }
-}
-
-/* Animaciones */
-.help-section {
-    animation: fadeIn 0.5s ease-in-out;
+.section-title {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 10px;
+    margin-bottom: 20px;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Estilos para código */
+/* Estilos específicos para tablas en la ayuda */
 .help-code {
-    background-color: #f8f9fa;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    padding: 1rem;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-left: 3px solid #555;
     overflow-x: auto;
-    margin: 1rem 0;
+    margin-bottom: 15px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
-/* Estilos para tablas */
 .help-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
+    margin: 20px 0;
+    font-size: 1em;
+    min-width: 400px;
 }
 
 .help-table th,
 .help-table td {
-    border: 1px solid var(--help-border);
-    padding: 0.75rem;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
     text-align: left;
 }
 
 .help-table th {
     background-color: var(--help-primary);
     color: white;
+    font-weight: bold;
 }
 
 .help-table tr:nth-child(even) {
-    background-color: var(--help-background);
+    background-color: #f2f2f2;
 }
 
-/* Estilos para botones */
+/* Estilos para botones en la ayuda */
 .help-button {
     display: inline-block;
-    padding: 0.5rem 1rem;
     background-color: var(--help-accent);
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 10px 15px;
     text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
     transition: background-color 0.3s ease;
 }
 
@@ -626,29 +522,166 @@ footer a:hover {
     background-color: #2980b9;
 }
 
-/* Estilos para tooltips */
+/* Estilos para tooltips en la ayuda */
 .help-tooltip {
     position: relative;
     display: inline-block;
+    border-bottom: 1px dotted black;
 }
 
 .help-tooltip .tooltip-text {
     visibility: hidden;
-    background-color: var(--help-primary);
-    color: white;
+    width: 120px;
+    background-color: black;
+    color: #fff;
     text-align: center;
-    padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: 6px;
+    padding: 5px 0;
     position: absolute;
     z-index: 1;
-    bottom: 125%;
+    bottom: 125%; /* Position the tooltip above the text */
     left: 50%;
-    transform: translateX(-50%);
+    margin-left: -60px;
     opacity: 0;
     transition: opacity 0.3s;
+}
+
+.help-tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
 }
 
 .help-tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
 }
+
+/* Nuevos estilos para la estructura con sidebar */
+.container-fluid {
+    padding: 0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding: 0;
+    }
+    .col-md-3, .col-lg-2 {
+        flex: none;
+        width: 100%;
+    }
+    .ms-sm-auto {
+        margin-left: 0 !important;
+    }
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-link .fas {
+    margin-right: 5px;
+    color: #777;
+}
+
+.sidebar .nav-link.active {
+    color: #007bff;
+}
+
+.sidebar .nav-link:hover .fas,
+.sidebar .nav-link.active .fas {
+    color: inherit;
+}
+
+.sidebar .nav-link:hover {
+    color: #007bff;
+}
+
+.sidebar .nav-item {
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+}
+
+.navbar-brand {
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .navbar-toggler {
+    top: .25rem;
+    right: 1rem;
+}
+
+.navbar .form-control {
+    padding: .75rem 1rem;
+}
+
+.form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .1);
+}
+
+.form-control-dark:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+}
+
+main {
+    padding-top: 20px;
+}
+
+.help-header {
+    margin-bottom: 30px;
+}
+
+.help-header h1 {
+    color: #333;
+}
+
+.footer {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.footer p {
+    margin-bottom: 5px;
+}
+
+.footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+} 
