@@ -2,7 +2,7 @@ import { db, addSampleData } from './database.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar la base de datos (si es necesario, puedes llamar a addSampleData aquí)
-    await db.open();
+        await db.open();
     // await addSampleData(); // Descomentar para añadir datos de ejemplo
 
     // --- Elementos del DOM ---
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.classList.add('active', 'show');
-                button.classList.add('active');
+            button.classList.add('active');
             }
 
             // Cargar datos específicos al cambiar de pestaña
@@ -237,21 +237,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const totalContractAmountEl = document.getElementById('total-contract-amount');
             if (totalContractAmountEl) {
-                 const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
+            const totalAmount = allContracts.reduce((sum, c) => sum + (c.montoTotalContrato || 0), 0);
                  totalContractAmountEl.textContent = `USD ${totalAmount.toFixed(2)}`;
             }
 
             const expiringContractsEl = document.getElementById('expiring-contracts');
             if (expiringContractsEl) {
                 // Contar contratos que vencen en 30 días para la tarjeta (si aplica)
-                const thirtyDaysFromNow = new Date();
-                thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-                const expiringContracts = allContracts.filter(c => 
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            const expiringContracts = allContracts.filter(c => 
                     { // Usar fechaTerminacionExtendida si existe, si no fechaTerminacion
                         const terminationDate = c.fechaTerminacionExtendida ? new Date(c.fechaTerminacionExtendida) : new Date(c.fechaTerminacion);
                         return terminationDate && terminationDate <= thirtyDaysFromNow && terminationDate >= new Date();
                     }
-                ).length;
+            ).length;
                 expiringContractsEl.textContent = expiringContracts;
             }
 
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const totalModalitiesEl = document.getElementById('total-modalities');
             if (totalModalitiesEl) {
-                 const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
+            const modalities = new Set(allContracts.map(c => c.modalidadContratacion).filter(Boolean));
                  totalModalitiesEl.textContent = modalities.size;
             }
 
@@ -464,10 +464,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const observaciones = document.getElementById('observaciones').value;
         const estatusContrato = document.getElementById('estatus-contrato').value;
         const moneda = document.getElementById('moneda').value;
-        // Los archivos adjuntos requieren manejo especial
+            // Los archivos adjuntos requieren manejo especial
         const archivosAdjuntos = await handleFileUpload(
-            document.getElementById('adjuntar-archivos'),
-            document.getElementById('adjuntar-archivos-info')
+                document.getElementById('adjuntar-archivos'),
+                document.getElementById('adjuntar-archivos-info')
         );
 
         // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Para esta corrección, si no subes nuevos, se borran los viejos para esa entidadId/entidadTipo.
                  await db.archivos.where({ entidadId: contractId, entidadTipo: 'contrato' }).delete();
             }
-
+            
             clearContractFormBtn.click();
             loadContractList();
             tabButtons.forEach(btn => {
@@ -1133,7 +1133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     totalPartidaHes: partidaHes.totalPartidaHes,
                     montoAdicionalManual: partidaHes.montoAdicionalManual // Guardar el monto adicional manual
                  });
-             }
+            }
 
             clearHesFormBtn.click();
             await loadHesList();
@@ -1969,56 +1969,108 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
     async function renderContractsSlider() {
-        console.log("Renderizando carrusel de contratos..."); // Log para depuración
-        const sliderInner = document.getElementById('contracts-slider-inner');
-        const contracts = await db.contracts.toArray();
-        console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
-        sliderInner.innerHTML = '';
-        if (contracts.length === 0) {
-            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
-            // Ocultar controles si no hay contratos
-            document.querySelector('.carousel-control-prev').style.display = 'none';
-            document.querySelector('.carousel-control-next').style.display = 'none';
-            // Limpiar resumen si no hay contratos
-            document.getElementById('total-contract-amount').textContent = 'USD 0.00';
-            document.getElementById('contracts-expiry-list').innerHTML = '<li>No hay contratos próximos a vencer</li>';
-            document.getElementById('financial-progress-bar').style.width = '0%';
-            document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', 0);
-            document.getElementById('financial-progress-label').textContent = '0%';
-            document.getElementById('physical-progress-bar').style.width = '0%';
-            document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', 0);
-            document.getElementById('physical-progress-label').textContent = '0%';
-            return; // Salir si no hay contratos
-        }
-        // Mostrar controles si hay contratos
-        document.querySelector('.carousel-control-prev').style.display = '';
-        document.querySelector('.carousel-control-next').style.display = '';
+        try {
+            console.log("Renderizando carrusel de contratos..."); // Log para depuración
+            
+            // Verificar si el elemento del carrusel existe
+            const sliderInner = document.getElementById('contracts-slider-inner');
+            if (!sliderInner) {
+                console.error("Elemento del carrusel no encontrado");
+                return;
+            }
 
-        contracts.forEach((contract, idx) => {
-            const isActive = idx === 0 ? 'active' : '';
-            const card = document.createElement('div');
-            card.className = `carousel-item ${isActive}`;
-            card.innerHTML = `
-                <div class="card">
-                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
-                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
-                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
-                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
-                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
-                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
-                </div>
-            `;
-            sliderInner.appendChild(card);
-        });
-        if (contracts.length > 0) {
-            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id); // Log
-            updateSummaryByContract(contracts[0]);
-        }
+            // Verificar si Bootstrap está disponible
+            if (typeof bootstrap === 'undefined') {
+                console.error("Bootstrap no está cargado");
+                showToast("Error: Bootstrap no está cargado correctamente", "error");
+                return;
+            }
 
-        // Inicializar el carrusel de Bootstrap explícitamente
-        if (contracts.length > 0 && document.getElementById('contracts-slider')) {
-            const carousel = new bootstrap.Carousel(document.getElementById('contracts-slider'), { interval: false }); // Puedes ajustar el intervalo si quieres auto-slide
-            console.log("Carrusel de Bootstrap inicializado."); // Log
+            const contracts = await db.contracts.toArray();
+            console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
+            
+            sliderInner.innerHTML = '';
+            
+            if (contracts.length === 0) {
+                sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+                
+                // Ocultar controles si no hay contratos
+                const prevControl = document.querySelector('.carousel-control-prev');
+                const nextControl = document.querySelector('.carousel-control-next');
+                if (prevControl) prevControl.style.display = 'none';
+                if (nextControl) nextControl.style.display = 'none';
+                
+                // Limpiar resumen si no hay contratos
+                const elements = {
+                    'total-contract-amount': 'USD 0.00',
+                    'contracts-expiry-list': '<li>No hay contratos próximos a vencer</li>',
+                    'financial-progress-bar': '0%',
+                    'financial-progress-label': '0%',
+                    'physical-progress-bar': '0%',
+                    'physical-progress-label': '0%'
+                };
+                
+                Object.entries(elements).forEach(([id, value]) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        if (id.includes('progress-bar')) {
+                            element.style.width = value;
+                            element.setAttribute('aria-valuenow', 0);
+                        } else {
+                            element.innerHTML = value;
+                        }
+                    }
+                });
+                return;
+            }
+
+            // Mostrar controles si hay contratos
+            const prevControl = document.querySelector('.carousel-control-prev');
+            const nextControl = document.querySelector('.carousel-control-next');
+            if (prevControl) prevControl.style.display = '';
+            if (nextControl) nextControl.style.display = '';
+
+            // Crear slides para cada contrato
+            contracts.forEach((contract, idx) => {
+                const isActive = idx === 0 ? 'active' : '';
+                const card = document.createElement('div');
+                card.className = `carousel-item ${isActive}`;
+                card.innerHTML = `
+                    <div class="card">
+                        <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                        <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                        <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                        <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                        <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                        <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                    </div>
+                `;
+                sliderInner.appendChild(card);
+            });
+
+            // Actualizar resumen para el primer contrato
+            if (contracts.length > 0) {
+                console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id);
+                await updateSummaryByContract(contracts[0]);
+            }
+
+            // Inicializar el carrusel de Bootstrap
+            const sliderElement = document.getElementById('contracts-slider');
+            if (sliderElement && contracts.length > 0) {
+                try {
+                    const carousel = new bootstrap.Carousel(sliderElement, { 
+                        interval: false,
+                        wrap: true
+                    });
+                    console.log("Carrusel de Bootstrap inicializado correctamente");
+                } catch (error) {
+                    console.error("Error al inicializar el carrusel:", error);
+                    showToast("Error al inicializar el carrusel", "error");
+                }
+            }
+        } catch (error) {
+            console.error("Error en renderContractsSlider:", error);
+            showToast("Error al cargar el carrusel de contratos", "error");
         }
     }
 
@@ -2254,8 +2306,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             chartData = {
                 type: 'line',
-                data: {
-                    labels: labels,
+            data: {
+                labels: labels,
                     datasets: [{
                         label: 'Monto Acumulado',
                         data: montosAcumulados,
@@ -2264,10 +2316,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         fill: true,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)'
                     }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
+            },
+            options: {
+                responsive: true,
+                plugins: {
                         title: {
                             display: true,
                             text: `Línea de Tiempo Financiera - ${contract.numeroSICAC || contract.numeroProveedor}`
@@ -2281,8 +2333,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
+                    y: {
+                        beginAtZero: true,
                             title: {
                                 display: true,
                                 text: `Monto (${contract.moneda || 'USD'})`
@@ -2308,10 +2360,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (exportPngButton) {
             exportPngButton.onclick = () => {
                 if (window.resumenGraficoInstance) {
-                    const link = document.createElement('a');
+        const link = document.createElement('a');
                     link.download = `grafico_${contract.numeroSICAC || contract.numeroProveedor || 'contrato'}.png`;
                     link.href = window.resumenGraficoInstance.toBase64Image();
-                    link.click();
+        link.click();
                 }
             };
         }

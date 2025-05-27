@@ -3,349 +3,134 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ayuda - SIGESCON</title>
+    <title>Ayuda - Sistema de Gestión de Contratos</title>
 
     <!-- Estilos -->
     <link rel="stylesheet" href="css/ayuda.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#introduccion">
-                                <i class="fas fa-home"></i> Introducción
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#contratos">
-                                <i class="fas fa-file-contract"></i> Contratos
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#hes">
-                                <i class="fas fa-clipboard-list"></i> HES
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#avances">
-                                <i class="fas fa-chart-line"></i> Avances
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#reportes">
-                                <i class="fas fa-file-alt"></i> Reportes
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#configuracion">
-                                <i class="fas fa-cog"></i> Configuración
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    <div class="help-container">
+        <nav class="help-nav">
+            <div class="help-nav-header">
+                <h1><i class="fas fa-question-circle"></i> Ayuda</h1>
+                <p>Guía rápida del sistema</p>
+            </div>
+            <ul>
+                <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="#contratos"><i class="fas fa-file-contract"></i> Contratos</a></li>
+                <li><a href="#hes"><i class="fas fa-tasks"></i> HES</a></li>
+                <li><a href="#reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                <li><a href="#configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </nav>
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Ayuda SIGESCON</h1>
+        <main class="help-content">
+            <section id="inicio" class="help-section">
+                <h2>Bienvenido a la Ayuda</h2>
+                <p>Esta sección te guiará en el uso del Sistema de Gestión de Contratos. Selecciona un tema en el menú lateral para obtener información detallada.</p>
+                
+                <div class="help-note">
+                    <strong>Consejo:</strong> Usa el buscador en la parte superior para encontrar rápidamente lo que necesitas.
+                </div>
+            </section>
+
+            <section id="contratos" class="help-section">
+                <h2>Gestión de Contratos</h2>
+                <div class="feature-box">
+                    <h3><i class="fas fa-plus-circle"></i> Crear Contrato</h3>
+                    <p>Para crear un nuevo contrato:</p>
+                    <ol>
+                        <li>Haz clic en "Nuevo Contrato"</li>
+                        <li>Completa los campos requeridos</li>
+                        <li>Agrega las partidas necesarias</li>
+                        <li>Guarda el contrato</li>
+                    </ol>
                 </div>
 
-                <!-- Introducción -->
-                <section id="introduccion" class="mb-5">
-                    <h2>Introducción</h2>
-                    <p>SIGESCON es un sistema de gestión de contratos empresariales que permite el seguimiento y control de contratos, HES (Hojas de Estimación de Servicios) y sus respectivas partidas.</p>
-                </section>
+                <div class="feature-box">
+                    <h3><i class="fas fa-edit"></i> Editar Contrato</h3>
+                    <p>Para modificar un contrato existente:</p>
+                    <ol>
+                        <li>Busca el contrato en la lista</li>
+                        <li>Haz clic en "Editar"</li>
+                        <li>Realiza los cambios necesarios</li>
+                        <li>Guarda los cambios</li>
+                    </ol>
+                </div>
+            </section>
 
-                <!-- Contratos -->
-                <section id="contratos" class="mb-5">
-                    <h2>Gestión de Contratos</h2>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3>Crear/Editar Contrato</h3>
-                            <ol>
-                                <li>Navega a "Nuevo/Editar Contrato" en el menú lateral</li>
-                                <li>Completa los campos requeridos:
-                                    <ul>
-                                        <li>Número de Proveedor</li>
-                                        <li>Fechas (Firma, Inicio, Terminación)</li>
-                                        <li>Monto Total</li>
-                                        <li>Modalidad de Contratación</li>
-                                    </ul>
-                                </li>
-                                <li>Agrega las partidas del contrato</li>
-                                <li>Haz clic en "Guardar Contrato"</li>
-                            </ol>
+            <section id="hes" class="help-section">
+                <h2>Gestión de HES</h2>
+                <h3>Crear HES</h3>
+                <p>Para crear una nueva HES:</p>
+                <ol>
+                    <li>Selecciona el contrato</li>
+                    <li>Haz clic en "Nueva HES"</li>
+                    <li>Completa la información</li>
+                    <li>Agrega las partidas ejecutadas</li>
+                </ol>
 
-                            <h3>Alertas de Vencimiento</h3>
-                            <p>El sistema mostrará alertas automáticas cuando un contrato esté próximo a vencer. Puedes configurar el número de días de anticipación en la sección de Configuración.</p>
-                        </div>
-                    </div>
-                </section>
+                <div class="help-warning">
+                    <strong>Importante:</strong> Verifica que las cantidades ejecutadas no excedan las cantidades del contrato.
+                </div>
+            </section>
 
-                <!-- HES -->
-                <section id="hes" class="mb-5">
-                    <h2>Gestión de HES</h2>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3>Crear/Editar HES</h3>
-                            <ol>
-                                <li>Selecciona el contrato asociado</li>
-                                <li>Ingresa el número de HES</li>
-                                <li>Define las fechas de inicio y fin</li>
-                                <li>Selecciona las partidas a ejecutar</li>
-                                <li>Configura el porcentaje de gastos administrativos (opcional)</li>
-                            </ol>
+            <section id="reportes" class="help-section">
+                <h2>Reportes</h2>
+                <h3>Tipos de Reportes</h3>
+                <table class="help-table">
+                    <thead>
+                        <tr>
+                            <th>Reporte</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Resumen de Contratos</td>
+                            <td>Muestra el estado general de todos los contratos</td>
+                        </tr>
+                        <tr>
+                            <td>Ejecución de HES</td>
+                            <td>Detalla el avance de las HES por contrato</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-                            <h3>Gastos Administrativos</h3>
-                            <p>Puedes configurar el porcentaje de gastos administrativos para cada HES. Este porcentaje se aplicará sobre el subtotal de la HES para calcular el monto total.</p>
-                        </div>
-                    </div>
-                </section>
+            <section id="configuracion" class="help-section">
+                <h2>Configuración</h2>
+                <h3>Parámetros del Sistema</h3>
+                <ul>
+                    <li>Días de alerta para vencimientos</li>
+                    <li>Porcentaje de gastos administrativos</li>
+                    <li>Moneda predeterminada</li>
+                    <li>Formato de fechas</li>
+                </ul>
 
-                <!-- Avances -->
-                <section id="avances" class="mb-5">
-                    <h2>Seguimiento de Avances</h2>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3>Avance Físico</h3>
-                            <ul>
-                                <li>Muestra el porcentaje de ejecución por partida</li>
-                                <li>Calcula el progreso global del contrato</li>
-                                <li>Visualiza el avance en gráficos</li>
-                            </ul>
-
-                            <h3>Avance Financiero</h3>
-                            <ul>
-                                <li>Muestra el monto ejecutado vs. total</li>
-                                <li>Desglosa el avance por HES</li>
-                                <li>Incluye gastos administrativos en los cálculos</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Reportes -->
-                <section id="reportes" class="mb-5">
-                    <h2>Reportes</h2>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3>Tipos de Reportes</h3>
-                            <ul>
-                                <li>Reporte de contrato individual</li>
-                                <li>Resumen de HES</li>
-                                <li>Avances físicos y financieros</li>
-                                <li>Estadísticas globales</li>
-                            </ul>
-
-                            <h3>Exportación</h3>
-                            <p>Los reportes pueden exportarse en los siguientes formatos:</p>
-                            <ul>
-                                <li>Excel (.xlsx)</li>
-                                <li>PDF</li>
-                                <li>Imagen (.png)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Configuración -->
-                <section id="configuracion" class="mb-5">
-                    <h2>Configuración del Sistema</h2>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h3>Parámetros Configurables</h3>
-                            <ul>
-                                <li><strong>Días de Alerta:</strong> Configura el número de días antes del vencimiento para mostrar alertas (1-365 días)</li>
-                                <li><strong>Gastos Administrativos:</strong> Establece el porcentaje por defecto para nuevas HES</li>
-                                <li><strong>Moneda:</strong> Selecciona la moneda predeterminada para nuevos contratos</li>
-                            </ul>
-
-                            <h3>Respaldo de Datos</h3>
-                            <p>En la sección de Informes puedes:</p>
-                            <ul>
-                                <li>Exportar la base de datos completa</li>
-                                <li>Importar datos desde archivos Excel</li>
-                                <li>Realizar respaldos automáticos de la configuración</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
+                <div class="help-code">
+                    // Ejemplo de configuración
+                    {
+                        "diasAlerta": 30,
+                        "gastosAdmin": 10,
+                        "moneda": "USD",
+                        "formatoFecha": "DD/MM/YYYY"
+                    }
+                </div>
+            </section>
+        </main>
     </div>
 
- 
-    <main>
-        <!-- Barra de Búsqueda -->
-        <section class="card help-section">
-            <h2 class="section-title"><i class="fas fa-search"></i> Buscar en la Ayuda</h2>
-            <div class="input-group mb-3">
-                <input type="text" id="help-search-input" class="form-control" placeholder="Escribe para buscar en la documentación...">
-                <button class="btn btn-primary" type="button" id="help-search-button"><i class="fas fa-search"></i> Buscar</button>
-            </div>
-            <div id="help-search-results" class="mt-3"></div>
-        </section>
+    <footer>
+        <p class="footer-text">© 2024 Sistema de Gestión de Contratos. Todos los derechos reservados.</p>
+        <p class="footer-text">Versión 1.0.0</p>
+    </footer>
 
-        <!-- Introducción -->
-        <section id="introduccion" class="card help-section">
-            <h2 class="section-title"><i class="fas fa-home"></i> Introducción a SIGESCON</h2>
-            <p>SIGESCON es un sistema integral para la gestión de contratos empresariales que te permite:</p>
-             <ul>
-                 <li>Gestionar contratos y sus partidas</li>
-                 <li>Administrar HES (Hojas de Estimación de Servicios)</li>
-                 <li>Seguir el avance físico y financiero</li>
-                 <li>Generar reportes detallados</li>
-             </ul>
-        </section>
-
-        <!-- Gestión de Contratos -->
-        <section id="gestion-contratos" class="card help-section">
-            <h2 class="section-title"><i class="fas fa-file-contract"></i> Módulo: Gestión de Contratos</h2>
-            <p>Este módulo te permite crear, ver, editar y eliminar contratos, así como gestionar sus partidas asociadas.</p>
-
-            <h3><i class="fas fa-plus"></i> Crear un Nuevo Contrato</h3>
-            <ol>
-                <li>Haz clic en "Nuevo/Editar Contrato" en el menú lateral.</li>
-                <li>Completa los campos requeridos, como N° Proveedor, Fechas (Firma, Creación, Inicio, Terminación Original), Monto Original, Estatus, Modalidad, etc.</li>
-                <li><strong>Nuevos Campos de Extensión:</strong> Puedes añadir Días de Extensión para calcular automáticamente una Fecha de Terminación Extendida. Esto ayuda a proyectar la duración final del contrato.</li>
-                <li><strong>Gestión de Partidas:</strong> Utiliza el botón "<i class=\"fas fa-plus\"></i> Añadir Partida" para listar los ítems o servicios incluidos en el contrato, con su cantidad, unidad de medida y precio unitario. El total de la partida y el Monto Original del Contrato se calcularán automáticamente.</li>
-                <li><strong>Monto Modificado:</strong> Puedes ingresar un Monto Modificado adicional o de reducción que se sumará/restará al Monto Original para obtener el Monto Total del Contrato.</li>
-                <li><strong>Archivos Adjuntos:</strong> Puedes adjuntar archivos relevantes al contrato. Estos se guardan localmente.</li>
-                <li>Haz clic en "Guardar Contrato".</li>
-            </ol>
-
-            <h3><i class="fas fa-edit"></i> Editar un Contrato Existente</h3>
-            <ol>
-                <li>Ve al módulo "Lista de Contratos".</li>
-                <li>Encuentra el contrato que deseas editar (puedes usar los filtros si es necesario).</li>
-                <li>Haz clic en el botón con el icono de lápiz (<i class="fas fa-edit"></i>) en la fila del contrato.</li>
-                <li>El formulario "Nuevo/Editar Contrato" se llenará con los datos del contrato seleccionado.</li>
-                <li>Realiza los cambios necesarios (incluyendo partidas, montos o fechas de extensión).</li>
-                <li>Haz clic en "Guardar Contrato" (ahora actuará como Actualizar).</li>
-            </ol>
-
-             <h3><i class="fas fa-trash"></i> Enviar Contrato a la Papelera</h3>
-             <p>Si ya no necesitas un contrato, puedes enviarlo a la papelera:</p>
-             <ol>
-                 <li>Ve al módulo "Lista de Contratos".</li>
-             <li>Haz clic en el botón con el icono de papelera (<i class="fas fa-trash"></i>) en la fila del contrato.</li>
-             <li>Confirma la acción cuando se te solicite.</li>
-             <li>El contrato y sus HES/Partidas asociadas serán movidos a la Papelera de Reciclaje, no eliminados permanentemente de inmediato.</li>
-             </ol>
-
-             <h3>Alerta de Vencimiento</h3>
-             <p>El sistema te notificará con una alerta si un contrato tiene una fecha de terminación (o terminación extendida) que se encuentra a 20 días o menos de la fecha actual.</p>
-
-        </section>
-
-        <!-- Gestión de HES -->
-        <section id="gestion-hes" class="card help-section">
-            <h2 class="section-title"><i class="fas fa-clipboard-list"></i> Módulo: Gestión de HES</h2>
-            <p>Las HES (Hojas de Estimación de Servicios) registran los avances y montos ejecutados para un contrato en un período determinado.</p>
-            <p>En este módulo, seleccionas un contrato y registras las partidas que se han ejecutado dentro de una HES específica.</p>
-
-            <h3><i class="fas fa-plus"></i> Crear una Nueva HES</h3>
-            <ol>
-                <li>Haz clic en "Gestión de HES" en el menú lateral.</li>
-                <li>Selecciona el Contrato asociado a la HES en el menú desplegable.</li>
-                <li>Ingresa el N° HES, Fechas (Inicio y Final de la HES), y otros detalles como Aprobado, Texto Breve, etc.</li>
-                <li><strong>Registro de Ejecución de Partidas:</strong> En la tabla inferior, verás las partidas del contrato seleccionado. Ingresa la "Cantidad a Ejecutar" para cada partida que se haya realizado en esta HES. El sistema validará que la cantidad no exceda la cantidad restante disponible para esa partida en el contrato.</li>
-                 <li><strong>Monto Adicional Manual:</strong> Ahora puedes ingresar un monto adicional manualmente por partida en la HES si es necesario (por ejemplo, para ajustes). Este monto se sumará al cálculo basado en la cantidad ejecutada y el precio unitario de la partida para obtener el total de esa partida en la HES.</li>
-                <li>El Subtotal, Gastos Administrativos (5% del subtotal) y el Total de la HES se calcularán automáticamente. Ahora el porcentaje de gastos administrativos es configurable.</li>
-                 <li><strong>Validación de Monto Total:</strong> El sistema validará que el monto total de la HES (incluyendo montos adicionales manuales) no supere el Monto Total del Contrato asociado.</li>
-                <li>Adjunta Anexos si es necesario.</li>
-                <li>Haz clic en "Guardar HES".</li>
-            </ol>
-
-            <h3><i class="fas fa-edit"></i> Editar una HES Existente</h3>
-            <ol>
-                <li>Ve a la lista de HES en la parte inferior del módulo "Gestión de HES".</li>
-                <li>Encuentra la HES que deseas editar.</li>
-                <li>Haz clic en el botón con el icono de lápiz (<i class="fas fa-edit"></i>) en la fila de la HES.</li>
-                <li>El formulario se llenará con los datos de la HES.</li>
-                <li>Realiza los cambios necesarios (fechas, estatus, cantidades ejecutadas, montos adicionales).</li>
-                <li>Haz clic en "Guardar HES" (ahora actuará como Actualizar).</li>
-            </ol>
-
-            <h3><i class="fas fa-trash"></i> Enviar HES a la Papelera</h3>
-             <p>Si necesitas eliminar una HES:</p>
-             <ol>
-                 <li>Ve a la lista de HES.</li>
-             <li>Haz clic en el botón con el icono de papelera (<i class="fas fa-trash"></i>) en la fila de la HES.</li>
-             <li>Confirma la acción.</li>
-             <li>La HES será movida a la Papelera de Reciclaje.</li>
-             </ol>
-        </section>
-
-        <!-- Avance Físico -->
-        <section id="avance-fisico" class="card help-section">
-            <h2 class="section-title"><i class="fas fa-chart-line"></i> Módulo: Avance Físico</h2>
-            <p>Permite registrar avances manuales de progreso físico en porcentajes (%) para cada contrato.</p>
-            <h3><i class="fas fa-plus"></i> Registrar Avance</h3>
-            <p>El avance físico se calcula automáticamente en función de las cantidades ejecutadas en las HES.</p>
-
-            <h3><i class="fas fa-history"></i> Historial de Avances</h3>
-            <p>Se guarda un historial completo de avances físicos por contrato, mostrando:</p>
-            <ul>
-                <li>Fecha</li>
-                <li>Porcentaje</li>
-                <li>Monto del avance</li>
-                <li>Descripción</li>
-            </ul>
-        </section>
-
-        <!-- Resumen Gráfico -->
-         <section id="resumen-grafico" class="card help-section">
-             <h2 class="section-title"><i class="fas fa-chart-bar"></i> Módulo: Resumen Gráfico</h2>
-             <p>Ofrece visualizaciones gráficas de tus datos para un mejor entendimiento.</p>
-             <ul>
-                 <li><strong>Gráficos Generales:</strong> Al acceder a la pestaña de "Resumen Gráfico", verás gráficos que resumen el estatus y las modalidades de todos tus contratos.</li>
-                 <li><strong>Gráficos por Contrato:</strong> Puedes seleccionar un contrato específico y un tipo de gráfico (Barras, Línea - para avance financiero) para ver una representación visual de su progreso o detalles.</li>
-                 <li><strong>Línea de Tiempo Financiera:</strong> El gráfico de tipo "Línea" para un contrato muestra la evolución del monto financiero ejecutado a lo largo del tiempo, basado en las fechas de las HES.</li>
-                 <li><strong>Exportar Gráficos:</strong> Puedes exportar el gráfico visual actual a formato PNG. También puedes exportar los datos subyacentes de algunos gráficos a Excel o PDF (revisa las opciones de exportación disponibles).</li>
-             </ul>
-         </section>
-
-         <!-- Informes -->
-          <section id="informes" class="card help-section">
-              <h2 class="section-title"><i class="fas fa-file-alt"></i> Módulo: Informes</h2>
-              <p>Genera informes detallados de contratos individuales y gestiona la configuración del sistema.</p>
-              
-              <h3>Informes de Contrato</h3>
-              <p>Selecciona un contrato en el menú desplegable para ver un resumen, partidas asociadas, historial de HES y gráficos interactivos.</p>
-              
-              <h3>Configuración del Sistema</h3>
-              <p>Aquí puedes:</p>
-              <ul>
-                  <li>Configurar los <strong>Días de Alerta</strong> para vencimientos (1-365 días).</li>
-                  <li>Importar y Exportar la base de datos.</li>
-              </ul>
-
-          </section>
-
-         <!-- Papelera de Reciclaje -->
-         <section id="papelera" class="card help-section">
-             <h2 class="section-title"><i class="fas fa-trash-alt"></i> Papelera de Reciclaje</h2>
-             <p>Cuando eliminas contratos o HES, no se borran permanentemente de inmediato. Se mueven a la papelera, donde puedes revisarlos, restaurarlos o eliminarlos definitivamente.</p>
-             <ul>
-                 <li>Ve a la pestaña "Papelera de Reciclaje".</li>
-                 <li>Verás listas separadas para Contratos Eliminados y HES Eliminadas.</li>
-                 <li><strong>Restaurar:</strong> Haz clic en el botón "<i class="fas fa-undo"></i> Restaurar" para mover un elemento de vuelta a su sección original.</li>
-                 <li><strong>Eliminar Permanentemente:</strong> Borra el elemento de la base de datos de forma irreversible.</li>
-             </ul>
-         </section>
-
-    </main>
-    
-    <div id="toast-container"></div> <footer class="footer text-center py-3">
+    <div id="toast-container"></div>
+    <footer class="footer text-center py-3">
         <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
         <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
     </footer>
