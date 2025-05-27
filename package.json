@@ -1,0 +1,45 @@
+{
+  "name": "gescon",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión de Contratos",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "RojasTech",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "sequelize": "^6.35.1",
+    "dotenv": "^16.3.1"
+  },
+  "build": {
+    "appId": "com.rojastech.gescon",
+    "productName": "GESCON",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "img/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "extraResources": [
+      {
+        "from": "config",
+        "to": "config"
+      }
+    ]
+  }
+} 
