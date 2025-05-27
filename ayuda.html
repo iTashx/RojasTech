@@ -12,13 +12,177 @@
 
 </head>
 <body>
-    <header>
-        <h1><i class="fas fa-info-circle"></i> Ayuda - SIGESCON</h1>
-        <div class="header-buttons">
-            <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
-        </div>
-    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#introduccion">
+                                <i class="fas fa-home"></i> Introducción
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contratos">
+                                <i class="fas fa-file-contract"></i> Contratos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#hes">
+                                <i class="fas fa-clipboard-list"></i> HES
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#avances">
+                                <i class="fas fa-chart-line"></i> Avances
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#reportes">
+                                <i class="fas fa-file-alt"></i> Reportes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#configuracion">
+                                <i class="fas fa-cog"></i> Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Ayuda SIGESCON</h1>
+                </div>
+
+                <!-- Introducción -->
+                <section id="introduccion" class="mb-5">
+                    <h2>Introducción</h2>
+                    <p>SIGESCON es un sistema de gestión de contratos empresariales que permite el seguimiento y control de contratos, HES (Hojas de Estimación de Servicios) y sus respectivas partidas.</p>
+                </section>
+
+                <!-- Contratos -->
+                <section id="contratos" class="mb-5">
+                    <h2>Gestión de Contratos</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Crear/Editar Contrato</h3>
+                            <ol>
+                                <li>Navega a "Nuevo/Editar Contrato" en el menú lateral</li>
+                                <li>Completa los campos requeridos:
+                                    <ul>
+                                        <li>Número de Proveedor</li>
+                                        <li>Fechas (Firma, Inicio, Terminación)</li>
+                                        <li>Monto Total</li>
+                                        <li>Modalidad de Contratación</li>
+                                    </ul>
+                                </li>
+                                <li>Agrega las partidas del contrato</li>
+                                <li>Haz clic en "Guardar Contrato"</li>
+                            </ol>
+
+                            <h3>Alertas de Vencimiento</h3>
+                            <p>El sistema mostrará alertas automáticas cuando un contrato esté próximo a vencer. Puedes configurar el número de días de anticipación en la sección de Configuración.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HES -->
+                <section id="hes" class="mb-5">
+                    <h2>Gestión de HES</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Crear/Editar HES</h3>
+                            <ol>
+                                <li>Selecciona el contrato asociado</li>
+                                <li>Ingresa el número de HES</li>
+                                <li>Define las fechas de inicio y fin</li>
+                                <li>Selecciona las partidas a ejecutar</li>
+                                <li>Configura el porcentaje de gastos administrativos (opcional)</li>
+                            </ol>
+
+                            <h3>Gastos Administrativos</h3>
+                            <p>Puedes configurar el porcentaje de gastos administrativos para cada HES. Este porcentaje se aplicará sobre el subtotal de la HES para calcular el monto total.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Avances -->
+                <section id="avances" class="mb-5">
+                    <h2>Seguimiento de Avances</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Avance Físico</h3>
+                            <ul>
+                                <li>Muestra el porcentaje de ejecución por partida</li>
+                                <li>Calcula el progreso global del contrato</li>
+                                <li>Visualiza el avance en gráficos</li>
+                            </ul>
+
+                            <h3>Avance Financiero</h3>
+                            <ul>
+                                <li>Muestra el monto ejecutado vs. total</li>
+                                <li>Desglosa el avance por HES</li>
+                                <li>Incluye gastos administrativos en los cálculos</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reportes -->
+                <section id="reportes" class="mb-5">
+                    <h2>Reportes</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Tipos de Reportes</h3>
+                            <ul>
+                                <li>Reporte de contrato individual</li>
+                                <li>Resumen de HES</li>
+                                <li>Avances físicos y financieros</li>
+                                <li>Estadísticas globales</li>
+                            </ul>
+
+                            <h3>Exportación</h3>
+                            <p>Los reportes pueden exportarse en los siguientes formatos:</p>
+                            <ul>
+                                <li>Excel (.xlsx)</li>
+                                <li>PDF</li>
+                                <li>Imagen (.png)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuración -->
+                <section id="configuracion" class="mb-5">
+                    <h2>Configuración del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Parámetros Configurables</h3>
+                            <ul>
+                                <li><strong>Días de Alerta:</strong> Configura el número de días antes del vencimiento para mostrar alertas (1-365 días)</li>
+                                <li><strong>Gastos Administrativos:</strong> Establece el porcentaje por defecto para nuevas HES</li>
+                                <li><strong>Moneda:</strong> Selecciona la moneda predeterminada para nuevos contratos</li>
+                            </ul>
+
+                            <h3>Respaldo de Datos</h3>
+                            <p>En la sección de Informes puedes:</p>
+                            <ul>
+                                <li>Exportar la base de datos completa</li>
+                                <li>Importar datos desde archivos Excel</li>
+                                <li>Realizar respaldos automáticos de la configuración</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+ 
     <main>
         <!-- Barra de Búsqueda -->
         <section class="card help-section">
@@ -188,5 +352,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/script.js"></script> <!-- Asegurarse de incluir script.js si contiene lógica de ayuda -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
 </body>
 </html>

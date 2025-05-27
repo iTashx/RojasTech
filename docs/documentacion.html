@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="documentacion.css">
 </head>
 <body>
+ 
     <header>
         <h1><i class="fas fa-book"></i> Documentación SIGESCON</h1>
          <div class="header-buttons">
@@ -55,6 +56,87 @@
             <div class="card-body">
                 <h3>Estructura Actual (IndexedDB)</h3>
                 <pre><code class="help-code">
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#introduccion">
+                                <i class="fas fa-home"></i> Introducción
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#estructura">
+                                <i class="fas fa-sitemap"></i> Estructura del Sistema
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#base-datos">
+                                <i class="fas fa-database"></i> Base de Datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#modulos">
+                                <i class="fas fa-cubes"></i> Módulos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#configuracion">
+                                <i class="fas fa-cog"></i> Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Documentación SIGESCON</h1>
+                </div>
+
+                <!-- Introducción -->
+                <section id="introduccion" class="mb-5">
+                    <h2>Introducción</h2>
+                    <p>SIGESCON es un sistema de gestión de contratos empresariales que permite el seguimiento y control de contratos, HES (Hojas de Estimación de Servicios) y sus respectivas partidas.</p>
+                </section>
+
+                <!-- Estructura del Sistema -->
+                <section id="estructura" class="mb-5">
+                    <h2>Estructura del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Arquitectura</h3>
+                            <p>El sistema está diseñado con una arquitectura modular y escalable:</p>
+                            <ul>
+                                <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (Vanilla)</li>
+                                <li><strong>Base de Datos:</strong> 
+                                    <ul>
+                                        <li>IndexedDB (Dexie.js) para almacenamiento local</li>
+                                        <li>Preparado para migración a base de datos física (PostgreSQL/MySQL)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Almacenamiento:</strong>
+                                    <ul>
+                                        <li>Archivos locales para documentos adjuntos</li>
+                                        <li>Preparado para migración a almacenamiento en la nube</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Base de Datos -->
+                <section id="base-datos" class="mb-5">
+                    <h2>Base de Datos</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Estructura Actual (IndexedDB)</h3>
+                            <pre><code>
 // Tablas principales
 contratos: {
     id: autoincrement,
@@ -111,6 +193,7 @@ configuracion: {
     valor: string,
     descripcion: string
 }
+ 
                 </code></pre>
 
                 <h3>Migración a Base de Datos Física</h3>
@@ -178,6 +261,77 @@ configuracion: {
         <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
         <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
     </footer>
+
+                            </code></pre>
+
+                            <h3>Migración a Base de Datos Física</h3>
+                            <p>El sistema está preparado para migrar a una base de datos física con las siguientes consideraciones:</p>
+                            <ul>
+                                <li>Mantenimiento de la misma estructura de tablas</li>
+                                <li>Adición de índices y claves foráneas</li>
+                                <li>Implementación de triggers para auditoría</li>
+                                <li>Soporte para múltiples usuarios concurrentes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Módulos -->
+                <section id="modulos" class="mb-5">
+                    <h2>Módulos del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Gestión de Contratos</h3>
+                            <ul>
+                                <li>Creación y edición de contratos</li>
+                                <li>Gestión de partidas</li>
+                                <li>Seguimiento de vencimientos</li>
+                                <li>Alertas configurables</li>
+                            </ul>
+
+                            <h3>Gestión de HES</h3>
+                            <ul>
+                                <li>Creación y edición de HES</li>
+                                <li>Cálculo automático de totales</li>
+                                <li>Gastos administrativos configurables</li>
+                                <li>Seguimiento de ejecución</li>
+                            </ul>
+
+                            <h3>Reportes y Análisis</h3>
+                            <ul>
+                                <li>Exportación a Excel y PDF</li>
+                                <li>Gráficos de avance</li>
+                                <li>Resúmenes financieros</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuración -->
+                <section id="configuracion" class="mb-5">
+                    <h2>Configuración del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Parámetros Configurables</h3>
+                            <ul>
+                                <li><strong>Días de Alerta:</strong> Configuración del número de días antes del vencimiento para mostrar alertas (1-365 días)</li>
+                                <li><strong>Gastos Administrativos:</strong> Porcentaje configurable para cada HES</li>
+                                <li><strong>Moneda:</strong> Selección de moneda para contratos (USD, EUR, VES)</li>
+                            </ul>
+
+                            <h3>Exportación/Importación</h3>
+                            <ul>
+                                <li>Exportación completa de la base de datos</li>
+                                <li>Importación de datos desde archivos Excel</li>
+                                <li>Respaldo automático de configuración</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+ 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

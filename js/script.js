@@ -153,8 +153,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     await loadContractList();
                 } else if (targetId === 'general-summary') {
                     await updateSummaryCards();
+ 
                     // Re-inicializar el carrusel después de cargar los contratos
                     await renderContractsSlider(); 
+
+                    await renderContractsSlider(); // Asegurar que el slider se recargue si se vuelve a la pestaña
+ 
                 } else if (targetId === 'new-edit-contract') {
                     if (!currentContractId) {
                         document.getElementById('fecha-creado').value = new Date().toISOString().split('T')[0];
@@ -2934,6 +2938,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!file) return; // No hay archivo seleccionado
 
             if (!confirm('¿Está seguro de que desea importar datos? Esto podría actualizar o añadir contratos y HES existentes.')) {
+ 
+
+                // Limpiar el input de archivo para que el mismo archivo pueda ser seleccionado de nuevo
+ 
                 importDbFileInput.value = '';
                 return;
             }
@@ -2941,9 +2949,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('Iniciando importación desde Excel...', 'info');
 
             try {
+ 
                 const reader = new FileReader();
                 reader.onload = async (e) => { // <-- Abre scope de onload
                     try { // <-- Abre try dentro de onload
+
+                // Leer el archivo Excel
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+ 
                         const data = new Uint8Array(e.target.result);
                         const workbook = XLSX.read(data, { type: 'array' });
 
@@ -3071,6 +3086,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                         // --- Importar HesPartidas (depende de HES y Partidas) ---
                         if (importedData.hespartidas) {
+ 
                             showToast(`Importando ${importedData.hespartidas.length} HesPartidas...`, 'info');
                             // La lógica de importación es más compleja y se abordará en el siguiente paso.
                             // Necesita manejar duplicados, relaciones entre tablas, y errores.
@@ -3128,6 +3144,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+                             showToast(`Importando ${importedData.hespartidas.length} HesPartidas...`, 'info');
+    // La lógica de importación es más compleja y se abordará en el siguiente paso.
+    // Necesita manejar duplicados, relaciones entre tablas, y errores.
+});
+
+// Lógica para el botón de hamburguesa y el sidebar responsive
+const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+const bodyEl = document.body;
+
+if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener('click', () => {
+        bodyEl.classList.toggle('sidebar-open');
+    });
+}
+
+// Cerrar sidebar al hacer clic en el overlay o en un enlace del sidebar (si se convierte en menú)
+document.addEventListener('click', (e) => {
+    // Si se hizo clic en el overlay y el sidebar está abierto
+    if (bodyEl.classList.contains('sidebar-open') && e.target === bodyEl.lastChild && e.target.classList.contains('sidebar-overlay')) {
+         bodyEl.classList.remove('sidebar-open');
+     }
+     // Si se hizo clic en un enlace dentro del sidebar (y está en modo responsive/desplegable)
+     if (bodyEl.classList.contains('sidebar-open') && e.target.closest('.sidebar .nav-link')) {
+         // Añadir una pequeña demora para permitir que la navegación ocurra antes de cerrar
+         setTimeout(() => {
+              bodyEl.classList.remove('sidebar-open');
+         }, 100);
+     }
+});
+
+// Opcional: Cerrar sidebar si se redimensiona la ventana a un tamaño mayor
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && bodyEl.classList.contains('sidebar-open')) {
+        bodyEl.classList.remove('sidebar-open');
+    }
+});
+ 
+
     // Cargar configuración de días de alerta
     async function cargarConfiguracionDiasAlerta() {
         try {
@@ -3170,6 +3224,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // ... existing code ...
+ 
 
     // Llamada inicial para cargar el resumen general y el carrusel al cargar la página
     // Asegurarse de que el carrusel se inicialice DESPUÉS de que los datos se carguen
@@ -3180,3 +3235,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Funciones restantes del archivo (si las hay fuera del DOMContentLoaded)
 // ... existing code ...
+
+});
+ 
