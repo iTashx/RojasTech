@@ -1,25 +1,9 @@
+import { db, addSampleData } from './database.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
-    // Inicialización de Dexie (base de datos local)
-    const db = new Dexie('SigesconDB');
-    db.version(5).stores({
-        contracts: '++id,numeroProveedor,fechaFirmaContrato,fechaCreado,montoTotalContrato,estatusContrato,numeroSICAC', // Agregado numeroSICAC como índice
-        partidas: '++id,contractId,descripcion,cantidad,umd,precioUnitario,total',
-        hes: '++id,contractId,noHes,fechaInicioHes,fechaFinalHes,aprobado,textoHes,ejecutada,fechaCreadoHes,fechaAprobadoHes,textoBreveHes,valuacion,lugarPrestacionServicio,responsableSdo,subTotalHes,gastosAdministrativosHes,totalHes',
-        hesPartidas: '++id,hesId,contractPartidaId,descripcion,cantidadOriginal,cantidadEjecutada,umd,precioUnitario,totalPartidaHes',
-        trash: '++id,originalId,type,data,deletedAt',
-        archivos: '++id,entidadId,entidadTipo,nombre,tipo,tamano,fechaModificacion,contenido'
-    });
-
-    try {
-        await db.open();
-        console.log("Base de datos abierta exitosamente.");
-        // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
-
-    } catch (err) {
-        console.error("Error al abrir la base de datos:", err);
-        showToast("Error al cargar la base de datos local. " + err.message, "error");
-        return;
-    }
+    // Inicializar la base de datos (si es necesario, puedes llamar a addSampleData aquí)
+    await db.open();
+    // await addSampleData(); // Descomentar para añadir datos de ejemplo
 
     // --- Elementos del DOM ---
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -45,6 +29,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const montoOriginalInput = document.getElementById('monto-original'); // Nuevo
     const montoModificadoInput = document.getElementById('monto-modificado'); // Nuevo
     const montoTotalContratoInput = document.getElementById('monto-total-contrato'); // Nuevo
+
+    // Nuevos campos de extensión
+    const fechaTerminacionOriginalInput = document.getElementById('fecha-terminacion');
+    const diasExtensionInput = document.getElementById('dias-extension');
+    const fechaTerminacionExtendidaInput = document.getElementById('fecha-terminacion-extendida');
 
     // Elementos del formulario HES
     const hesForm = document.getElementById('hes-form');
@@ -243,12 +232,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const expiringContractsEl = document.getElementById('expiring-contracts');
             if (expiringContractsEl) {
+                // Contar contratos que vencen en 30 días para la tarjeta (si aplica)
                 const thirtyDaysFromNow = new Date();
                 thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
                 const expiringContracts = allContracts.filter(c => 
-                    c.fechaTerminacion && new Date(c.fechaTerminacion) <= thirtyDaysFromNow && new Date(c.fechaTerminacion) >= new Date()
+                    { // Usar fechaTerminacionExtendida si existe, si no fechaTerminacion
+                        const terminationDate = c.fechaTerminacionExtendida ? new Date(c.fechaTerminacionExtendida) : new Date(c.fechaTerminacion);
+                        return terminationDate && terminationDate <= thirtyDaysFromNow && terminationDate >= new Date();
+                    }
                 ).length;
                 expiringContractsEl.textContent = expiringContracts;
+            }
+
+            // Mostrar alerta para contratos que vencen en 20 días o menos
+            const twentyDaysFromNow = new Date();
+            twentyDaysFromNow.setDate(twentyDaysFromNow.getDate() + 20);
+            const expiringSoonContracts = allContracts.filter(c => {
+                const terminationDate = c.fechaTerminacionExtendida ? new Date(c.fechaTerminacionExtendida) : new Date(c.fechaTerminacion);
+                return terminationDate && terminationDate <= twentyDaysFromNow && terminationDate >= new Date();
+            });
+
+            if (expiringSoonContracts.length > 0) {
+                let message = `¡Alerta! ${expiringSoonContracts.length} contrato(s) vencen pronto (en 20 días o menos):<br>`;
+                expiringSoonContracts.forEach(c => {
+                    const terminationDate = c.fechaTerminacionExtendida ? new Date(c.fechaTerminacionExtendida) : new Date(c.fechaTerminacion);
+                    const daysLeft = Math.ceil((terminationDate - new Date()) / (1000 * 60 * 60 * 24));
+                    message += `- Contrato N° Proveedor: ${c.numeroProveedor || 'N/A'} (Vence en ${daysLeft} días)<br>`;
+                });
+                showToast(message, 'warning');
+            }
+
+            const contractsExpiryListEl = document.getElementById('contracts-expiry-list');
+            if (contractsExpiryListEl) {
+                // ... existing code ...
             }
 
             const totalModalitiesEl = document.getElementById('total-modalities');
@@ -403,74 +419,81 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Guardar/Actualizar Contrato
-    contractForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
+    saveContractBtn.addEventListener('click', async (event) => {
+        event.preventDefault(); // Evitar el envío del formulario por defecto
 
-        // Deshabilitar el botón para evitar múltiples clics
-        saveContractBtn.disabled = true;
+        const contractId = document.getElementById('contract-id').value;
+        const numeroProveedor = document.getElementById('numero-proveedor').value;
+        const fechaFirmaContrato = document.getElementById('fecha-firma-contrato').value;
+        const fechaCreado = document.getElementById('fecha-creado').value;
+        const fechaInicio = document.getElementById('fecha-inicio').value;
+        // Obtener valores de los campos de extensión
+        const fechaTerminacionOriginal = fechaTerminacionOriginalInput.value;
+        const diasExtension = parseInt(diasExtensionInput.value) || 0;
+        const fechaTerminacionExtendida = fechaTerminacionExtendidaInput.value;
+        // La fechaTerminacion principal para compatibilidad con lógica existente
+        const fechaTerminacion = fechaTerminacionExtendida || fechaTerminacionOriginal;
 
-        const contractData = {
-            numeroProveedor: document.getElementById('numero-proveedor').value,
-            fechaFirmaContrato: document.getElementById('fecha-firma-contrato').value,
-            fechaCreado: document.getElementById('fecha-creado').value,
-            fechaInicio: document.getElementById('fecha-inicio').value,
-            fechaTerminacion: document.getElementById('fecha-terminacion').value,
-            periodoCulminacion: parseInt(periodoCulminacionInput.value) || 0,
-            numeroSICAC: document.getElementById('numero-sicac').value,
-            divisionArea: document.getElementById('division-area').value,
-            eemn: document.getElementById('eemn').value,
-            region: document.getElementById('region').value,
-            naturalezaContratacion: document.getElementById('naturaleza-contratacion').value,
-            lineaServicio: document.getElementById('linea-servicio').value,
-            noPeticionOferta: document.getElementById('no-peticion-oferta').value,
-            modalidadContratacion: modalidadContratacionSelect.value,
-            regimenLaboral: document.getElementById('regimen-laboral').value,
-            objetoContractual: document.getElementById('objeto-contractual').value,
-            fechaCambioAlcance: document.getElementById('fecha-cambio-alcance').value,
-            montoOriginal: parseFloat(montoOriginalInput.value) || 0,
-            montoModificado: parseFloat(montoModificadoInput.value) || 0,
-            montoTotalContrato: parseFloat(montoTotalContratoInput.value) || 0,
-            numeroContratoInterno: document.getElementById('numero-contrato-interno').value,
-            observaciones: document.getElementById('observaciones').value,
-            estatusContrato: document.getElementById('estatus-contrato').value,
-            moneda: document.getElementById('moneda').value,
-            // Los archivos adjuntos requieren manejo especial
-            archivosAdjuntos: await handleFileUpload(
-                document.getElementById('adjuntar-archivos'),
-                document.getElementById('adjuntar-archivos-info')
-            )
-        };
+        const periodoCulminacion = parseInt(document.getElementById('periodo-culminacion').value) || 0;
+        const numeroSICAC = document.getElementById('numero-sicac').value;
+        const divisionArea = document.getElementById('division-area').value;
+        const eemn = document.getElementById('eemn').value;
+        const region = document.getElementById('region').value;
+        const naturalezaContratacion = document.getElementById('naturaleza-contratacion').value;
+        const lineaServicio = document.getElementById('linea-servicio').value;
+        const noPeticionOferta = document.getElementById('no-peticion-oferta').value;
+        const modalidadContratacion = modalidadContratacionSelect.value;
+        const regimenLaboral = document.getElementById('regimen-laboral').value;
+        const objetoContractual = document.getElementById('objeto-contractual').value;
+        const fechaCambioAlcance = document.getElementById('fecha-cambio-alcance').value;
+        const montoOriginal = parseFloat(montoOriginalInput.value) || 0;
+        const montoModificado = parseFloat(montoModificadoInput.value) || 0;
+        const montoTotalContrato = parseFloat(montoTotalContratoInput.value) || 0;
+        const numeroContratoInterno = document.getElementById('numero-contrato-interno').value;
+        const observaciones = document.getElementById('observaciones').value;
+        const estatusContrato = document.getElementById('estatus-contrato').value;
+        const moneda = document.getElementById('moneda').value;
+        // Los archivos adjuntos requieren manejo especial
+        const archivosAdjuntos = await handleFileUpload(
+            document.getElementById('adjuntar-archivos'),
+            document.getElementById('adjuntar-archivos-info')
+        );
 
         // Crear un objeto limpio con solo las propiedades esperadas para evitar problemas de Dexie
         const cleanedContractData = {
-            numeroProveedor: contractData.numeroProveedor,
-            fechaFirmaContrato: contractData.fechaFirmaContrato,
-            fechaCreado: contractData.fechaCreado,
-            fechaInicio: contractData.fechaInicio,
-            fechaTerminacion: contractData.fechaTerminacion,
-            periodoCulminacion: contractData.periodoCulminacion,
-            numeroSICAC: contractData.numeroSICAC,
-            divisionArea: contractData.divisionArea,
-            eemn: contractData.eemn,
-            region: contractData.region,
-            naturalezaContratacion: contractData.naturalezaContratacion,
-            lineaServicio: contractData.lineaServicio,
-            noPeticionOferta: contractData.noPeticionOferta,
-            modalidadContratacion: contractData.modalidadContratacion,
-            regimenLaboral: contractData.regimenLaboral,
-            objetoContractual: contractData.objetoContractual,
-            fechaCambioAlcance: contractData.fechaCambioAlcance,
-            montoOriginal: contractData.montoOriginal,
-            montoModificado: contractData.montoModificado,
-            montoTotalContrato: contractData.montoTotalContrato,
-            numeroContratoInterno: contractData.numeroContratoInterno,
-            observaciones: contractData.observaciones,
-            estatusContrato: contractData.estatusContrato,
-            moneda: contractData.moneda
+            numeroProveedor: numeroProveedor,
+            fechaFirmaContrato: fechaFirmaContrato,
+            fechaCreado: fechaCreado,
+            fechaInicio: fechaInicio,
+            // Guardar campos de extensión
+            fechaTerminacionOriginal: fechaTerminacionOriginal,
+            diasExtension: diasExtension,
+            fechaTerminacionExtendida: fechaTerminacionExtendida,
+            // Mantener fechaTerminacion para compatibilidad
+            fechaTerminacion: fechaTerminacion,
+            periodoCulminacion: periodoCulminacion,
+            numeroSICAC: numeroSICAC,
+            divisionArea: divisionArea,
+            eemn: eemn,
+            region: region,
+            naturalezaContratacion: naturalezaContratacion,
+            lineaServicio: lineaServicio,
+            noPeticionOferta: noPeticionOferta,
+            modalidadContratacion: modalidadContratacion,
+            regimenLaboral: regimenLaboral,
+            objetoContractual: objetoContractual,
+            fechaCambioAlcance: fechaCambioAlcance,
+            montoOriginal: montoOriginal,
+            montoModificado: montoModificado,
+            montoTotalContrato: montoTotalContrato,
+            numeroContratoInterno: numeroContratoInterno,
+            observaciones: observaciones,
+            estatusContrato: estatusContrato,
+            moneda: moneda,
             // No incluir archivosAdjuntos aquí, se manejan por separado
         };
 
-        if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
+        if (!numeroProveedor || !fechaFirmaContrato || !fechaInicio || !fechaTerminacion) {
             showToast("Por favor, complete los campos obligatorios: N° Proveedor, Fecha Firma, Fecha Inicio y Fecha Terminación.", "warning");
             saveContractBtn.disabled = false; // Habilitar si falla la validación inicial
             return;
@@ -485,10 +508,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast("Contrato actualizado exitosamente.", "success");
             } else {
                 // Validar N° SICAC duplicado solo al crear un nuevo contrato
-                if (contractData.numeroSICAC) {
-                    const existingContract = await db.contracts.where({ numeroSICAC: contractData.numeroSICAC }).first();
+                if (numeroSICAC) {
+                    const existingContract = await db.contracts.where({ numeroSICAC: numeroSICAC }).first();
                     if (existingContract) {
-                        showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}. Por favor, edite el contrato existente o use otro número.`, "error");
+                        showToast(`Ya existe un contrato con el N° SICAC: ${numeroSICAC}. Por favor, edite el contrato existente o use otro número.`, "error");
                         saveContractBtn.disabled = false; // Habilitar si hay duplicado de SICAC
                         return;
                     }
@@ -687,10 +710,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Rellenar todos los campos del formulario con los datos del contrato
                 document.getElementById('numero-proveedor').value = contract.numeroProveedor || '';
                 document.getElementById('fecha-firma-contrato').value = contract.fechaFirmaContrato || '';
-                document.getElementById('fecha-creado').value = contract.fechaCreado || new Date().toISOString().split('T')[0];
+                document.getElementById('fecha-creado').value = contract.fechaCreado || '';
                 document.getElementById('fecha-inicio').value = contract.fechaInicio || '';
-                document.getElementById('fecha-terminacion').value = contract.fechaTerminacion || '';
-                periodoCulminacionInput.value = contract.periodoCulminacion !== undefined ? contract.periodoCulminacion : '';
+                // Cargar campos de extensión
+                fechaTerminacionOriginalInput.value = contract.fechaTerminacionOriginal || contract.fechaTerminacion || ''; // Usar original si existe, si no, la vieja fechaTerminacion
+                diasExtensionInput.value = contract.diasExtension || 0;
+                fechaTerminacionExtendidaInput.value = contract.fechaTerminacionExtendida || '';
+                // Actualizar el campo de fechaTerminacion principal para cálculos existentes si es necesario (manteniendo compatibilidad)
+                document.getElementById('fecha-terminacion').value = contract.fechaTerminacionExtendida || contract.fechaTerminacionOriginal || contract.fechaTerminacion || '';
+
+                // Calcular y mostrar período de culminación
+                calculatePeriodoCulminacion();
+
                 document.getElementById('numero-sicac').value = contract.numeroSICAC || '';
                 document.getElementById('division-area').value = contract.divisionArea || '';
                 document.getElementById('eemn').value = contract.eemn || '';
@@ -872,15 +903,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let cantidadEjecutar = parseFloat(input.value) || 0;
             if (cantidadEjecutar < 0) cantidadEjecutar = 0;
-            // Limitar al máximo disponible al escribir
-            if (cantidadEjecutar > availableQuantity) {
-                cantidadEjecutar = availableQuantity;
-                input.value = cantidadEjecutar.toFixed(2); // Actualizar el input si se excede el límite
-            }
+            
+            // Validar contra la cantidad disponible. Permitimos un pequeño margen por posibles errores de coma flotante.
+            if (cantidadEjecutar > availableQuantity + 0.001) {
+                 showToast(`La cantidad a ejecutar excede la cantidad disponible (${availableQuantity.toFixed(2)}).`, "warning");
+                 // Opcional: Restablecer el valor al máximo disponible
+                 cantidadEjecutar = availableQuantity;
+                 input.value = cantidadEjecutar.toFixed(2);
+             }
 
-            // Asegurarse de que el valor tiene 2 decimales si es necesario
+            // Asegurarse de que el valor tiene 2 decimales si es un número válido
             // Si el usuario está escribiendo y el número aún no está completo (ej. '12.'), no formatear todavía
-            if (!isNaN(cantidadEjecutar) && input.value.slice(-1) !== '.') {
+            if (!isNaN(cantidadEjecutar) && input.value.trim() !== '' && !input.value.endsWith('.') && !input.value.endsWith('.0')) {
                 input.value = cantidadEjecutar.toFixed(2);
             }
 
@@ -888,7 +922,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Event listeners para los nuevos botones de incremento/decremento
+    // Event listeners para los botones de incremento/decremento (opcional, pero manteniendo la funcionalidad)
     hesPartidasTableBody.addEventListener('click', (e) => {
         const targetBtn = e.target.closest('button');
         if (!targetBtn) return;
@@ -911,7 +945,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentValue -= step;
         }
 
-        // Asegurarse de que el valor esté dentro de los límites
+        // Asegurarse de que el valor esté dentro de los límites (0 y cantidad disponible)
         if (currentValue < 0) currentValue = 0;
         // Limitar al máximo disponible, permitiendo un pequeño margen por decimales
         if (currentValue > availableQuantity + 0.001) currentValue = availableQuantity;
@@ -933,13 +967,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         Array.from(rows).forEach(r => {
             const cantidadEjecutar = parseFloat(r.querySelector('.hes-cantidad-ejecutar').value) || 0;
             const precioUnitario = parseFloat(r.children[3].textContent) || 0; // Precio Unitario del contrato
-            const totalPartidaHes = cantidadEjecutar * precioUnitario;
-            r.querySelector('.hes-partida-total').textContent = totalPartidaHes.toFixed(2);
-            subtotalHes += totalPartidaHes;
+            const totalPartidaHes = cantidadEjecutar * precioUnitario; // Cálculo base
+
+            // Obtener el monto adicional manual para esta partida si el campo existe
+            const montoAdicionalManualInput = r.querySelector('.hes-monto-adicional-manual');
+            const montoAdicionalManual = montoAdicionalManualInput ? parseFloat(montoAdicionalManualInput.value) || 0 : 0;
+
+            const totalConAdicional = totalPartidaHes + montoAdicionalManual; // Sumar monto adicional
+            r.querySelector('.hes-partida-total').textContent = totalConAdicional.toFixed(2); // Mostrar total con adicional
+            subtotalHes += totalConAdicional; // Sumar al subtotal de la HES
         });
 
         hesSubtotalInput.value = subtotalHes.toFixed(2);
-        const gastosAdmin = subtotalHes * 0.05; // 5% de gastos administrativos
+        
+        // Leer el porcentaje de gastos administrativos ingresado por el usuario
+        const gastosAdminPercentageInput = document.getElementById('hes-gastos-administrativos-percentage');
+        const gastosAdminPercentage = gastosAdminPercentageInput ? parseFloat(gastosAdminPercentageInput.value) || 0 : 0;
+
+        // Calcular gastos administrativos usando el porcentaje del usuario
+        const gastosAdmin = subtotalHes * (gastosAdminPercentage / 100);
         hesGastosAdministrativosInput.value = gastosAdmin.toFixed(2);
         hesTotalInput.value = (subtotalHes + gastosAdmin).toFixed(2);
     }
@@ -1016,8 +1062,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const precioUnitario = parseFloat(row.children[3].textContent);
             const umd = row.children[2].textContent;
             const descripcion = row.children[1].textContent;
+            const montoAdicionalManual = parseFloat(row.querySelector('.hes-monto-adicional-manual')?.value) || 0; // Obtener monto adicional manual
+            const totalPartidaHes = cantidadEjecutada * precioUnitario + montoAdicionalManual; // Recalcular total incluyendo adicional
 
-            if (cantidadEjecutada > 0) {
+            if (cantidadEjecutada > 0 || montoAdicionalManual > 0) {
                 hasExecutedQuantity = true;
                 const executedAmountForPartida = await getExecutedQuantityForContractPartida(contractPartidaId, currentHesId);
                 const availableQuantity = cantidadOriginalContract - executedAmountForPartida;
@@ -1034,13 +1082,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     cantidadEjecutada: cantidadEjecutada,
                     umd: umd,
                     precioUnitario: precioUnitario,
-                    totalPartidaHes: cantidadEjecutada * precioUnitario
+                    totalPartidaHes: totalPartidaHes, // Guardar el total con adicional
+                    montoAdicionalManual: montoAdicionalManual // Guardar el monto adicional manual
                 });
             }
         }
 
         if (!hasExecutedQuantity) {
-            showToast("Debe ingresar al menos una cantidad a ejecutar en las partidas de la HES.", "warning");
+            showToast("Debe ingresar al menos una cantidad a ejecutar o un monto adicional en las partidas de la HES.", "warning");
             return;
         }
 
@@ -1055,11 +1104,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast("HES guardada exitosamente.", "success");
             }
 
-            await db.hesPartidas.where({ hesId: hesId }).delete();
-            for (const hesPartida of hesPartidasToSave) {
-                hesPartida.hesId = hesId;
-                await db.hesPartidas.add(hesPartida);
+            // Eliminar hesPartidas existentes para esta HES antes de guardar las nuevas (si es actualización)
+            if (currentHesId) {
+                await db.hesPartidas.where('hesId').equals(currentHesId).delete();
             }
+
+            // Guardar las hesPartidas asociadas a esta HES
+            for (const partidaHes of hesPartidasToSave) {
+                await db.hesPartidas.add({
+                    hesId: hesId,
+                    contractPartidaId: partidaHes.contractPartidaId,
+                    descripcion: partidaHes.descripcion,
+                    cantidadOriginal: partidaHes.cantidadOriginal,
+                    cantidadEjecutada: partidaHes.cantidadEjecutada,
+                    umd: partidaHes.umd,
+                    precioUnitario: partidaHes.precioUnitario,
+                    totalPartidaHes: partidaHes.totalPartidaHes,
+                    montoAdicionalManual: partidaHes.montoAdicionalManual // Guardar el monto adicional manual
+                 });
+             }
 
             clearHesFormBtn.click();
             await loadHesList();
@@ -2129,95 +2192,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function renderResumenGrafico(contratoId, tipo) {
-        console.log(`Renderizando gráfico para contrato ${contratoId} y tipo ${tipo}...`); // Log para depuración
+        const canvas = document.getElementById('resumen-grafico');
+        if (!canvas) return;
+
+        // Destruir instancia anterior si existe
+        if (window.resumenGraficoInstance) {
+            window.resumenGraficoInstance.destroy();
+        }
+
         const contract = await db.contracts.get(contratoId);
-        if (!contract) {
-            console.warn(`Contrato con ID ${contratoId} no encontrado.`); // Log de advertencia
-            return;
-        }
-        const partidas = await db.partidas.where({ contractId: contratoId }).toArray();
-        const hesList = await db.hes.where({ contractId: contratoId }).toArray();
-        // Avance físico y financiero por partida
-        const labels = partidas.map(p => p.descripcion);
-        const fisico = [];
-        const financiero = [];
-        for (const p of partidas) {
-            const ejecutada = await getExecutedQuantityForContractPartida(p.id);
-            fisico.push(p.cantidad > 0 ? (ejecutada / p.cantidad) * 100 : 0);
-            // Financiero: suma de totalPartidaHes de todas las HES para esa partida
-            let totalFin = 0;
-            for (const hes of hesList) {
-                const hesPartidas = await db.hesPartidas.where({ hesId: hes.id, contractPartidaId: p.id }).toArray();
-                for (const hp of hesPartidas) {
-                    totalFin += hp.totalPartidaHes || 0;
-                }
-            }
-            financiero.push(contract.montoTotalContrato > 0 ? (totalFin / contract.montoTotalContrato) * 100 : 0);
-        }
-        // Renderizar el gráfico
-        const ctx = document.getElementById('contractStatusChart').getContext('2d');
-        if (window.resumenGraficoInstance) window.resumenGraficoInstance.destroy();
-        let chartType = tipo;
-        if (tipo === 'doughnut') chartType = 'doughnut';
-        if (tipo === 'pie') chartType = 'pie';
-        if (tipo === 'bar') chartType = 'bar';
-        if (tipo === 'line') chartType = 'line';
-        window.resumenGraficoInstance = new Chart(ctx, {
-            type: chartType,
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Avance Físico (%)',
-                        data: fisico,
-                        backgroundColor: '#17a2b8',
-                        borderColor: '#138496',
-                        fill: false,
-                        yAxisID: 'y',
-                    },
-                    {
-                        label: 'Avance Financiero (%)',
-                        data: financiero,
-                        backgroundColor: '#28a745',
-                        borderColor: '#218838',
-                        fill: false,
-                        yAxisID: 'y',
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: 'Resumen Gráfico del Contrato' }
+        if (!contract) return;
+
+        const ctx = canvas.getContext('2d');
+        let chartData;
+
+        if (tipo === 'financiero') {
+            // Obtener todas las HES del contrato ordenadas por fecha
+            const hesList = await db.hes
+                .where('contractId')
+                .equals(contratoId)
+                .toArray();
+
+            // Ordenar HES por fecha de inicio
+            hesList.sort((a, b) => new Date(a.fechaInicioHes) - new Date(b.fechaInicioHes));
+
+            // Preparar datos para la línea de tiempo
+            const labels = hesList.map(hes => {
+                const fecha = new Date(hes.fechaInicioHes);
+                return fecha.toLocaleDateString('es-ES', { 
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            });
+
+            // Calcular montos acumulados
+            let montoAcumulado = 0;
+            const montosAcumulados = hesList.map(hes => {
+                montoAcumulado += hes.totalHes || 0;
+                return montoAcumulado;
+            });
+
+            // Añadir punto inicial (0) y punto final (monto total)
+            labels.unshift(new Date(contract.fechaInicio).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }));
+            montosAcumulados.unshift(0);
+
+            chartData = {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monto Acumulado',
+                        data: montosAcumulados,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1,
+                        fill: true,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                    }]
                 },
-                scales: chartType === 'bar' || chartType === 'line' ? {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        title: { display: true, text: 'Porcentaje (%)' }
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Línea de Tiempo Financiera - ${contract.numeroSICAC || contract.numeroProveedor}`
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Monto: ${context.raw.toFixed(2)} ${contract.moneda || 'USD'}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: `Monto (${contract.moneda || 'USD'})`
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
                     }
-                } : {}
-            }
-        });
-        // Agregar botón de exportar imagen
+                }
+            };
+        } else {
+            // ... existing code for other chart types ...
+        }
+
+        window.resumenGraficoInstance = new Chart(ctx, chartData);
+
+        // Asegurar que el botón de exportación funcione
         const exportPngButton = document.getElementById('export-chart-png');
         if (exportPngButton) {
-            exportPngButton.onclick = () => exportChartAsPng(window.resumenGraficoInstance, contract.numeroSICAC || contract.numeroProveedor || 'grafico');
+            exportPngButton.onclick = () => {
+                if (window.resumenGraficoInstance) {
+                    const link = document.createElement('a');
+                    link.download = `grafico_${contract.numeroSICAC || contract.numeroProveedor || 'contrato'}.png`;
+                    link.href = window.resumenGraficoInstance.toBase64Image();
+                    link.click();
+                }
+            };
         }
-    }
-
-    // Función para exportar el gráfico como PNG
-    function exportChartAsPng(chartInstance, filename) {
-        if (!chartInstance) {
-            showToast("No hay gráfico para exportar.", "warning");
-            return;
-        }
-        const link = document.createElement('a');
-        link.download = `${filename}.png`;
-        link.href = chartInstance.toBase64Image();
-        link.click();
-        showToast("Gráfico exportado como PNG.", "success");
     }
 
     // --- MODALIDAD DINÁMICA MEJORADA ---
@@ -2625,4 +2711,439 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // ... rest of existing code ...
     }
+
+    // Event listener para calcular fecha de terminación extendida
+    diasExtensionInput.addEventListener('input', () => {
+        const fechaOriginal = new Date(fechaTerminacionOriginalInput.value);
+        const dias = parseInt(diasExtensionInput.value) || 0;
+        if (!isNaN(fechaOriginal.getTime()) && dias >= 0) {
+            const fechaExtendida = new Date(fechaOriginal);
+            fechaExtendida.setDate(fechaOriginal.getDate() + dias);
+            fechaTerminacionExtendidaInput.value = fechaExtendida.toISOString().split('T')[0];
+        } else {
+            fechaTerminacionExtendidaInput.value = ''; // Limpiar si las entradas no son válidas
+        }
+    });
+
+    // Función para calcular la fecha de vencimiento (20 días antes)
+    function calcularFechaVencimiento(fechaTerminacion) {
+        const fecha = new Date(fechaTerminacion);
+        fecha.setDate(fecha.getDate() - 20);
+        return fecha;
+    }
+
+    // Función para calcular la fecha extendida
+    function calcularFechaExtendida(fechaTerminacion, diasExtension) {
+        const fecha = new Date(fechaTerminacion);
+        fecha.setDate(fecha.getDate() + diasExtension);
+        return fecha;
+    }
+
+    // Modificar la función de guardar contrato
+    async function guardarContrato(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        // Calcular fecha de vencimiento (20 días antes)
+        const fechaTerminacion = new Date(formData.get('fechaTerminacion'));
+        const fechaVencimiento = calcularFechaVencimiento(fechaTerminacion);
+        
+        // Calcular fecha extendida si hay días de extensión
+        const diasExtension = parseInt(formData.get('diasExtension')) || 0;
+        const fechaExtendida = diasExtension > 0 ? calcularFechaExtendida(fechaTerminacion, diasExtension) : null;
+
+        const contratoData = {
+            numeroProveedor: formData.get('numeroProveedor'),
+            numeroSICAC: formData.get('numeroSICAC'),
+            fechaFirma: formData.get('fechaFirma'),
+            fechaInicio: formData.get('fechaInicio'),
+            fechaTerminacion: fechaTerminacion,
+            fechaVencimiento: fechaVencimiento,
+            diasExtension: diasExtension,
+            fechaExtendida: fechaExtendida,
+            montoTotalContrato: parseFloat(formData.get('montoTotalContrato')),
+            estatusContrato: formData.get('estatusContrato'),
+            modalidadContratacion: formData.get('modalidadContratacion'),
+            moneda: formData.get('moneda'),
+            observaciones: formData.get('observaciones'),
+            fechaCreacion: new Date(),
+            fechaModificacion: new Date()
+        };
+
+        try {
+            await db.contracts.add(contratoData);
+            showToast('Contrato guardado exitosamente', 'success');
+            form.reset();
+        } catch (error) {
+            showToast('Error al guardar el contrato: ' + error.message, 'error');
+        }
+    }
+
+    // Modificar la función de guardar HES
+    async function guardarHES(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        const contractId = parseInt(formData.get('contractId'));
+        const contrato = await db.contracts.get(contractId);
+        
+        // Calcular monto adicional y porcentaje
+        const montoAdicional = parseFloat(formData.get('montoAdicional')) || 0;
+        const porcentajeAdicional = parseFloat(formData.get('porcentajeAdicional')) || 0;
+        
+        // Validar que el monto total no supere el monto original del contrato
+        const totalHes = parseFloat(formData.get('totalHes')) + montoAdicional;
+        if (totalHes > contrato.montoTotalContrato) {
+            showToast('El monto total no puede superar el monto original del contrato', 'error');
+            return;
+        }
+
+        const hesData = {
+            contractId: contractId,
+            noHes: formData.get('noHes'),
+            fechaInicioHes: formData.get('fechaInicioHes'),
+            fechaFinalHes: formData.get('fechaFinalHes'),
+            totalHes: totalHes,
+            estatusHes: formData.get('estatusHes'),
+            aprobado: formData.get('aprobado') === 'true',
+            montoAdicional: montoAdicional,
+            porcentajeAdicional: porcentajeAdicional,
+            fechaCreacion: new Date(),
+            fechaModificacion: new Date()
+        };
+
+        try {
+            await db.hes.add(hesData);
+            showToast('HES guardada exitosamente', 'success');
+            form.reset();
+        } catch (error) {
+            showToast('Error al guardar la HES: ' + error.message, 'error');
+        }
+    }
+
+    // Función para verificar vencimientos
+    async function verificarVencimientos() {
+        const hoy = new Date();
+        const contratos = await db.contracts.toArray();
+        
+        // Obtener el número de días configurado para las alertas
+        const configAlerta = await db.configuracion.where('clave').equals('dias_alerta_vencimiento').first();
+        const diasAlerta = configAlerta ? parseInt(configAlerta.valor) : 20; // Valor por defecto: 20 días
+        
+        for (const contrato of contratos) {
+            const fechaVencimiento = new Date(contrato.fechaVencimiento);
+            const diasRestantes = Math.ceil((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
+            
+            if (diasRestantes <= diasAlerta && diasRestantes > 0) {
+                showToast(`¡Alerta! El contrato ${contrato.numeroSICAC || contrato.numeroProveedor} vence en ${diasRestantes} días`, 'warning');
+            }
+        }
+    }
+
+    // Función para actualizar la configuración de días de alerta
+    async function actualizarDiasAlerta(nuevosDias) {
+        try {
+            const configAlerta = await db.configuracion.where('clave').equals('dias_alerta_vencimiento').first();
+            if (configAlerta) {
+                await db.configuracion.update(configAlerta.id, { valor: nuevosDias.toString() });
+            } else {
+                await db.configuracion.add({
+                    clave: 'dias_alerta_vencimiento',
+                    valor: nuevosDias.toString(),
+                    descripcion: 'Número de días antes del vencimiento para mostrar alertas'
+                });
+            }
+            showToast('Configuración de días de alerta actualizada correctamente', 'success');
+            // Ejecutar verificación inmediatamente con la nueva configuración
+            await verificarVencimientos();
+        } catch (error) {
+            console.error('Error al actualizar días de alerta:', error);
+            showToast('Error al actualizar la configuración: ' + error.message, 'error');
+        }
+    }
+
+    // Ejecutar verificación de vencimientos cada día y al cargar la página
+    setInterval(verificarVencimientos, 24 * 60 * 60 * 1000);
+    verificarVencimientos(); // Ejecutar al cargar la página
+
+    // --- Gestión de Base de Datos (Importación/Exportación) ---
+
+    // Función para exportar toda la base de datos a un archivo Excel con múltiples hojas
+    async function exportDatabase() {
+        try {
+            showToast('Preparando datos para exportar a Excel...', 'info');
+
+            const data = {
+                contracts: await db.contracts.toArray(),
+                partidas: await db.partidas.toArray(),
+                hes: await db.hes.toArray(),
+                hesPartidas: await db.hesPartidas.toArray(),
+                trash: await db.trash.toArray(), // Incluir papelera en exportación
+                archivos: await db.archivos.toArray() // Incluir metadatos de archivos en exportación
+            };
+
+            const wb = XLSX.utils.book_new();
+
+            // Añadir cada tabla como una hoja
+            for (const tableName in data) {
+                if (data.hasOwnProperty(tableName)) {
+                    const ws = XLSX.utils.json_to_sheet(data[tableName]);
+                    XLSX.utils.book_append_sheet(wb, ws, tableName.charAt(0).toUpperCase() + tableName.slice(1)); // Capitalizar nombre de hoja
+                }
+            }
+
+            XLSX.writeFile(wb, 'sigescon_db_export.xlsx');
+
+            showToast('Base de datos exportada a Excel exitosamente.', 'success');
+
+        } catch (error) {
+            console.error('Error al exportar la base de datos:', error);
+            showToast('Error al exportar la base de datos: ' + error.message, 'error');
+        }
+    }
+
+    // Event listener para el botón de exportar
+    const exportDbBtn = document.getElementById('export-db-btn');
+    if (exportDbBtn) {
+        exportDbBtn.addEventListener('click', exportDatabase);
+    }
+
+    // --- Lógica de Importación de Base de Datos desde Excel ---
+    const importDbBtn = document.getElementById('import-db-btn');
+    const importDbFileInput = document.getElementById('import-db-file-input');
+
+    // Asociar el botón al input de archivo oculto
+    if (importDbBtn && importDbFileInput) {
+        importDbBtn.addEventListener('click', () => {
+            importDbFileInput.click(); // Simula el clic en el input de archivo
+        });
+    }
+
+    // Event listener para cuando se selecciona un archivo en el input
+    if (importDbFileInput) {
+        importDbFileInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            if (!file) return; // No hay archivo seleccionado
+
+            if (!confirm('¿Está seguro de que desea importar datos? Esto podría actualizar o añadir contratos y HES existentes.')) {
+                // Limpiar el input de archivo para que el mismo archivo pueda ser seleccionado de nuevo
+                importDbFileInput.value = '';
+                return;
+            }
+
+            showToast('Iniciando importación desde Excel...', 'info');
+
+            try {
+                // Leer el archivo Excel
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+
+                        // --- Lógica de Procesamiento de Hojas y Datos ---
+                        const importedData = {};
+                        workbook.SheetNames.forEach(sheetName => {
+                            const worksheet = workbook.Sheets[sheetName];
+                            // Convertir la hoja a JSON (array de objetos)
+                            importedData[sheetName.toLowerCase()] = XLSX.utils.sheet_to_json(worksheet);
+                        });
+
+                        console.log('Datos leídos del archivo Excel:', importedData);
+
+                        // Diccionarios para mapear IDs antiguos/externos a IDs de Dexie
+                        const contractIdMap = new Map(); // Mapa: identificador_externo -> dexieId
+                        const hesIdMap = new Map(); // Mapa: identificador_externo -> dexieId
+                        
+                        // --- Importar Contratos ---
+                        if (importedData.contracts) {
+                             showToast(`Importando ${importedData.contracts.length} contratos...`, 'info');
+                            for (const contractData of importedData.contracts) {
+                                // Usar numeroSICAC o numeroProveedor como identificador único si están presentes
+                                // Asumimos que si numeroSICAC existe, es el principal. Si no, usamos numeroProveedor.
+                                const externalId = contractData.numeroSICAC || contractData.numeroProveedor;
+                                
+                                if (!externalId) {
+                                     console.warn('Contrato sin identificador único (numeroSICAC o numeroProveedor), omitiendo:', contractData);
+                                     showToast(`Contrato sin identificador único omitido.`, 'warning');
+                                     continue; // Omitir contratos sin identificador único
+                                }
+
+                                // Buscar si el contrato ya existe en Dexie por numeroSICAC o numeroProveedor
+                                let existingContract = await db.contracts
+                                    .where('numeroSICAC').equals(externalId).first() ||
+                                    await db.contracts.where('numeroProveedor').equals(externalId).first();
+
+                                // Eliminar el ID original si existe para que Dexie asigne uno nuevo en caso de add
+                                delete contractData.id; 
+                                
+                                let dexieId;
+                                if (existingContract) {
+                                    // Si existe, actualizarlo
+                                    // Mantener el ID de Dexie existente
+                                    dexieId = existingContract.id;
+                                    await db.contracts.update(dexieId, contractData);
+                                    console.log(`Contrato ${externalId} actualizado (Dexie ID: ${dexieId}).`);
+                                } else {
+                                    // Si no existe, añadirlo
+                                    dexieId = await db.contracts.add(contractData);
+                                    console.log(`Contrato ${externalId} añadido (Dexie ID: ${dexieId}).`);
+                                }
+                                // Mapear el identificador externo al ID de Dexie
+                                contractIdMap.set(externalId, dexieId);
+                            }
+                            showToast('Contratos importados/actualizados.', 'success');
+                        }
+
+                        // --- Importar Partidas (depende de Contratos) ---
+                        if (importedData.partidas) {
+                            showToast(`Importando ${importedData.partidas.length} partidas...`, 'info');
+                             // Limpiar partidas existentes para los contratos que fueron actualizados
+                             const updatedContractIds = Array.from(contractIdMap.values());
+                             if(updatedContractIds.length > 0) {
+                                 // Esto podría ser problemático si el Excel no tiene TODAS las partidas del contrato.
+                                 // Una lógica más avanzada implicaría intentar emparejar partidas también.
+                                 // Por ahora, si actualizamos un contrato, BORRAMOS sus partidas viejas e insertamos las del Excel.
+                                 await db.partidas.where('contractId').anyOf(updatedContractIds).delete();
+                                 console.log(`Partidas antiguas de ${updatedContractIds.length} contratos actualizados eliminadas.`);
+                             }
+                            for (const partidaData of importedData.partidas) {
+                                // Asumimos que cada partida tiene una referencia al contrato padre (ej. por numeroSICAC del contrato)
+                                const parentContractExternalId = partidaData.contractExternalId; // Nombre de columna de ejemplo
+                                const parentContractDexieId = contractIdMap.get(parentContractExternalId);
+
+                                if (parentContractDexieId) {
+                                     delete partidaData.id; // Eliminar ID original
+                                    // Asegurarse de que la partida se vincule al ID de Dexie del contrato
+                                    partidaData.contractId = parentContractDexieId;
+                                     // Opcional: Eliminar la columna externa usada para el mapeo
+                                     delete partidaData.contractExternalId;
+                                    await db.partidas.add(partidaData);
+                                } else {
+                                    console.warn(`Partida sin contrato padre válido (${parentContractExternalId}), omitiendo:`, partidaData);
+                                    showToast(`Partida sin contrato padre válido omitida.`, 'warning');
+                                }
+                            }
+                             showToast('Partidas importadas.', 'success');
+                        }
+
+                        // --- Importar HES (depende de Contratos) ---
+                        if (importedData.hes) {
+                            showToast(`Importando ${importedData.hes.length} HES...`, 'info');
+                             // Similar a partidas, si actualizamos un contrato, BORRAMOS sus HES viejas y las insertamos desde Excel
+                              const updatedContractIds = Array.from(contractIdMap.values());
+                              if(updatedContractIds.length > 0) {
+                                   await db.hes.where('contractId').anyOf(updatedContractIds).delete();
+                                   console.log(`HES antiguas de ${updatedContractIds.length} contratos actualizados eliminadas.`);
+                              }
+                            for (const hesData of importedData.hes) {
+                                const parentContractExternalId = hesData.contractExternalId; // Nombre de columna de ejemplo
+                                const parentContractDexieId = contractIdMap.get(parentContractExternalId);
+                                const hesExternalId = hesData.noHes; // Usar noHes como identificador para HES
+
+                                if (parentContractDexieId && hesExternalId) {
+                                    delete hesData.id; // Eliminar ID original
+                                     // Asegurarse de que la HES se vincule al ID de Dexie del contrato
+                                    hesData.contractId = parentContractDexieId;
+                                     // Opcional: Eliminar la columna externa usada para el mapeo
+                                     delete hesData.contractExternalId;
+                                    
+                                    // Aquí podríamos buscar si la HES ya existe dentro del contrato (por noHes) si quisiéramos actualizar HES individuales
+                                    // Por ahora, con el borrado de HES viejas por contrato, simplemente las añadimos.
+                                    
+                                    const newHesId = await db.hes.add(hesData);
+                                     // Mapear el identificador externo (noHes) al ID de Dexie de la HES recién creada
+                                     hesIdMap.set(hesExternalId, newHesId);
+
+                                } else {
+                                    console.warn(`HES sin contrato padre válido (${parentContractExternalId}) o sin noHes (${hesExternalId}), omitiendo:`, hesData);
+                                     showToast(`HES sin contrato padre válido o sin No. HES omitida.`, 'warning');
+                                }
+                            }
+                             showToast('HES importadas.', 'success');
+                        }
+
+                        // --- Importar HesPartidas (depende de HES y Partidas) ---
+                        if (importedData.hespartidas) {
+                             showToast(`Importando ${importedData.hespartidas.length} HesPartidas...`, 'info');
+    // La lógica de importación es más compleja y se abordará en el siguiente paso.
+    // Necesita manejar duplicados, relaciones entre tablas, y errores.
+});
+
+// Lógica para el botón de hamburguesa y el sidebar responsive
+const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+const bodyEl = document.body;
+
+if (sidebarToggleBtn) {
+    sidebarToggleBtn.addEventListener('click', () => {
+        bodyEl.classList.toggle('sidebar-open');
+    });
+}
+
+// Cerrar sidebar al hacer clic en el overlay o en un enlace del sidebar (si se convierte en menú)
+document.addEventListener('click', (e) => {
+    // Si se hizo clic en el overlay y el sidebar está abierto
+    if (bodyEl.classList.contains('sidebar-open') && e.target === bodyEl.lastChild && e.target.classList.contains('sidebar-overlay')) {
+         bodyEl.classList.remove('sidebar-open');
+     }
+     // Si se hizo clic en un enlace dentro del sidebar (y está en modo responsive/desplegable)
+     if (bodyEl.classList.contains('sidebar-open') && e.target.closest('.sidebar .nav-link')) {
+         // Añadir una pequeña demora para permitir que la navegación ocurra antes de cerrar
+         setTimeout(() => {
+              bodyEl.classList.remove('sidebar-open');
+         }, 100);
+     }
+});
+
+// Opcional: Cerrar sidebar si se redimensiona la ventana a un tamaño mayor
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && bodyEl.classList.contains('sidebar-open')) {
+        bodyEl.classList.remove('sidebar-open');
+    }
+});
+
+    // Cargar configuración de días de alerta
+    async function cargarConfiguracionDiasAlerta() {
+        try {
+            const configAlerta = await db.configuracion.where('clave').equals('dias_alerta_vencimiento').first();
+            const diasAlertaInput = document.getElementById('dias-alerta-vencimiento');
+            if (diasAlertaInput) {
+                diasAlertaInput.value = configAlerta ? configAlerta.valor : '20';
+            }
+        } catch (error) {
+            console.error('Error al cargar configuración de días de alerta:', error);
+        }
+    }
+
+    // Event listener para el botón de guardar días de alerta
+    const guardarDiasAlertaBtn = document.getElementById('guardar-dias-alerta-btn');
+    if (guardarDiasAlertaBtn) {
+        guardarDiasAlertaBtn.addEventListener('click', async () => {
+            const diasAlertaInput = document.getElementById('dias-alerta-vencimiento');
+            if (diasAlertaInput) {
+                const nuevosDias = parseInt(diasAlertaInput.value);
+                if (nuevosDias >= 1 && nuevosDias <= 365) {
+                    await actualizarDiasAlerta(nuevosDias);
+                } else {
+                    showToast('El número de días debe estar entre 1 y 365', 'warning');
+                }
+            }
+        });
+    }
+
+    // Cargar configuración al cambiar a la pestaña de informes
+    tabButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const targetId = button.getAttribute('data-target');
+            
+            if (targetId === 'reports') {
+                await cargarConfiguracionDiasAlerta();
+            }
+            // ... resto del código existente ...
+        });
+    });
+
+    // ... existing code ...
 });

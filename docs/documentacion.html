@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Documentación Completa - SIGESCON</title>
+    <title>Documentación SIGESCON</title>
 
     <!-- Estilos -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -11,907 +11,211 @@
     <link rel="stylesheet" href="documentacion.css">
 </head>
 <body>
-    <header class="help-header">
-        <h1>Documentación Completa SIGESCON</h1>
-    </header>
-
-    <div class="help-container">
-        <aside class="help-nav">
-            <nav>
-                <ul>
-                    <li><a href="#introduccion">1. Introducción</a></li>
-                    <li><a href="#arquitectura">2. Arquitectura del Sistema</a></li>
-                    <li><a href="#estructura-archivos">3. Estructura de Archivos y Directorios</a></li>
-                    <li><a href="#base-datos">4. Base de Datos (Dexie.js)</a></li>
-                    <li><a href="#logica-programacion">5. Lógica de Programación Profunda (script.js)</a></li>
-                    <li><a href="#componentes-ui">6. Componentes de Interfaz de Usuario (UI)</a></li>
-                    <li><a href="#guia-desarrollador">7. Guía para Desarrolladores</a></li>
-                    <li><a href="#guia-usuario">8. Guía de Usuario</a></li>
-                    <li><a href="#faq">9. Preguntas Frecuentes (FAQ)</a></li>
-                </ul>
-            </nav>
-        </aside>
-
-        <main class="help-content">
-            <section id="introduccion" class="help-section">
-                <h2>1. Introducción</h2>
-                <p>Este documento proporciona una guía completa sobre el Sistema de Gestión de Contratos Empresariales (SIGESCON). Abarca desde una descripción general para nuevos usuarios hasta detalles técnicos profundos para desarrolladores.</p>
-                <p>SIGESCON es una aplicación web diseñada para...</p>
-                <!-- Secciones futuras se añadirán aquí -->
-            </section>
-
-            <section id="arquitectura" class="help-section">
-                <h2>2. Arquitectura del Sistema</h2>
-                <p>SIGESCON sigue una arquitectura de aplicación web de una sola página (SPA) con un enfoque en el frontend para la interacción del usuario y el manejo de datos locales, utilizando IndexedDB a través de Dexie.js.</p>
-                
-                <h3>Componentes Principales:</h3>
-                <ul>
-                    <li>**Interfaz de Usuario (UI):** Construida con HTML, CSS (Bootstrap 5 y estilos personalizados en <code>documentacion.css</code>) y JavaScript. Se organiza mediante pestañas para navegar entre las diferentes funcionalidades (Resumen General, Gestión de Contratos, Gestión de HES, etc.).</li>
-                    <li>**Lógica de la Aplicación:** Implementada en <code>js/script.js</code>. Contiene las funciones para interactuar con la base de datos, manejar eventos del usuario, realizar cálculos (avances físico y financiero), generar reportes (Excel y PDF) y gestionar la interfaz dinámica.</li>
-                    <li>**Base de Datos Local:** Se utiliza IndexedDB a través de la librería Dexie.js para almacenar todos los datos de contratos, partidas y HES directamente en el navegador del usuario. Esto permite que la aplicación funcione sin necesidad de un servidor backend.</li>
-                    <li>**Librerías Externas:** Se utilizan librerías como Bootstrap 5 (para estilos y componentes UI como el carrusel), Font Awesome (para iconos), Chart.js (para gráficos), SheetJS (xlsx) y jsPDF (para exportación de datos).</li>
-                </ul>
-
-                <h3>Diagrama Conceptual (Texto):</h3>
-                <pre class="help-code">
-+-------------------+     +---------------------+
-| Interfaz de Usuario | --> | Lógica de Aplicación  |
-| (HTML, CSS, JS)   |     | (js/script.js)      |
-+-------------------+     +---------------------+
-         |                         |
-         v                         v
-+-------------------------+     +--------------------+
-| Base de Datos Local     |     | Librerías Externas |
-| (IndexedDB via Dexie.js)|     | (Bootstrap, Chart.js, etc.)|
-+-------------------------+     +--------------------+
-                </pre>
-
-                <p>La comunicación principal ocurre entre la Interfaz de Usuario y la Lógica de Aplicación, que a su vez interactúa con la Base de Datos Local y utiliza las Librerías Externas para funcionalidades específicas.</p>
-
-            </section>
-
-            <section id="estructura-archivos" class="help-section">
-                <h2>3. Estructura de Archivos y Directorios</h2>
-                <p>El proyecto SIGESCON se organiza en la siguiente estructura de directorios:</p>
-                <pre class="help-code">
-/
-├── css/
-│   ├── ayuda.css
-│   └── style.css
-├── docs/
-│   ├── documentacion.css
-│   └── documentacion.html
-├── js/
-│   └── script.js
-├── README.md
-└── index.html
-                </pre>
-                <p>Descripción de los archivos y directorios clave:</p>
-                <ul>
-                    <li><code>/</code>: Directorio raíz del proyecto.</li>
-                    <li><code>css/</code>: Contiene los archivos CSS para los estilos de la aplicación.</li>
-                    <li><code>css/ayuda.css</code>: Estilos específicos para la página de ayuda.</li>
-                    <li><code>css/style.css</code>: Estilos generales de la aplicación.</li>
-                    <li><code>docs/</code>: Contiene los archivos de documentación.</li>
-                    <li><code>docs/documentacion.css</code>: Estilos para la documentación completa (copia de <code>ayuda.css</code>).</li>
-                    <li><code>docs/documentacion.html</code>: El archivo HTML de la documentación completa.</li>
-                    <li><code>js/</code>: Contiene los archivos JavaScript.</li>
-                    <li><code>js/script.js</code>: El archivo principal con toda la lógica de la aplicación.</li>
-                    <li><code>README.md</code>: Archivo con la descripción general del proyecto.</li>
-                    <li><code>index.html</code>: La página principal de la aplicación.</li>
-                </ul>
-            </section>
-
-            <section id="mdp" class="help-section">
-                <h1 class="section-title">Manual de Desarrollo Privado (MDP)</h1>
-
-# Manual de Desarrollo Privado (MDP) - SIGESCON
-
-## Índice
-1. [Estructura del Proyecto](#estructura-del-proyecto)
-2. [Arquitectura](#arquitectura)
-3. [Base de Datos](#base-de-datos)
-4. [Interfaz de Usuario](#interfaz-de-usuario)
-5. [Lógica de Negocio](#lógica-de-negocio)
-6. [Seguridad](#seguridad)
-7. [Optimización](#optimización)
-8. [Mantenimiento](#mantenimiento)
-
-## Estructura del Proyecto
-
-```
-SIGESCON/
-├── index.html              # Página principal
-├── ayuda.html             # Documentación usuario
-├── css/
-│   ├── style.css         # Estilos generales
-│   ├── ayuda.css         # Estilos ayuda
-│   └── MDP.css           # Estilos documentación privada
-├── js/
-│   ├── script.js         # Lógica principal
-│   ├── db.js            # Manejo de IndexedDB
-│   ├── ui.js            # Componentes UI
-│   ├── calculations.js  # Funciones de cálculo
-│   ├── validations.js   # Validaciones
-│   ├── exports.js       # Exportación de datos
-│   └── MDP.js           # Lógica documentación privada
-├── docs/
-│   ├── MDP.md           # Este archivo
-│   └── personal.md      # Documentación técnica general
-└── assets/
-    ├── images/          # Imágenes del proyecto
-    └── icons/           # Iconos personalizados
-```
-
-## Arquitectura
-
-### Patrones de Diseño
-- **MVC (Modelo-Vista-Controlador)**
-  - Modelo: IndexedDB (Dexie.js)
-  - Vista: HTML/CSS
-  - Controlador: JavaScript
-
-- **Singleton**
-  - Instancia única de la base de datos
-  - Gestor de eventos globales
-
-- **Observer**
-  - Actualización de UI en tiempo real
-  - Notificaciones de cambios
-
-### Flujo de Datos
-```mermaid
-graph TD
-    A[UI] -->|Eventos| B[Controlador]
-    B -->|Operaciones| C[Modelo DB]
-    C -->|Actualizaciones| D[Observer]
-    D -->|Notificaciones| A
-```
-
-## Base de Datos
-
-### Esquema IndexedDB
-
-#### Tabla: Contratos
-```javascript
-{
-    id: number,                    // Clave primaria
-    numeroProveedor: string,       // Identificador único
-    fechaFirma: Date,             // Fecha de firma
-    fechaInicio: Date,            // Fecha de inicio
-    fechaTerminacion: Date,       // Fecha de terminación
-    montoTotal: number,           // Monto total del contrato
-    estatus: string,              // Estado actual
-    modalidad: string,            // Modalidad de contratación
-    moneda: string,               // Tipo de moneda
-    observaciones: string,        // Notas adicionales
-    archivos: Array<File>,        // Archivos adjuntos
-    fechaCreacion: Date,          // Fecha de creación
-    fechaModificacion: Date,      // Última modificación
-    usuarioCreacion: string,      // Usuario que creó
-    usuarioModificacion: string   // Último usuario que modificó
-}
-```
-
-#### Tabla: Partidas
-```javascript
-{
-    id: number,                    // Clave primaria
-    contratoId: number,           // Referencia a Contratos
-    descripcion: string,          // Descripción detallada
-    cantidad: number,             // Cantidad contratada
-    umd: string,                  // Unidad de medida
-    precioUnitario: number,       // Precio por unidad
-    total: number,                // Total calculado
-    fechaCreacion: Date,          // Fecha de creación
-    fechaModificacion: Date       // Última modificación
-}
-```
-
-#### Tabla: HES
-```javascript
-{
-    id: number,                    // Clave primaria
-    contratoId: number,           // Referencia a Contratos
-    numeroHES: string,            // Número de HES
-    fechaInicio: Date,            // Fecha de inicio
-    fechaFinal: Date,             // Fecha final
-    total: number,                // Monto total
-    estatus: string,              // Estado actual
-    aprobado: boolean,            // Estado de aprobación
-    fechaAprobacion: Date,        // Fecha de aprobación
-    archivos: Array<File>,        // Documentos adjuntos
-    fechaCreacion: Date,          // Fecha de creación
-    fechaModificacion: Date       // Última modificación
-}
-```
-
-#### Tabla: PartidasHES
-```javascript
-{
-    id: number,                    // Clave primaria
-    hesId: number,                // Referencia a HES
-    partidaId: number,            // Referencia a Partidas
-    cantidadEjecutada: number,    // Cantidad ejecutada
-    totalPartida: number,         // Total calculado
-    fechaCreacion: Date,          // Fecha de creación
-    fechaModificacion: Date       // Última modificación
-}
-```
-
-### Índices y Relaciones
-```javascript
-// Índices principales
-db.contratos.index('numeroProveedor');
-db.contratos.index('estatus');
-db.hes.index('contratoId');
-db.partidas.index('contratoId');
-db.partidasHES.index('hesId');
-db.partidasHES.index('partidaId');
-
-// Relaciones
-db.contratos.hasMany('partidas');
-db.contratos.hasMany('hes');
-db.hes.hasMany('partidasHES');
-db.partidas.hasMany('partidasHES');
-```
-
-## Interfaz de Usuario
-
-### Componentes Principales
-
-#### 1. Header
-```html
-<header class="header bg-light-blue">
     <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center py-3">
-            <div class="logo d-flex align-items-center">
-                <i class="fas fa-file-contract me-2"></i>
-                <h1 class="mb-0">Gestión de Contratos Empresariales</h1>
-            </div>
-            <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
-                <i class="fas fa-question-circle me-2"></i> Ayuda
-            </a>
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#introduccion">
+                                <i class="fas fa-home"></i> Introducción
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#estructura">
+                                <i class="fas fa-sitemap"></i> Estructura del Sistema
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#base-datos">
+                                <i class="fas fa-database"></i> Base de Datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#modulos">
+                                <i class="fas fa-cubes"></i> Módulos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#configuracion">
+                                <i class="fas fa-cog"></i> Configuración
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Documentación SIGESCON</h1>
+                </div>
+
+                <!-- Introducción -->
+                <section id="introduccion" class="mb-5">
+                    <h2>Introducción</h2>
+                    <p>SIGESCON es un sistema de gestión de contratos empresariales que permite el seguimiento y control de contratos, HES (Hojas de Estimación de Servicios) y sus respectivas partidas.</p>
+                </section>
+
+                <!-- Estructura del Sistema -->
+                <section id="estructura" class="mb-5">
+                    <h2>Estructura del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Arquitectura</h3>
+                            <p>El sistema está diseñado con una arquitectura modular y escalable:</p>
+                            <ul>
+                                <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (Vanilla)</li>
+                                <li><strong>Base de Datos:</strong> 
+                                    <ul>
+                                        <li>IndexedDB (Dexie.js) para almacenamiento local</li>
+                                        <li>Preparado para migración a base de datos física (PostgreSQL/MySQL)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Almacenamiento:</strong>
+                                    <ul>
+                                        <li>Archivos locales para documentos adjuntos</li>
+                                        <li>Preparado para migración a almacenamiento en la nube</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Base de Datos -->
+                <section id="base-datos" class="mb-5">
+                    <h2>Base de Datos</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Estructura Actual (IndexedDB)</h3>
+                            <pre><code>
+// Tablas principales
+contratos: {
+    id: autoincrement,
+    numeroProveedor: string,
+    numeroSICAC: string,
+    fechaFirma: date,
+    fechaInicio: date,
+    fechaTerminacion: date,
+    fechaVencimiento: date,
+    diasExtension: number,
+    montoTotalContrato: number,
+    estatusContrato: string,
+    modalidadContratacion: string,
+    moneda: string,
+    observaciones: string,
+    fechaCreacion: date,
+    fechaModificacion: date
+}
+
+partidas: {
+    id: autoincrement,
+    contractId: number,
+    descripcion: string,
+    cantidad: number,
+    umd: string,
+    precioUnitario: number,
+    total: number
+}
+
+hes: {
+    id: autoincrement,
+    contractId: number,
+    noHes: string,
+    fechaInicioHes: date,
+    fechaFinalHes: date,
+    totalHes: number,
+    estatusHes: string,
+    aprobado: string,
+    montoAdicional: number,
+    porcentajeAdicional: number
+}
+
+hesPartidas: {
+    id: autoincrement,
+    hesId: number,
+    contractPartidaId: number,
+    cantidadEjecutada: number,
+    totalPartidaHes: number
+}
+
+configuracion: {
+    id: autoincrement,
+    clave: string,
+    valor: string,
+    descripcion: string
+}
+                            </code></pre>
+
+                            <h3>Migración a Base de Datos Física</h3>
+                            <p>El sistema está preparado para migrar a una base de datos física con las siguientes consideraciones:</p>
+                            <ul>
+                                <li>Mantenimiento de la misma estructura de tablas</li>
+                                <li>Adición de índices y claves foráneas</li>
+                                <li>Implementación de triggers para auditoría</li>
+                                <li>Soporte para múltiples usuarios concurrentes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Módulos -->
+                <section id="modulos" class="mb-5">
+                    <h2>Módulos del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Gestión de Contratos</h3>
+                            <ul>
+                                <li>Creación y edición de contratos</li>
+                                <li>Gestión de partidas</li>
+                                <li>Seguimiento de vencimientos</li>
+                                <li>Alertas configurables</li>
+                            </ul>
+
+                            <h3>Gestión de HES</h3>
+                            <ul>
+                                <li>Creación y edición de HES</li>
+                                <li>Cálculo automático de totales</li>
+                                <li>Gastos administrativos configurables</li>
+                                <li>Seguimiento de ejecución</li>
+                            </ul>
+
+                            <h3>Reportes y Análisis</h3>
+                            <ul>
+                                <li>Exportación a Excel y PDF</li>
+                                <li>Gráficos de avance</li>
+                                <li>Resúmenes financieros</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Configuración -->
+                <section id="configuracion" class="mb-5">
+                    <h2>Configuración del Sistema</h2>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3>Parámetros Configurables</h3>
+                            <ul>
+                                <li><strong>Días de Alerta:</strong> Configuración del número de días antes del vencimiento para mostrar alertas (1-365 días)</li>
+                                <li><strong>Gastos Administrativos:</strong> Porcentaje configurable para cada HES</li>
+                                <li><strong>Moneda:</strong> Selección de moneda para contratos (USD, EUR, VES)</li>
+                            </ul>
+
+                            <h3>Exportación/Importación</h3>
+                            <ul>
+                                <li>Exportación completa de la base de datos</li>
+                                <li>Importación de datos desde archivos Excel</li>
+                                <li>Respaldo automático de configuración</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
         </div>
     </div>
-</header>
-```
-
-#### 2. Sidebar
-```html
-<aside class="sidebar bg-dark-blue">
-    <nav class="nav flex-column">
-        <!-- Botones de navegación -->
-    </nav>
-</aside>
-```
-
-#### 3. Contenido Principal
-```html
-<main class="content">
-    <section id="[section-id]" class="content-section">
-        <!-- Contenido dinámico -->
-    </section>
-</main>
-```
-
-### Estilos CSS
-
-#### Variables Globales
-```css
-:root {
-    --primary-color: #4CAF50;
-    --secondary-color: #2196F3;
-    --accent-color: #FFC107;
-    --danger-color: #F44336;
-    --success-color: #4CAF50;
-}
-```
-
-#### Clases Comunes
-```css
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.btn {
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-}
-```
-
-## Lógica de Negocio
-
-### Módulos Principales
-
-#### 1. Gestión de Contratos
-- Crear/Editar Contrato
-- Eliminar Contrato
-- Consultar Contratos
-
-#### 2. Gestión de HES
-- Crear/Editar HES
-- Eliminar HES
-- Consultar HES
-
-#### 3. Avances
-- Calcular Avance Físico
-- Calcular Avance Financiero
-
-#### 4. Informes
-- Generar Informe Individual
-- Generar Informe Global
-
-### Funciones Clave
-
-#### Creación de Contrato
-```javascript
-async function crearContrato(datos) {
-    try {
-        // Validaciones
-        validarDatosContrato(datos);
-        
-        // Cálculos
-        const montos = calcularMontosContrato(datos.partidas);
-        
-        // Creación en DB
-        const contratoId = await db.contratos.add({
-            ...datos,
-            ...montos,
-            fechaCreacion: new Date(),
-            usuarioCreacion: obtenerUsuarioActual()
-        });
-        
-        // Notificación
-        mostrarNotificacion('Contrato creado exitosamente');
-        
-        return contratoId;
-    } catch (error) {
-        manejarError(error);
-    }
-}
-```
-
-#### Edición de Contrato
-```javascript
-async function editarContrato(id, datos) {
-    try {
-        // Validaciones
-        validarDatosContrato(datos);
-        
-        // Actualización
-        await db.contratos.update(id, {
-            ...datos,
-            fechaModificacion: new Date(),
-            usuarioModificacion: obtenerUsuarioActual()
-        });
-        
-        // Notificación
-        mostrarNotificacion('Contrato actualizado exitosamente');
-    } catch (error) {
-        manejarError(error);
-    }
-}
-```
-
-### Gestión de HES
-
-#### Creación de HES
-```javascript
-async function crearHES(datos) {
-    try {
-        // Validaciones
-        validarDatosHES(datos);
-        
-        // Cálculos
-        const montos = calcularMontosHES(datos.partidas);
-        
-        // Creación en DB
-        const hesId = await db.hes.add({
-            ...datos,
-            ...montos,
-            fechaCreacion: new Date()
-        });
-        
-        // Actualización de avances
-        await actualizarAvancesContrato(datos.contratoId);
-        
-        return hesId;
-    } catch (error) {
-        manejarError(error);
-    }
-}
-```
-
-### Cálculos
-
-#### Avance Físico
-```javascript
-function calcularAvanceFisico(contratoId) {
-    const partidas = await db.partidas
-        .where('contratoId')
-        .equals(contratoId)
-        .toArray();
-        
-    const partidasHES = await db.partidasHES
-        .where('partidaId')
-        .anyOf(partidas.map(p => p.id))
-        .toArray();
-        
-    return partidas.map(partida => {
-        const ejecutado = partidasHES
-            .filter(ph => ph.partidaId === partida.id)
-            .reduce((sum, ph) => sum + ph.cantidadEjecutada, 0);
-            
-        return {
-            partidaId: partida.id,
-            avance: (ejecutado / partida.cantidad) * 100
-        };
-    });
-}
-```
-
-#### Avance Financiero
-```javascript
-function calcularAvanceFinanciero(contratoId) {
-    const contrato = await db.contratos.get(contratoId);
-    const hes = await db.hes
-        .where('contratoId')
-        .equals(contratoId)
-        .toArray();
-        
-    const totalEjecutado = hes.reduce((sum, h) => sum + h.total, 0);
-    
-    return {
-        total: contrato.montoTotal,
-        ejecutado: totalEjecutado,
-        porcentaje: (totalEjecutado / contrato.montoTotal) * 100
-    };
-}
-```
-
-## Seguridad
-
-### Validaciones
-
-#### Datos de Contrato
-```javascript
-function validarDatosContrato(datos) {
-    if (!datos.numeroProveedor || !datos.fechaFirma || !datos.fechaInicio || !datos.fechaTerminacion || !datos.montoTotal) {
-        throw new Error('Faltan campos obligatorios del contrato.');
-    }
-    // Más validaciones...
-}
-```
-
-#### Datos de HES
-```javascript
-function validarDatosHES(datos) {
-    if (!datos.contratoId || !datos.numeroHES || !datos.fechaInicio || !datos.fechaFinal || !datos.total) {
-        throw new Error('Faltan campos obligatorios de la HES.');
-    }
-    // Más validaciones...
-}
-```
-
-### Autenticación y Autorización
-- Se implementó un sistema básico de login/logout para el MDP.
-- Las credenciales se almacenan localmente (en este caso, en `localStorage` o IndexedDB).
-- Acceso al contenido del MDP restringido a usuarios autenticados.
-
-## Optimización
-
-- Uso de IndexedDB para almacenamiento local eficiente.
-- Carga asíncrona de datos.
-- Optimización de consultas a la base de datos (índices).
-
-## Mantenimiento
-
-- Estructura modular del código JS.
-- Uso de comentarios y documentación (este MDP).
-- Manejo de errores (try...catch).
-
----
-
-*Fin del Manual de Desarrollo Privado*
-
-*Desarrollado por RojasTech*
-
-            </section>
-
-            <section id="tecnica" class="help-section">
-                <h1 class="section-title">Documentación Técnica Personal</h1>
-
-# Documentación Técnica SIGESCON
-
-## Estructura del Proyecto
-
-```
-SIGESCON/
-├── index.html          # Página principal de la aplicación
-├── ayuda.html          # Documentación para usuarios finales
-├── css/
-│   ├── style.css      # Estilos generales de la aplicación
-│   └── ayuda.css      # Estilos específicos de la página de ayuda
-├── js/
-│   └── script.js      # Lógica principal de la aplicación
-└── docs/
-    └── personal.md    # Documentación técnica (este archivo)
-```
-
-## Tecnologías Utilizadas
-
-- **Frontend**:
-  - HTML5
-  - CSS3 (Bootstrap 5.3.0)
-  - JavaScript (ES6+)
-  - Dexie.js (IndexedDB)
-  - Chart.js (Gráficos)
-  - XLSX.js (Exportación a Excel)
-  - jsPDF (Exportación a PDF)
-
-## Base de Datos (IndexedDB)
-
-### Tablas
-
-1. **Contratos**
-   ```javascript
-   {
-     id: number,
-     numeroProveedor: string,
-     fechaFirma: Date,
-     fechaInicio: Date,
-     fechaTerminacion: Date,
-     montoTotal: number,
-     estatus: string,
-     // ... otros campos
-   }
-   ```
-
-2. **Partidas**
-   ```javascript
-   {
-     id: number,
-     contratoId: number,
-     descripcion: string,
-     cantidad: number,
-     umd: string,
-     precioUnitario: number,
-     total: number
-   }
-   ```
-
-3. **HES**
-   ```javascript
-   {
-     id: number,
-     contratoId: number,
-     numeroHES: string,
-     fechaInicio: Date,
-     fechaFinal: Date,
-     total: number,
-     estatus: string
-   }
-   ```
-
-4. **PartidasHES**
-   ```javascript
-   {
-     id: number,
-     hesId: number,
-     partidaId: number,
-     cantidadEjecutada: number,
-     totalPartida: number
-   }
-   ```
-
-5. **Avances**
-   ```javascript
-   {
-     id: number,
-     contratoId: number,
-     fecha: Date,
-     avanceFisico: number,
-     avanceFinanciero: number
-   }
-   ```
-
-6. **Archivos**
-   ```javascript
-   {
-     id: number,
-     contratoId: number,
-     nombre: string,
-     tipo: string,
-     contenido: Blob
-   }
-   ```
-
-## Componentes de la UI
-
-### 1. Header
-- Logo y título de la aplicación
-- Botón de ayuda que abre `ayuda.html` en nueva pestaña
-
-### 2. Sidebar
-- Navegación principal con iconos de Font Awesome
-- Secciones:
-  - Resumen General
-  - Nuevo/Editar Contrato
-  - Lista de Contratos
-  - Gestión de HES
-  - Avance Físico
-  - Avance Financiero
-  - Resumen Gráfico
-  - Informes
-  - Papelera de Reciclaje
-
-### 3. Contenido Principal
-Cada sección se carga dinámicamente en el área de contenido principal.
-
-## Funcionalidades Principales
-
-### Gestión de Contratos
-- Creación y edición de contratos
-- Gestión de partidas
-- Cálculos automáticos de montos
-- Validaciones de fechas y montos
-
-### Gestión de HES
-- Creación y edición de HES
-- Asociación con contratos
-- Cálculo automático de subtotales y totales
-- Control de cantidades ejecutadas
-
-### Avances
-- Cálculo de avance físico por partida
-- Cálculo de avance financiero global
-- Visualización de progreso con barras
-- Exportación de reportes
-
-### Gráficos
-- Gráficos de estado de contratos
-- Gráficos por modalidad
-- Exportación a PNG
-- Diferentes tipos de visualización
-
-## Eventos y Listeners
-
-### Formularios
-- `contract-form`: Gestión de contratos
-- `hes-form`: Gestión de HES
-- Validación y cálculo automático de campos
-
-### Botones
-- Navegación entre secciones
-- Acciones CRUD
-- Exportación de datos
-- Filtros y búsquedas
-
-## Funciones de Utilidad
-
-### Cálculos
-```javascript
-// Cálculo de período
-function calcularPeriodo(fechaInicio, fechaFin) {
-    // Implementación
-}
-
-// Cálculo de montos
-function calcularMontos(partidas) {
-    // Implementación
-}
-```
-
-### Validaciones
-```javascript
-// Validación de fechas
-function validarFechas(fechaInicio, fechaFin) {
-    // Implementación
-}
-
-// Validación de montos
-function validarMontos(monto) {
-    // Implementación
-}
-```
-
-### Exportación
-```javascript
-// Exportar a Excel
-function exportarExcel(datos) {
-    // Implementación
-}
-
-// Exportar a PDF
-function exportarPDF(datos) {
-    // Implementación
-}
-```
-
-## Manejo de Errores
-
-- Validación de formularios
-- Mensajes de error en toasts
-- Confirmaciones para acciones críticas
-- Manejo de errores de base de datos
-
-## Optimizaciones
-
-### Rendimiento
-- Carga lazy de secciones
-- Caché de datos frecuentes
-- Optimización de consultas IndexedDB
-
-### Almacenamiento
-- Almacenamiento local con IndexedDB
-- Gestión de archivos adjuntos (si aplica)
-
-## Mantenimiento
-
-- Estructura modular del código JS
-- Uso de comentarios y documentación
-- Manejo de errores
-
----
-
-*Fin de la Documentación Técnica Personal*
-
-*Desarrollado por RojasTech*
-
-            </section>
-
-             <section id="usuario" class="help-section">
-                 <h1 class="section-title">Guía de Usuario</h1>
-                
-                <h2>Introducción a SIGESCON</h2>
-                <div class="help-image-container">
-                    <img src="assets/images/help/dashboard-overview.png" alt="Vista general del dashboard" class="help-image">
-                    <p class="image-caption">Figura 1: Vista general del dashboard principal de SIGESCON</p>
-                </div>
-                <p>SIGESCON es un sistema integral para la gestión de contratos empresariales que te permite:</p>
-                <ul>
-                    <li>Gestionar contratos y sus partidas</li>
-                    <li>Administrar HES (Hojas de Estimación de Servicios)</li>
-                    <li>Seguir el avance físico y financiero</li>
-                    <li>Generar reportes detallados</li>
-                </ul>
-            
-                <h2>Gestión de Contratos</h2>
-                
-                <h3>Crear un Nuevo Contrato</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/new-contract-form.png" alt="Formulario de nuevo contrato" class="help-image">
-                    <p class="image-caption">Figura 2: Formulario para crear un nuevo contrato</p>
-                </div>
-                <ol>
-                    <li>Haz clic en "Nuevo/Editar Contrato" en el menú lateral</li>
-                    <li>Completa los campos requeridos (marcados con *)</li>
-                    <li>Agrega las partidas del contrato</li>
-                    <li>Haz clic en "Guardar Contrato"</li>
-                </ol>
-
-                <h3>Gestionar Partidas</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/contract-items.png" alt="Gestión de partidas" class="help-image">
-                    <p class="image-caption">Figura 3: Sección de gestión de partidas del contrato</p>
-                </div>
-                <p>Para agregar partidas a un contrato:</p>
-                <ol>
-                    <li>Haz clic en "Añadir Partida"</li>
-                    <li>Completa la descripción, cantidad y precio unitario</li>
-                    <li>El total se calculará automáticamente</li>
-                </ol>
-            
-                <h2>Gestión de HES</h2>
-                
-                <h3>Crear una HES</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/new-hes-form.png" alt="Formulario de nueva HES" class="help-image">
-                    <p class="image-caption">Figura 4: Formulario para crear una nueva HES</p>
-                </div>
-                <ol>
-                    <li>Selecciona el contrato asociado</li>
-                    <li>Ingresa el número de HES</li>
-                    <li>Define las fechas de inicio y fin</li>
-                    <li>Selecciona las partidas a ejecutar</li>
-                </ol>
-
-                <h3>Ejecutar Partidas en HES</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/hes-items.png" alt="Ejecución de partidas en HES" class="help-image">
-                    <p class="image-caption">Figura 5: Sección de ejecución de partidas en HES</p>
-                </div>
-                <p>Para ejecutar partidas:</p>
-                <ol>
-                    <li>Selecciona la cantidad a ejecutar</li>
-                    <li>Verifica los totales calculados</li>
-                    <li>Confirma la ejecución</li>
-                </ol>
-            
-                <h2>Seguimiento de Avances</h2>
-                
-                <h3>Avance Físico</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/physical-progress.png" alt="Vista de avance físico" class="help-image">
-                    <p class="image-caption">Figura 6: Panel de control de avance físico</p>
-                </div>
-                <p>El avance físico muestra:</p>
-                <ul>
-                    <li>Porcentaje de ejecución por partida</li>
-                    <li>Progreso global del contrato</li>
-                    <li>Gráficos de seguimiento</li>
-                </ul>
-
-                <h3>Avance Financiero</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/financial-progress.png" alt="Vista de avance financiero" class="help-image">
-                    <p class="image-caption">Figura 7: Panel de control de avance financiero</p>
-                </div>
-                <p>El avance financiero incluye:</p>
-                <ul>
-                    <li>Monto ejecutado vs. total</li>
-                    <li>Desglose por HES</li>
-                    <li>Proyecciones financieras</li>
-                </ul>
-            
-                <h2>Reportes</h2>
-                
-                <h3>Generar Reportes</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/reports-menu.png" alt="Menú de reportes" class="help-image">
-                    <p class="image-caption">Figura 8: Menú de opciones de reportes</p>
-                </div>
-                <p>Tipos de reportes disponibles:</p>
-                <ul>
-                    <li>Reporte de contrato individual</li>
-                    <li>Resumen de HES</li>
-                    <li>Avances físicos y financieros</li>
-                    <li>Estadísticas globales</li>
-                </ul>
-
-                <h3>Exportar Reportes</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/export-options.png" alt="Opciones de exportación" class="help-image">
-                    <p class="image-caption">Figura 9: Opciones de exportación de reportes</p>
-                </div>
-                <p>Formatos de exportación:</p>
-                <ul>
-                    <li>Excel (.xlsx)</li>
-                    <li>PDF</li>
-                    <li>Imagen (.png)</li>
-                </ul>
-            
-                <h2>Papelera de Reciclaje</h2>
-                
-                <h3>Gestionar Elementos Eliminados</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/recycle-bin.png" alt="Papelera de reciclaje" class="help-image">
-                    <p class="image-caption">Figura 10: Vista de la papelera de reciclaje</p>
-                </div>
-                <p>En la papelera puedes:</p>
-                <ul>
-                    <li>Ver elementos eliminados</li>
-                    <li>Restaurar contratos o HES</li>
-                    <li>Eliminar permanentemente</li>
-                </ul>
-            </section>
-        </main>
-    </div>
-
-    <footer class="footer text-center py-3">
-        <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
-        <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

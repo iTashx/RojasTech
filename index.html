@@ -249,6 +249,11 @@
                                 <small class="text-muted" id="adjuntar-archivos-info">Ningún archivo seleccionado</small>
                                 <div id="archivos-contrato" class="mt-2"></div>
                             </div>
+                            <div class="form-group">
+                                <label for="diasExtension">Días de Extensión</label>
+                                <input type="number" class="form-control" id="diasExtension" name="diasExtension" min="0">
+                                <small class="form-text text-muted">Número de días a extender la fecha de terminación</small>
+                            </div>
                         </div>
 
                         <h3 class="mt-4">Partidas del Contrato</h3>
@@ -458,12 +463,19 @@
                         <div class="row g-3 mt-4">
                             <div class="col-md-4">
                                 <label for="hes-subtotal" class="form-label">Sub Total HES:</label>
-                                <input type="number" id="hes-subtotal" class="form-control" step="0.01" value="0.00" readonly>
+                                <input type="number" class="form-control" id="hes-subtotal" step="0.01" value="0.00" readonly>
                             </div>
                             <div class="col-md-4">
-                                <label for="hes-gastos-administrativos" class="form-label">5% Gastos Administrativos:</label>
-                                <input type="number" id="hes-gastos-administrativos" class="form-control" step="0.01" value="0.00" readonly>
+                                <label for="hes-gastos-administrativos-percentage" class="form-label">% Gastos Administrativos:</label>
+                                <input type="number" class="form-control" id="hes-gastos-administrativos-percentage" step="0.01" value="5.00">
                             </div>
+                            <div class="col-md-4">
+                                <label for="hes-gastos-administrativos" class="form-label">Monto Gastos Administrativos:</label>
+                                <input type="number" class="form-control" id="hes-gastos-administrativos" step="0.01" value="0.00" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-4">
                             <div class="col-md-4">
                                 <label for="hes-total" class="form-label">Total HES:</label>
                                 <input type="number" id="hes-total" class="form-control" step="0.01" value="0.00" readonly>
@@ -686,6 +698,32 @@
                                         </thead>
                                         <tbody id="report-hes-partidas-body"></tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="mt-5">Gestión de Datos de la Base de Datos</h3>
+                        <div class="card p-3">
+                            <p>Exporta o importa la base de datos completa. Usa la importación para restaurar datos o fusionar información.</p>
+                            <div class="button-group">
+                                <button class="btn btn-primary" id="export-db-btn"><i class="fas fa-download me-2"></i> Exportar Base de Datos</button>
+                                <button class="btn btn-secondary ms-2" id="import-db-btn"><i class="fas fa-upload me-2"></i> Importar Base de Datos</button>
+                                <input type="file" id="import-db-file-input" style="display: none;">
+                            </div>
+                        </div>
+
+                        <h3 class="mt-5">Configuración del Sistema</h3>
+                        <div class="card p-3">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="dias-alerta-vencimiento" class="form-label">Días de Alerta para Vencimiento de Contratos:</label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="dias-alerta-vencimiento" min="1" max="365" value="20">
+                                        <button class="btn btn-primary" id="guardar-dias-alerta-btn">
+                                            <i class="fas fa-save me-2"></i> Guardar
+                                        </button>
+                                    </div>
+                                    <small class="text-muted">Número de días antes del vencimiento para mostrar alertas de contratos.</small>
                                 </div>
                             </div>
                         </div>
