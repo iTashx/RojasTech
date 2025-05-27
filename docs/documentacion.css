@@ -27,9 +27,9 @@
     --help-primary: #2c3e50;
     --help-secondary: #34495e;
     --help-accent: #3498db;
-    --help-background: #f8f9fa;
     --help-text: #2c3e50;
-    --help-border: #e9ecef;
+    --help-background: #f8f9fa;
+    --help-border: #dee2e6;
 }
 
 * {
@@ -37,11 +37,11 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--help-background);
+    color: var(--help-text);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -308,38 +308,20 @@ footer a:hover {
 
 /* --- Help/Documentation Layout --- */
 .help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr; /* Adjust sidebar width as needed */
-    min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    min-height: calc(100vh - 200px);
 }
 
 .help-nav {
-    background-color: var(--help-primary);
-    color: white;
-    padding: var(--spacing-md);
-    position: fixed; /* Fixed sidebar */
-    width: 250px; /* Same as grid template */
-    height: 100vh; /* Full height */
-    overflow-y: auto; /* Scrollable if content overflows */
-}
-
-.help-nav-header {
-    text-align: center;
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 1px solid var(--help-secondary);
-}
-
-.help-nav-header h1 {
-    margin: 0;
-    font-size: 1.8em;
-    color: white;
-}
-
-.help-nav-header p {
-    margin: 0;
-    font-size: 1em;
-    color: rgba(255, 255, 255, 0.7);
+    width: 250px;
+    background-color: var(--help-secondary);
+    padding: 1rem;
+    position: fixed;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 
 .help-nav ul {
@@ -358,74 +340,66 @@ footer a:hover {
     display: block;
     padding: 0.5rem;
     border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 .help-nav a:hover {
-    background-color: var(--help-secondary);
+    background-color: var(--help-accent);
 }
 
 .help-content {
-    margin-left: 250px; /* Same as sidebar width */
-    padding: var(--spacing-md) var(--spacing-lg);
-    max-width: 1200px; /* Optional: set max width for content */
+    flex: 1;
+    margin-left: 270px;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* --- Section Styles --- */
 .help-section {
     margin-bottom: 2rem;
-    background-color: white; /* Use white background for sections */
-    padding: var(--spacing-md);
-    border-radius: var(--help-radius); /* Use help-specific radius */
-    box-shadow: var(--help-shadow); /* Use help-specific shadow */
 }
 
-.help-section h2 {
-    color: var(--help-primary); /* Use help-specific primary color for headings */
-    margin-bottom: 1rem;
-    font-size: 1.8rem;
+.section-title {
+    border-bottom: 2px solid var(--help-accent);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    color: var(--help-primary);
 }
 
-.help-section h3 {
-    color: var(--help-secondary); /* Use help-specific secondary color for subheadings */
-    margin: 1.5rem 0 1rem; /* Adjust margins as needed */
-    font-size: 1.4rem;
+h2 {
+    margin-top: 20px;
+    color: var(--help-primary);
 }
 
-.help-section p {
-    margin-bottom: 1rem;
+/* Código y ejemplos */
+.help-code {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    border: 1px solid var(--help-border);
 }
 
-.help-section ul,
-.help-section ol {
-    margin: 1rem 0;
-    padding-left: 2rem;
-}
-
-.help-section li {
-    margin-bottom: 0.5rem;
-    /* You might want to add a custom list style */
-}
-
-/* --- Image Styles --- */
+/* Imágenes */
 .help-image-container {
-    text-align: center; /* Center images */
     margin: 1rem 0;
+    text-align: center;
 }
 
 .help-image {
     max-width: 100%;
     height: auto;
-    border: 1px solid var(--help-border);
     border-radius: 4px;
-    box-shadow: var(--help-shadow);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .image-caption {
-    display: block;
-    text-align: center;
-    font-size: 0.9em;
-    color: var(--light-text-color);
+    font-style: italic;
+    color: #666;
     margin-top: 0.5rem;
 }
 
@@ -446,17 +420,6 @@ footer a:hover {
     padding: 1rem;
     margin: 1rem 0;
     border-radius: 4px;
-}
-
-/* Code Blocks */
-.help-code {
-    background-color: #f8f9fa; /* Light gray */
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    padding: 1rem;
-    font-family: monospace; /* Monospaced font */
-    overflow-x: auto; /* Horizontal scroll for long lines */
-    margin: 1rem 0;
 }
 
 /* Tables */
@@ -529,20 +492,18 @@ footer a:hover {
 /* --- Responsive Styles for Help/Documentation --- */
 @media (max-width: 768px) {
     .help-container {
-        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+        flex-direction: column;
     }
 
     .help-nav {
-        position: relative; /* Static position on smaller screens */
-        width: 100%; /* Full width */
+        position: static;
+        width: 100%;
+        height: auto;
         margin-bottom: 1rem;
-        height: auto; /* Auto height */
-        overflow-y: visible; /* Remove scroll */
     }
 
     .help-content {
-        margin-left: 0; /* No margin on smaller screens */
-        padding: var(--spacing-md);
+        margin-left: 0;
     }
 }
 
@@ -560,4 +521,35 @@ footer a:hover {
 
 .help-section {
     animation: fadeIn 0.5s ease-out;
+}
+
+/* Header */
+.help-header {
+    background-color: var(--help-primary);
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.help-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--help-primary);
+    color: white;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
 } 
