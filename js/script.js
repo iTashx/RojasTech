@@ -1970,10 +1970,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- SLIDER/CARRUSEL EN RESUMEN GENERAL ---
     async function renderContractsSlider() {
         try {
-            console.log("Renderizando carrusel de contratos..."); // Log para depuración
+        console.log("Renderizando carrusel de contratos..."); // Log para depuración
             
             // Verificar si el elemento del carrusel existe
-            const sliderInner = document.getElementById('contracts-slider-inner');
+        const sliderInner = document.getElementById('contracts-slider-inner');
             if (!sliderInner) {
                 console.error("Elemento del carrusel no encontrado");
                 return;
@@ -1986,21 +1986,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            const contracts = await db.contracts.toArray();
-            console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
+        const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length); // Log para depuración
             
-            sliderInner.innerHTML = '';
+        sliderInner.innerHTML = '';
             
-            if (contracts.length === 0) {
-                sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
                 
-                // Ocultar controles si no hay contratos
+            // Ocultar controles si no hay contratos
                 const prevControl = document.querySelector('.carousel-control-prev');
                 const nextControl = document.querySelector('.carousel-control-next');
                 if (prevControl) prevControl.style.display = 'none';
                 if (nextControl) nextControl.style.display = 'none';
                 
-                // Limpiar resumen si no hay contratos
+            // Limpiar resumen si no hay contratos
                 const elements = {
                     'total-contract-amount': 'USD 0.00',
                     'contracts-expiry-list': '<li>No hay contratos próximos a vencer</li>',
@@ -2024,34 +2024,35 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Mostrar controles si hay contratos
+        // Mostrar controles si hay contratos
             const prevControl = document.querySelector('.carousel-control-prev');
             const nextControl = document.querySelector('.carousel-control-next');
             if (prevControl) prevControl.style.display = '';
             if (nextControl) nextControl.style.display = '';
 
             // Crear slides para cada contrato
-            contracts.forEach((contract, idx) => {
-                const isActive = idx === 0 ? 'active' : '';
-                const card = document.createElement('div');
-                card.className = `carousel-item ${isActive}`;
-                card.innerHTML = `
-                    <div class="card">
-                        <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
-                        <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
-                        <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
-                        <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
-                        <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
-                        <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
-                    </div>
-                `;
-                sliderInner.appendChild(card);
-            });
+        contracts.forEach((contract, idx) => {
+            const isActive = idx === 0 ? 'active' : '';
+            const card = document.createElement('div');
+            card.className = `carousel-item ${isActive}`;
+            card.innerHTML = `
+                <div class="card">
+                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                </div>
+            `;
+            sliderInner.appendChild(card);
+        });
 
             // Actualizar resumen para el primer contrato
-            if (contracts.length > 0) {
+        if (contracts.length > 0) {
                 console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id);
                 await updateSummaryByContract(contracts[0]);
+                renderFinancialTimeline(contracts[0]);
             }
 
             // Inicializar el carrusel de Bootstrap
@@ -3241,6 +3242,243 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Asegurarse de que el carrusel se inicialice DESPUÉS de que los datos se carguen
     updateSummaryCards(); // <-- Ahora dentro del listener
     renderContractsSlider(); // <-- Ahora dentro del listener
+
+    // Sistema de Notificaciones
+    let notifications = [];
+
+    function addNotification(title, message, type = 'info') {
+        const notification = {
+            id: Date.now(),
+            title,
+            message,
+            type,
+            timestamp: new Date(),
+            read: false
+        };
+        
+        notifications.unshift(notification);
+        updateNotificationBadge();
+        renderNotifications();
+        saveNotifications();
+    }
+
+    function updateNotificationBadge() {
+        const unreadCount = notifications.filter(n => !n.read).length;
+        const badge = document.getElementById('notificationCount');
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+
+    function renderNotifications() {
+        const list = document.getElementById('notificationList');
+        list.innerHTML = '';
+        
+        notifications.forEach(notification => {
+            const li = document.createElement('li');
+            li.className = `notification-item ${notification.read ? 'read' : ''}`;
+            
+            const iconClass = getNotificationIcon(notification.type);
+            
+            li.innerHTML = `
+                <div class="notification-icon ${notification.type}">
+                    <i class="fas ${iconClass}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatNotificationTime(notification.timestamp)}</div>
+                </div>
+            `;
+            
+            li.addEventListener('click', () => markNotificationAsRead(notification.id));
+            list.appendChild(li);
+        });
+    }
+
+    function getNotificationIcon(type) {
+        switch(type) {
+            case 'error': return 'fa-exclamation-circle';
+            case 'warning': return 'fa-exclamation-triangle';
+            case 'success': return 'fa-check-circle';
+            default: return 'fa-info-circle';
+        }
+    }
+
+    function formatNotificationTime(timestamp) {
+        const now = new Date();
+        const diff = now - timestamp;
+        
+        if (diff < 60000) return 'Hace un momento';
+        if (diff < 3600000) return `Hace ${Math.floor(diff/60000)} minutos`;
+        if (diff < 86400000) return `Hace ${Math.floor(diff/3600000)} horas`;
+        return timestamp.toLocaleDateString();
+    }
+
+    function markNotificationAsRead(id) {
+        const notification = notifications.find(n => n.id === id);
+        if (notification) {
+            notification.read = true;
+            updateNotificationBadge();
+            saveNotifications();
+        }
+    }
+
+    function clearNotifications() {
+        notifications = [];
+        updateNotificationBadge();
+        renderNotifications();
+        saveNotifications();
+    }
+
+    function saveNotifications() {
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+    }
+
+    function loadNotifications() {
+        const saved = localStorage.getItem('notifications');
+        if (saved) {
+            notifications = JSON.parse(saved);
+            updateNotificationBadge();
+            renderNotifications();
+        }
+    }
+
+    // Línea de Tiempo Financiera
+    function renderFinancialTimeline(contract) {
+        const timeline = document.getElementById('financial-timeline');
+        timeline.innerHTML = '';
+        
+        if (!contract) return;
+        
+        const totalAmount = contract.montoTotalContrato;
+        const steps = 5; // Número de marcadores en la línea de tiempo
+        const stepAmount = totalAmount / (steps - 1);
+        
+        for (let i = 0; i < steps; i++) {
+            const amount = i * stepAmount;
+            const percentage = (i / (steps - 1)) * 100;
+            
+            const marker = document.createElement('div');
+            marker.className = 'timeline-marker';
+            marker.style.left = `${percentage}%`;
+            
+            const label = document.createElement('div');
+            label.className = 'timeline-label';
+            label.textContent = formatMonto(amount);
+            
+            marker.appendChild(label);
+            timeline.appendChild(marker);
+        }
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        loadNotifications();
+        
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const clearNotificationsBtn = document.getElementById('clearNotifications');
+        
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('show');
+        });
+        
+        clearNotificationsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearNotifications();
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!notificationDropdown.contains(e.target) && !notificationBell.contains(e.target)) {
+                notificationDropdown.classList.remove('show');
+            }
+        });
+    });
+
+    // Modificar la función renderContractsSlider para incluir la línea de tiempo
+    async function renderContractsSlider() {
+        console.log("Renderizando carrusel de contratos...");
+        const sliderInner = document.getElementById('contracts-slider-inner');
+        const contracts = await db.contracts.toArray();
+        console.log("Contratos cargados para carrusel:", contracts.length);
+        
+        sliderInner.innerHTML = '';
+        
+        if (contracts.length === 0) {
+            sliderInner.innerHTML = '<div class="carousel-item active"><div class="card"><h3>No hay contratos activos</h3><p>Registra nuevos contratos para ver el resumen aquí.</p></div></div>';
+            document.querySelector('.carousel-control-prev').style.display = 'none';
+            document.querySelector('.carousel-control-next').style.display = 'none';
+            document.getElementById('total-contract-amount').textContent = 'USD 0.00';
+            document.getElementById('contracts-expiry-list').innerHTML = '<li>No hay contratos próximos a vencer</li>';
+            document.getElementById('financial-progress-bar').style.width = '0%';
+            document.getElementById('financial-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('financial-progress-label').textContent = '0%';
+            document.getElementById('physical-progress-bar').style.width = '0%';
+            document.getElementById('physical-progress-bar').setAttribute('aria-valuenow', 0);
+            document.getElementById('physical-progress-label').textContent = '0%';
+            return;
+        }
+        
+        // Mostrar controles si hay contratos
+        document.querySelector('.carousel-control-prev').style.display = '';
+        document.querySelector('.carousel-control-next').style.display = '';
+        
+        // Crear slides para cada contrato
+        contracts.forEach((contract, idx) => {
+            const isActive = idx === 0 ? 'active' : '';
+            const card = document.createElement('div');
+            card.className = `carousel-item ${isActive}`;
+            card.innerHTML = `
+                <div class="card">
+                    <h3>${contract.numeroSICAC || contract.numeroProveedor || 'Sin Nombre'}</h3>
+                    <p><strong>N° Proveedor:</strong> ${contract.numeroProveedor || '-'}</p>
+                    <p><strong>N° SICAC:</strong> ${contract.numeroSICAC || '-'}</p>
+                    <p><strong>Monto:</strong> USD ${formatMonto(contract.montoTotalContrato)}</p>
+                    <p><strong>Fecha Inicio:</strong> ${contract.fechaInicio || '-'}</p>
+                    <p><strong>Estatus:</strong> ${contract.estatusContrato || '-'}</p>
+                </div>
+            `;
+            sliderInner.appendChild(card);
+        });
+        
+        // Actualizar resumen para el primer contrato
+        if (contracts.length > 0) {
+            console.log("Actualizando resumen para el primer contrato en carrusel:", contracts[0].id);
+            await updateSummaryByContract(contracts[0]);
+            renderFinancialTimeline(contracts[0]);
+        }
+        
+        // Inicializar el carrusel de Bootstrap
+        const sliderElement = document.getElementById('contracts-slider');
+        if (sliderElement && contracts.length > 0) {
+            try {
+                const carousel = new bootstrap.Carousel(sliderElement, { 
+                    interval: false,
+                    wrap: true
+                });
+                
+                // Agregar evento para actualizar el resumen cuando cambie el slide
+                sliderElement.addEventListener('slid.bs.carousel', async (event) => {
+                    const activeIndex = event.to;
+                    const activeContract = contracts[activeIndex];
+                    await updateSummaryByContract(activeContract);
+                    renderFinancialTimeline(activeContract);
+                });
+                
+                console.log("Carrusel de Bootstrap inicializado correctamente");
+            } catch (error) {
+                console.error("Error al inicializar el carrusel:", error);
+                addNotification(
+                    "Error en el Carrusel",
+                    "No se pudo inicializar el carrusel de contratos. Por favor, recarga la página.",
+                    "error"
+                );
+            }
+        }
+    }
+
+    // ... existing code ...
 
 }); // Cierre del event listener DOMContentLoaded (Asegúrate que este es el ÚNICO }}); al final)
 

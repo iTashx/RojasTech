@@ -20,18 +20,37 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js"></script>
     </head>
     <body>
-        <header class="header bg-light-blue"> <div class="container-fluid">
-                <div class="d-flex justify-content-between align-items-center py-3">
-                    <div class="logo d-flex align-items-center">
-                        <i class="fas fa-file-contract me-2"></i>
-                        <h1 class="mb-0">Gestión de Contratos Empresariales</h1>
+        <header>
+            <div class="header-left">
+                <a href="ayuda.html" class="btn btn-outline-light">
+                    <i class="fas fa-question-circle"></i> Ayuda
+                </a>
+            </div>
+            
+            <div class="header-center">
+                <h1><i class="fas fa-file-contract"></i> Sistema de Gestión de Contratos</h1>
+            </div>
+            
+            <div class="header-right">
+                <a href="docs/documentacion.html" class="btn btn-outline-light">
+                    <i class="fas fa-book"></i> Documentación
+                </a>
+                
+                <div class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">0</span>
+                    
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notificaciones</h3>
+                            <button class="btn btn-sm btn-outline-secondary" id="clearNotifications">
+                                <i class="fas fa-trash"></i> Limpiar
+                            </button>
+                        </div>
+                        <ul class="notification-list" id="notificationList">
+                            <!-- Las notificaciones se agregarán dinámicamente aquí -->
+                        </ul>
                     </div>
-                    <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
-                        <i class="fas fa-question-circle me-2"></i> Ayuda
-                    </a>
-                    <a href="docs/documentacion.html" target="_blank" class="btn btn-secondary ms-2">
-                        <i class="fas fa-book me-2"></i> Documentación
-                    </a>
                 </div>
             </div>
         </header>
