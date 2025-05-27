@@ -10,7 +10,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         archivos: '++id,entidadId,entidadTipo,nombre,tipo,tamano,fechaModificacion,contenido'
     });
 
-    // ... existing code ...
+    try {
+        await db.open();
+        console.log("Base de datos abierta exitosamente.");
+        // seedDatabase(); // Habilitar para cargar datos de prueba al inicio
+
+    } catch (err) {
+        console.error("Error al abrir la base de datos:", err);
+        showToast("Error al cargar la base de datos local. " + err.message, "error");
+        return;
+    }
 
     // --- Elementos del DOM ---
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -397,6 +406,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     contractForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        // Deshabilitar el botón para evitar múltiples clics
+        saveContractBtn.disabled = true;
+
         const contractData = {
             numeroProveedor: document.getElementById('numero-proveedor').value,
             fechaFirmaContrato: document.getElementById('fecha-firma-contrato').value,
@@ -460,11 +472,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!contractData.numeroProveedor || !contractData.fechaFirmaContrato || !contractData.fechaInicio || !contractData.fechaTerminacion) {
             showToast("Por favor, complete los campos obligatorios: N° Proveedor, Fecha Firma, Fecha Inicio y Fecha Terminación.", "warning");
+            saveContractBtn.disabled = false; // Habilitar si falla la validación inicial
             return;
         }
 
         try {
-            console.log("Intentando guardar/actualizar contrato en Dexie con datos:", cleanedContractData); // Log de depuración
             let contractId;
             if (currentContractId) {
                 console.log("Operación: Actualizar", currentContractId);
@@ -477,7 +489,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const existingContract = await db.contracts.where({ numeroSICAC: contractData.numeroSICAC }).first();
                     if (existingContract) {
                         showToast(`Ya existe un contrato con el N° SICAC: ${contractData.numeroSICAC}. Por favor, edite el contrato existente o use otro número.`, "error");
-                        return; // Detener el proceso si hay duplicado
+                        saveContractBtn.disabled = false; // Habilitar si hay duplicado de SICAC
+                        return;
                     }
                 }
                 console.log("Operación: Añadir nuevo\n");
@@ -524,6 +537,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.log("Se ha capturado un error al guardar/actualizar el contrato:", error);
             showToast("Ocurrió un error al guardar/actualizar el contrato.", "error");
+        } finally {
+            // Habilitar el botón al finalizar (éxito, error o validación fallida)
+            saveContractBtn.disabled = false;
         }
     });
 
