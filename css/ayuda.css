@@ -1,166 +1,304 @@
-/* --- Estilos específicos para la página de ayuda (ayuda.html) --- */
+/* ayuda.css */
 
-/* Contenedor principal de la ayuda */
-.help-wrapper {
-    max-width: 1000px;
-    margin: 30px auto; /* Centra el contenido y da espacio arriba/abajo */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    position: relative;
+/* Importación de fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Roboto :wght@300;400;700&display=swap');
+
+/* Variables CSS */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --accent-color: #FFC107;
+    --danger-color: #F44336;
+    --success-color: #4CAF50;
+    --info-color: #03A9F4;
+    --background-color: #f0f2f5;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --light-text-color: #666;
+    --border-color: #ddd;
+    --header-bg: #3f51b5;
+
+    --spacing-xs: 5px;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+
+    --border-radius: 8px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Encabezado de la página de ayuda */
-.help-header {
-    background-color: #007bff; /* Azul primario */
-    color: white;
-    padding: 20px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    /* Ajusta para que ocupe todo el ancho de la tarjeta sin desbordar el redondeado */
-    margin: -20px -20px 20px -20px;
-    text-align: center;
+* {
+    box-sizing: border-box;
 }
 
-.help-header h1 {
+body {
+    font-family: 'Roboto', sans-serif;
     margin: 0;
-    font-size: 2.2rem;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-/* Secciones individuales de ayuda */
-.help-section {
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px dashed #eee; /* Línea divisoria suave */
-}
-
-/* La última sección no lleva borde inferior */
-.help-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-/* Títulos de sección (ej. "Paneles Principales") */
-.help-section h2 {
-    color: #007bff; /* Azul primario */
-    font-size: 1.8rem;
-    margin-top: 0;
-    margin-bottom: 15px;
-    padding-left: 10px;
-    border-left: 5px solid #007bff; /* Borde izquierdo distintivo */
-}
-
-/* Subtítulos de sección (ej. "Creación y Edición de Contratos") */
-.help-section h3 {
-    color: #0056b3; /* Azul más oscuro para subtítulos */
-    font-size: 1.4rem;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-/* Párrafos y elementos de lista generales */
-.help-section p, .help-section ul, .help-section ol {
-    font-size: 1.05rem;
-    color: #555;
-    margin-bottom: 10px;
-    padding-left: 5px; /* Pequeña indentación */
-}
-
-/* Listas sin ordenar */
-.help-section ul {
-    list-style-type: disc; /* Puntos */
-    margin-left: 30px;
-    margin-bottom: 20px;
-}
-
-/* Listas ordenadas */
-.help-section ol {
-    list-style-type: decimal; /* Números */
-    margin-left: 30px;
-    margin-bottom: 20px;
-}
-
-/* Elementos individuales de lista */
-.help-section ul li, .help-section ol li {
-    margin-bottom: 8px;
-}
-
-/* Estilo para código en línea (ej. `variable`) */
-.help-section code {
-    background-color: #f0f0f0; /* Fondo gris claro */
-    padding: 2px 5px;
-    border-radius: 4px;
-    font-family: 'Consolas', monospace; /* Fuente monoespaciada */
-    font-size: 0.95rem;
-}
-
-/* Contenedor del botón de volver */
-.back-button-container {
-    text-align: center;
-    margin-top: 40px;
-}
-
-/* Estilo para el botón de volver */
-.back-button {
-    display: inline-block; /* Para aplicar padding y gap */
-    background-color: #6c757d; /* Gris secundario */
+header {
+    background-color: var(--header-bg);
     color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    text-decoration: none; /* Elimina el subrayado por defecto */
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-    display: inline-flex; /* Para alinear ícono y texto */
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px; /* Espacio entre ícono y texto */
+    box-shadow: var(--box-shadow);
+    flex-wrap: wrap;
 }
 
-.back-button:hover {
-    background-color: #5a6268; /* Tono más oscuro al pasar el mouse */
+header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
 }
 
-/* Iconos dentro de las secciones de ayuda */
-.help-section .fas {
-    margin-right: 5px; /* Espacio a la derecha del icono */
-    color: #007bff; /* Color azul primario para los iconos */
+header h1 .fas {
+    margin-right: var(--spacing-sm);
 }
 
-/* Media Queries para responsividad en ayuda.html */
+.header-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+main {
+    flex-grow: 1;
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card {
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
+}
+
+.card h2 {
+    color: var(--header-bg);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+}
+
+.card h2 .fas {
+    margin-right: var(--spacing-sm);
+}
+
+.card h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+}
+
+.card h3 .fas {
+    margin-right: var(--spacing-xs);
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.card ul, .card ol {
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+}
+
+.card ul li, .card ol li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--light-text-color);
+}
+
+.card ul li strong, .card ol li strong {
+    color: var(--text-color);
+}
+
+/* Botones */
+.primary-btn,
+.success-btn,
+.danger-btn,
+.secondary-btn,
+.excel-btn,
+.pdf-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.primary-btn {
+    background-color: var(--secondary-color);
+}
+.primary-btn:hover {
+    background-color: #1976D2;
+    transform: translateY(-1px);
+}
+
+.success-btn {
+    background-color: var(--success-color);
+}
+.success-btn:hover {
+    background-color: #388E3C;
+    transform: translateY(-1px);
+}
+
+.danger-btn {
+    background-color: var(--danger-color);
+}
+.danger-btn:hover {
+    background-color: #D32F2F;
+    transform: translateY(-1px);
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+    color: white;
+}
+.secondary-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.excel-btn {
+    background-color: #28a745;
+}
+.excel-btn:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.pdf-btn {
+    background-color: #dc3545;
+}
+.pdf-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.small-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.85em;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* Toast */
+.toast {
+    display: inline-block;
+    background-color: var(--header-bg);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+    box-shadow: var(--box-shadow);
+    vertical-align: middle;
+    margin: 0 var(--spacing-xs);
+}
+
+.toast.show {
+    opacity: 1;
+    animation: fadeSlideIn 0.3s ease forwards;
+}
+
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer */
+footer {
+    background-color: var(--header-bg);
+    color: white;
+    text-align: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: 0.9em;
+    margin-top: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-text {
+    margin-top: 5px;
+    display: block;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .help-wrapper {
-        margin: 20px 15px; /* Menos margen lateral en móviles */
-        padding: 15px;
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-md) var(--spacing-sm);
     }
-    .help-header h1 {
-        font-size: 1.8rem;
+
+    .header-buttons {
+        margin-top: var(--spacing-sm);
     }
-    .help-section h2 {
-        font-size: 1.5rem;
-    }
-    .help-section h3 {
-        font-size: 1.2rem;
-    }
-    .help-section p, .help-section ul, .help-section ol {
-        font-size: 1rem;
-    }
-    .back-button {
-        padding: 10px 20px;
-        font-size: 0.9rem;
+
+    main {
+        padding: var(--spacing-sm);
     }
 }
 
 @media (max-width: 480px) {
-    .help-header h1 {
-        font-size: 1.6rem;
+    header h1 {
+        font-size: 1.5em;
     }
-    .help-section h2 {
-        font-size: 1.3rem;
+
+    .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: var(--spacing-sm);
     }
-    .help-section h3 {
-        font-size: 1.1rem;
+
+    .small-btn {
+        font-size: 0.75em;
+        display: inline-block;
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
-    .help-section ul, .help-section ol {
-        margin-left: 20px; /* Reducir indentación de listas */
+
+    .card h2 {
+        font-size: 1.3em;
+    }
+
+    .card h3 {
+        font-size: 1.1em;
+    }
+
+    .card ul, .card ol {
+        padding-left: var(--spacing-md);
     }
 }
