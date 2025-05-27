@@ -1,0 +1,162 @@
+DIVISIÓN DEL SCRIPT.JS EN MÓDULOS
+================================
+
+1. MÓDULOS DE CONTRATOS
+-----------------------
+js/modules/contracts/
+├── ContractManager.js    # Gestión principal de contratos
+├── ContractForm.js      # Manejo del formulario de contratos
+├── ContractList.js      # Lista y filtrado de contratos
+├── ContractPartidas.js  # Gestión de partidas de contratos
+└── ContractValidation.js # Validaciones de contratos
+
+Funcionalidades:
+- Creación/edición de contratos
+- Listado y filtrado
+- Gestión de partidas
+- Validaciones
+- Cálculos de montos
+
+2. MÓDULOS DE HES
+----------------
+js/modules/hes/
+├── HesManager.js        # Gestión principal de HES
+├── HesForm.js          # Manejo del formulario de HES
+├── HesList.js          # Lista y filtrado de HES
+├── HesPartidas.js      # Gestión de partidas de HES
+└── HesValidation.js    # Validaciones de HES
+
+Funcionalidades:
+- Creación/edición de HES
+- Listado y filtrado
+- Gestión de partidas
+- Validaciones
+- Cálculos de avances
+
+3. MÓDULOS DE AVANCES
+--------------------
+js/modules/advances/
+├── PhysicalAdvance.js   # Avance físico
+├── FinancialAdvance.js  # Avance financiero
+├── AdvanceCalculations.js # Cálculos de avances
+└── AdvanceExport.js     # Exportación de avances
+
+Funcionalidades:
+- Cálculos de avances
+- Visualización de progreso
+- Exportación de datos
+- Gráficos de avance
+
+4. MÓDULOS DE REPORTES
+---------------------
+js/modules/reports/
+├── ReportGenerator.js   # Generación de reportes
+├── ExcelExport.js      # Exportación a Excel
+├── PdfExport.js        # Exportación a PDF
+└── ReportConfig.js     # Configuración de reportes
+
+Funcionalidades:
+- Generación de reportes
+- Exportación a diferentes formatos
+- Configuración del sistema
+- Personalización de reportes
+
+5. MÓDULOS DE GRÁFICOS
+---------------------
+js/modules/charts/
+├── ChartManager.js     # Gestión de gráficos
+├── ContractCharts.js   # Gráficos de contratos
+├── HesCharts.js        # Gráficos de HES
+└── ChartExport.js      # Exportación de gráficos
+
+Funcionalidades:
+- Creación de gráficos
+- Visualizaciones
+- Exportación
+- Personalización
+
+6. MÓDULOS DE ARCHIVOS
+---------------------
+js/modules/files/
+├── FileManager.js      # Gestión de archivos
+├── FileUpload.js       # Subida de archivos
+├── FileDownload.js     # Descarga de archivos
+└── FileValidation.js   # Validación de archivos
+
+Funcionalidades:
+- Subida de archivos
+- Descarga de archivos
+- Validación de tipos
+- Manejo de almacenamiento
+
+7. MÓDULOS DE VALIDACIÓN
+-----------------------
+js/modules/validation/
+├── FormValidation.js   # Validación de formularios
+├── DataValidation.js   # Validación de datos
+└── ErrorHandler.js     # Manejo de errores
+
+Funcionalidades:
+- Validación de formularios
+- Validación de datos
+- Manejo de errores
+- Mensajes de error
+
+8. MÓDULOS DE CONFIGURACIÓN
+--------------------------
+js/modules/config/
+├── SystemConfig.js     # Configuración del sistema
+├── UserPreferences.js  # Preferencias de usuario
+└── Constants.js        # Constantes del sistema
+
+Funcionalidades:
+- Configuración general
+- Preferencias de usuario
+- Constantes del sistema
+- Ajustes de la aplicación
+
+9. MÓDULOS DE UTILIDADES
+-----------------------
+js/modules/utils/
+├── DateUtils.js        # Utilidades de fechas
+├── NumberUtils.js      # Utilidades de números
+├── StringUtils.js      # Utilidades de texto
+└── FormatUtils.js      # Utilidades de formato
+
+Funcionalidades:
+- Formateo de fechas
+- Formateo de números
+- Manipulación de texto
+- Funciones de utilidad
+
+10. MÓDULO PRINCIPAL
+------------------
+js/main.js
+
+Funcionalidades:
+- Inicialización de la aplicación
+- Carga de módulos
+- Coordinación entre módulos
+- Manejo de eventos globales
+
+BENEFICIOS DE ESTA ESTRUCTURA
+---------------------------
+1. Mejor organización del código
+2. Más fácil de mantener
+3. Mejor rendimiento
+4. Más fácil de depurar
+5. Mejor reutilización de código
+6. Más fácil de testear
+7. Mejor escalabilidad
+8. Mejor colaboración en equipo
+
+PROCESO DE MIGRACIÓN
+------------------
+1. Crear la estructura de carpetas
+2. Mover el código a los módulos correspondientes
+3. Actualizar las importaciones/exportaciones
+4. Probar cada módulo individualmente
+5. Integrar los módulos
+6. Probar la aplicación completa
+7. Optimizar el rendimiento
+8. Documentar los cambios 

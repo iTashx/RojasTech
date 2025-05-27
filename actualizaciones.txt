@@ -1,0 +1,47 @@
+# Registro de Actualizaciones - SIGESCON
+
+## Última Actualización: [Fecha Actual]
+
+### 1. Sistema de Notificaciones
+- Implementado nuevo módulo SystemNotifications.js
+- Añadido sistema de filtrado de notificaciones
+- Integrado contador de notificaciones no leídas
+- Mejorada la visualización de errores y soluciones
+- Añadido soporte para temas claro/oscuro
+
+### 2. Estructura de CSS
+- Reorganización de archivos CSS por módulos:
+  - /css/core/ (estilos base)
+  - /css/modules/ (estilos específicos por módulo)
+  - /css/themes/ (temas y variables)
+  - /css/components/ (componentes reutilizables)
+
+### 3. Documentación
+- Actualizado README.md con nueva estructura
+- Mejorada guía de usuario (guia.txt)
+- Añadida documentación técnica detallada
+- Incluidos ejemplos de uso y mejores prácticas
+
+### 4. Mejoras en la Interfaz
+- Implementado sistema de pestañas mejorado
+- Añadido soporte responsive
+- Mejorada la accesibilidad
+- Optimizada la experiencia de usuario
+
+### 5. Optimizaciones
+- Mejorado el rendimiento de carga
+- Reducido el tamaño de archivos CSS
+- Implementado lazy loading para módulos
+- Optimizada la gestión de recursos
+
+### 6. Próximas Actualizaciones
+- [ ] Implementar sistema de caché
+- [ ] Mejorar la documentación de API
+- [ ] Añadir más temas personalizados
+- [ ] Optimizar la carga de recursos
+
+### Notas Importantes
+- Todos los cambios son compatibles con versiones anteriores
+- Se mantiene la retrocompatibilidad
+- Se recomienda actualizar todos los archivos CSS
+- Verificar la configuración del servidor para el nuevo sistema de caché 

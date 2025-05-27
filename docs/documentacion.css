@@ -3,26 +3,26 @@
 
 /* Variables CSS */
 :root {
-    --primary-color: #4CAF50;
-    --secondary-color: #2196F3;
+    --primary-color: #2196F3;
+    --secondary-color: #1976D2;
     --accent-color: #FFC107;
-    --danger-color: #F44336;
-    --success-color: #4CAF50;
-    --info-color: #03A9F4;
-    --background-color: #f0f2f5;
-    --card-background: #ffffff;
     --text-color: #333;
     --light-text-color: #666;
+    --background-color: #f5f5f5;
+    --card-background: #fff;
+    --header-bg: #1976D2;
     --border-color: #ddd;
-    --header-bg: #3f51b5;
-
-    --spacing-xs: 5px;
-    --spacing-sm: 10px;
-    --spacing-md: 20px;
-    --spacing-lg: 30px;
-
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #F44336;
+    --info-color: #2196F3;
     --border-radius: 8px;
-    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
 
     --help-primary: #2c3e50;
     --help-secondary: #34495e;
@@ -37,7 +37,7 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
@@ -241,10 +241,12 @@ footer {
     background-color: var(--header-bg);
     color: white;
     text-align: center;
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: 0.9em;
-    margin-top: var(--spacing-md);
-    flex-shrink: 0;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.footer-text {
+    margin: var(--spacing-xs) 0;
 }
 
 footer a {
@@ -256,21 +258,17 @@ footer a:hover {
     text-decoration: underline;
 }
 
-.footer-text {
-    margin-top: 5px;
-    display: block;
-}
-
-/* Responsive Design */
+/* Media Queries */
 @media (max-width: 768px) {
     header {
         flex-direction: column;
-        align-items: flex-start;
-        padding: var(--spacing-md) var(--spacing-sm);
+        text-align: center;
+        gap: var(--spacing-sm);
     }
 
     .header-buttons {
-        margin-top: var(--spacing-sm);
+        width: 100%;
+        justify-content: center;
     }
 
     main {
@@ -285,14 +283,11 @@ footer a:hover {
 
     .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
         width: 100%;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
+        margin: var(--spacing-xs) 0;
     }
 
     .small-btn {
-        font-size: 0.75em;
-        display: inline-block;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        width: auto;
     }
 
     .card h2 {
@@ -304,135 +299,158 @@ footer a:hover {
     }
 
     .card ul, .card ol {
-        padding-left: var(--spacing-md);
+        padding-left: var(--spacing-sm);
     }
 }
 
-/* Estilos específicos de ayuda.html */
+/* Estilos específicos para la documentación */
 .section-title {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 10px;
-    margin-bottom: 20px;
+    color: var(--help-primary);
+    border-bottom: 2px solid var(--help-accent);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
 }
 
 .feature-box {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
+    border-left: 4px solid var(--primary-color);
 }
 
-.feature-box:hover {
-    transform: translateY(-3px);
+.feature-box h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.feature-box h3 i {
+    color: var(--accent-color);
 }
 
 .code-example {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 6px;
-    font-family: monospace;
+    background-color: #f8f9fa;
+    border: 1px solid var(--help-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
     overflow-x: auto;
 }
 
 .help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
+    flex: 1;
+    margin-left: 280px;
+    padding: var(--spacing-xl);
 }
 
 .help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--card-background);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-lg);
 }
 
 .help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
+    color: var(--secondary-color);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.4em;
 }
 
-.help-section ul {
-    list-style-type: none;
-    padding-left: 20px;
+.help-section p {
+    margin-bottom: var(--spacing-md);
+    color: var(--light-text-color);
+}
+
+.help-section ul, .help-section ol {
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-lg);
 }
 
 .help-section li {
-    margin-bottom: 10px;
+    margin-bottom: var(--spacing-sm);
+    color: var(--light-text-color);
 }
 
-.help-section li:before {
-    content: "•";
-    color: #3498db;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
+.help-section li strong {
+    color: var(--text-color);
+    font-weight: 600;
 }
 
 .help-image {
     max-width: 100%;
     height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 10px 0;
+    border-radius: var(--border-radius);
+    margin: var(--spacing-md) 0;
+    box-shadow: var(--box-shadow);
+}
+
+.help-note, .help-warning {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-md);
 }
 
 .help-note {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
-    padding: 15px;
-    margin: 15px 0;
+    background-color: #E3F2FD;
+    border-left: 4px solid var(--info-color);
 }
 
-/* Estilos para la documentación de ayuda */
+.help-warning {
+    background-color: #FFF3E0;
+    border-left: 4px solid var(--warning-color);
+}
 
-/* Layout principal */
 .help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
+    display: flex;
     min-height: 100vh;
-    background-color: var(--help-background);
 }
 
-/* Navegación */
 .help-nav {
-    background-color: var(--help-primary);
-    color: white;
-    padding: 1rem;
+    width: 280px;
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    box-shadow: var(--box-shadow);
     position: fixed;
-    width: 250px;
     height: 100vh;
     overflow-y: auto;
 }
 
 .help-nav-header {
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-md);
 }
 
 .help-nav-header h1 {
-    font-size: 1.5rem;
+    color: var(--primary-color);
     margin: 0;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .help-nav-header p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin: 0.5rem 0 0;
+    color: var(--light-text-color);
+    margin: var(--spacing-xs) 0 0;
 }
 
 .help-nav ul {
@@ -442,191 +460,86 @@ footer a:hover {
 }
 
 .help-nav li {
-    margin: 0.5rem 0;
+    margin-bottom: var(--spacing-xs);
 }
 
 .help-nav a {
-    color: white;
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-color);
     text-decoration: none;
-    display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    gap: var(--spacing-sm);
 }
 
 .help-nav a:hover {
-    background-color: var(--help-accent);
+    background-color: var(--primary-color);
+    color: white;
 }
 
-/* Contenido principal */
-.help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    width: auto;
-    max-width: none;
-    margin-right: 0;
-}
-
-/* Secciones */
-.help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
-}
-
-/* Contenedor de imágenes */
-.help-image-container {
-    margin: 2rem 0;
+.help-nav a i {
+    width: 20px;
     text-align: center;
 }
 
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.help-image-container {
+    margin: var(--spacing-md) 0;
 }
 
 .image-caption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--help-secondary);
-    font-style: italic;
+    text-align: center;
+    color: var(--light-text-color);
+    font-size: 0.9em;
+    margin-top: var(--spacing-xs);
 }
 
-/* Listas */
-.help-section ul,
-.help-section ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
-}
-
-.help-section li {
-    margin: 0.5rem 0;
-    line-height: 1.5;
-}
-
-/* Notas y advertencias */
-.help-note {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.help-warning {
-    background-color: #fff3e0;
-    border-left: 4px solid #ff9800;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .help-container {
-        grid-template-columns: 1fr;
-    }
-
-    .help-nav {
-        position: static;
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-    }
-
-    .help-content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-
-    .help-section {
-        padding: 1rem;
-    }
-}
-
-/* Animaciones */
-.help-section {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Estilos para código */
 .help-code {
     background-color: #f8f9fa;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    padding: 1rem;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    overflow-x: auto;
-    margin: 1rem 0;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--border-color);
 }
 
-/* Estilos para tablas */
 .help-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
+    margin-bottom: var(--spacing-md);
 }
 
-.help-table th,
-.help-table td {
-    border: 1px solid var(--help-border);
-    padding: 0.75rem;
+.help-table th, .help-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
     text-align: left;
 }
 
 .help-table th {
-    background-color: var(--help-primary);
+    background-color: var(--primary-color);
     color: white;
 }
 
 .help-table tr:nth-child(even) {
-    background-color: var(--help-background);
+    background-color: #f8f9fa;
 }
 
-/* Estilos para botones */
 .help-button {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: var(--spacing-sm) var(--spacing-md);
     background-color: var(--help-accent);
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
     text-decoration: none;
+    border-radius: var(--border-radius);
     transition: background-color 0.3s ease;
+    margin: var(--spacing-xs) 0;
 }
 
 .help-button:hover {
     background-color: #2980b9;
 }
 
-/* Estilos para tooltips */
 .help-tooltip {
     position: relative;
     display: inline-block;
@@ -634,11 +547,12 @@ footer a:hover {
 
 .help-tooltip .tooltip-text {
     visibility: hidden;
+    width: 200px;
     background-color: var(--help-primary);
     color: white;
     text-align: center;
-    padding: 0.5rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm);
     position: absolute;
     z-index: 1;
     bottom: 125%;
@@ -652,3 +566,48 @@ footer a:hover {
     visibility: visible;
     opacity: 1;
 }
+
+.help-section {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .help-container {
+        flex-direction: column;
+    }
+
+    .help-nav {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .help-content {
+        margin-left: 0;
+        padding: var(--spacing-md);
+    }
+
+    .help-section {
+        padding: var(--spacing-md);
+    }
+
+    .help-section h2 {
+        font-size: 1.5em;
+    }
+
+    .help-section h3 {
+        font-size: 1.2em;
+    }
+} 

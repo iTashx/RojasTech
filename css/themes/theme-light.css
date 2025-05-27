@@ -1,0 +1,86 @@
+/* Tema Claro */
+:root {
+    /* Colores principales */
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+
+    /* Colores de texto */
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+    --text-dark: #343a40;
+
+    /* Colores de fondo */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-dark: #343a40;
+    --bg-light: #f8f9fa;
+
+    /* Bordes */
+    --border-color: #dee2e6;
+    --border-radius: 0.25rem;
+    --border-width: 1px;
+
+    /* Sombras */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+    /* Componentes */
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --input-focus-border: #80bdff;
+    --input-focus-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    --btn-hover-bg: #0056b3;
+    --btn-hover-border: #0056b3;
+    --btn-active-bg: #0056b3;
+    --btn-active-border: #0056b3;
+    --btn-disabled-bg: #e9ecef;
+    --btn-disabled-border: #dee2e6;
+    --btn-disabled-color: #6c757d;
+
+    /* Notificaciones */
+    --notification-bg: #ffffff;
+    --notification-border: #dee2e6;
+    --notification-error-bg: #f8d7da;
+    --notification-error-border: #f5c6cb;
+    --notification-warning-bg: #fff3cd;
+    --notification-warning-border: #ffeeba;
+    --notification-info-bg: #d1ecf1;
+    --notification-info-border: #bee5eb;
+    --notification-success-bg: #d4edda;
+    --notification-success-border: #c3e6cb;
+
+    /* Tablas */
+    --table-bg: #ffffff;
+    --table-border: #dee2e6;
+    --table-striped-bg: rgba(0, 0, 0, 0.05);
+    --table-hover-bg: rgba(0, 0, 0, 0.075);
+    --table-active-bg: rgba(0, 0, 0, 0.1);
+
+    /* Modales */
+    --modal-bg: #ffffff;
+    --modal-border: #dee2e6;
+    --modal-header-bg: #f8f9fa;
+    --modal-footer-bg: #f8f9fa;
+    --modal-backdrop-bg: rgba(0, 0, 0, 0.5);
+
+    /* Tooltips */
+    --tooltip-bg: #343a40;
+    --tooltip-color: #ffffff;
+    --tooltip-arrow-color: #343a40;
+
+    /* Popovers */
+    --popover-bg: #ffffff;
+    --popover-border: #dee2e6;
+    --popover-header-bg: #f8f9fa;
+    --popover-arrow-color: #ffffff;
+    --popover-arrow-outer-color: rgba(0, 0, 0, 0.25);
+} 
