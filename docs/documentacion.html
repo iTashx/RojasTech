@@ -4,252 +4,275 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentación - Sistema de Gestión de Contratos</title>
-    <link rel="stylesheet" href="documentacion.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/core/reset.css" />
+    <link rel="stylesheet" href="css/core/variables.css" />
+    <link rel="stylesheet" href="css/themes/theme-light.css" /> <!-- O theme-dark.css -->
+    <link rel="stylesheet" href="css/components/buttons.css" />
+    <link rel="stylesheet" href="css/components/forms.css" />
+    <link rel="stylesheet" href="css/components/tabs.css" />
+    <!-- <link rel="stylesheet" href="css/documentacion.css"> -->
 </head>
 <body>
-    <div class="help-container">
-        <nav class="help-nav">
-            <div class="help-nav-header">
-                <h1><i class="fas fa-book"></i> Documentación</h1>
-                <p>Guía completa del sistema</p>
-            </div>
+    <header class="header">
+        <h1>Documentación del Sistema</h1>
+    </header>
+
+    <div class="container">
+        <nav class="doc-nav">
             <ul>
-                <li><a href="#introduccion"><i class="fas fa-info-circle"></i> Introducción</a></li>
-                <li><a href="#caracteristicas"><i class="fas fa-star"></i> Características</a></li>
-                <li><a href="#modulos"><i class="fas fa-cubes"></i> Módulos del Sistema</a></li>
-                <li><a href="#instalacion"><i class="fas fa-download"></i> Instalación</a></li>
-                <li><a href="#uso"><i class="fas fa-play-circle"></i> Guía de Uso</a></li>
-                <li><a href="#avances"><i class="fas fa-chart-line"></i> Gestión de Avances</a></li>
-                <li><a href="#reportes"><i class="fas fa-file-alt"></i> Reportes</a></li>
-                <li><a href="#troubleshooting"><i class="fas fa-wrench"></i> Solución de Problemas</a></li>
+                <li><a href="#introduccion">Introducción</a></li>
+                <li><a href="#estructura">Estructura del Proyecto</a></li>
+                <li><a href="#arquitectura">Arquitectura</a></li>
+                <li><a href="#base-datos">Base de Datos</a></li>
+                <li><a href="#interfaz">Interfaz de Usuario</a></li>
+                <li><a href="#logica">Lógica de Negocio</a></li>
+                <li><a href="#seguridad">Seguridad</a></li>
+                <li><a href="#optimizacion">Optimización</a></li>
+                <li><a href="#mantenimiento">Mantenimiento</a></li>
             </ul>
         </nav>
 
-        <main class="help-content">
-            <section id="introduccion" class="help-section">
+        <main class="doc-content">
+            <section id="introduccion" class="doc-section">
                 <h2>Introducción</h2>
-                <p>Bienvenido a la documentación del Sistema de Gestión de Contratos. Este sistema está diseñado para ayudar a las empresas a gestionar eficientemente sus contratos y documentos relacionados.</p>
+                <p>El Sistema de Gestión de Contratos (SIGESCON) es una aplicación web diseñada para facilitar la gestión y seguimiento de contratos de construcción. El sistema permite la creación, modificación y seguimiento de contratos, así como la gestión de partidas y montos asociados.</p>
                 
-                <div class="help-note">
-                    <strong>Nota:</strong> Esta documentación está en constante actualización. Si encuentras algún error o tienes sugerencias, por favor contáctanos.
+                <div class="note">
+                    <strong>Nota:</strong> Esta documentación está actualizada a la versión 2.0 del sistema.
                 </div>
+            </section>
 
-                <h3>Objetivos del Sistema</h3>
-                <ul>
-                    <li>Centralizar la gestión de contratos y documentos</li>
-                    <li>Automatizar el seguimiento de avances físicos y financieros</li>
-                    <li>Facilitar la generación de reportes y análisis</li>
-                    <li>Mejorar la comunicación y colaboración entre equipos</li>
+            <section id="estructura" class="doc-section">
+                <h2>Estructura del Proyecto</h2>
+                <pre><code>SIGESCON/
+├── index.html              # Página principal
+├── ayuda.html             # Documentación usuario
+├── css/
+│   ├── core/
+│   │   ├── style.css         # Estilos generales
+│   │   ├── ayuda.css         # Estilos ayuda
+│   │   └── documentacion.css # Estilos documentación
+│   ├── components/
+│   │   ├── tabs.css
+│   │   ├── buttons.css
+│   │   └── forms.css
+│   ├── modules/
+│   │   ├── contracts.css
+│   │   ├── suppliers.css
+│   │   └── reports.css
+│   └── themes/
+│       ├── theme-light.css
+│       └── theme-dark.css
+├── js/
+│   ├── modules/
+│   │   ├── contracts/    # Módulo de contratos
+│   │   ├── notifications/# Módulo de notificaciones
+│   │   ├── export/       # Módulo de exportación
+│   │   └── utils/        # Utilidades
+│   └── main.js           # Punto de entrada
+├── docs/
+│   └── modulos.md        # Documentación de módulos
+└── assets/
+    ├── images/           # Imágenes del proyecto
+    └── icons/            # Iconos personalizados</code></pre>
+            </section>
+
+            <section id="arquitectura" class="doc-section">
+                <h2>Arquitectura</h2>
+                <h3>Patrones de Diseño</h3>
+                <ul class="doc-list">
+                    <li><strong>MVC (Modelo-Vista-Controlador)</strong>
+                        <ul>
+                            <li>Modelo: IndexedDB (Dexie.js)</li>
+                            <li>Vista: HTML/CSS</li>
+                            <li>Controlador: JavaScript</li>
+                        </ul>
+                    </li>
+                    <li><strong>Singleton</strong>
+                        <ul>
+                            <li>Instancia única de la base de datos</li>
+                            <li>Gestor de eventos globales</li>
+                        </ul>
+                    </li>
+                    <li><strong>Observer</strong>
+                        <ul>
+                            <li>Actualización de UI en tiempo real</li>
+                            <li>Notificaciones de cambios</li>
+                        </ul>
+                    </li>
                 </ul>
             </section>
 
-            <section id="caracteristicas" class="help-section">
-                <h2>Características Principales</h2>
-                <div class="feature-box">
-                    <h3><i class="fas fa-check-circle"></i> Gestión de Contratos</h3>
-                    <p>Administra todos tus contratos en un solo lugar, con seguimiento de fechas importantes y estados.</p>
-                    <ul>
-                        <li>Creación y edición de contratos</li>
-                        <li>Seguimiento de fechas clave</li>
-                        <li>Gestión de documentos adjuntos</li>
-                        <li>Historial de cambios</li>
-                    </ul>
-                </div>
-
-                <div class="feature-box">
-                    <h3><i class="fas fa-chart-line"></i> Análisis y Reportes</h3>
-                    <p>Genera reportes detallados y visualiza el progreso de tus contratos con gráficos interactivos.</p>
-                    <ul>
-                        <li>Reportes personalizados</li>
-                        <li>Gráficos de avance</li>
-                        <li>Exportación a PDF y Excel</li>
-                        <li>Análisis comparativos</li>
-                    </ul>
-                </div>
-
-                <div class="feature-box">
-                    <h3><i class="fas fa-bell"></i> Notificaciones</h3>
-                    <p>Recibe alertas sobre fechas importantes y vencimientos de contratos.</p>
-                    <ul>
-                        <li>Alertas personalizables</li>
-                        <li>Notificaciones por correo</li>
-                        <li>Recordatorios automáticos</li>
-                        <li>Historial de notificaciones</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section id="modulos" class="help-section">
-                <h2>Módulos del Sistema</h2>
+            <section id="base-datos" class="doc-section">
+                <h2>Base de Datos</h2>
+                <h3>Esquema IndexedDB</h3>
                 
-                <div class="feature-box">
-                    <h3><i class="fas fa-file-contract"></i> Gestión de Contratos</h3>
-                    <p>Módulo principal para la administración de contratos.</p>
-                    <ul>
-                        <li>Creación de nuevos contratos</li>
-                        <li>Edición de contratos existentes</li>
-                        <li>Visualización de detalles</li>
-                        <li>Búsqueda y filtrado</li>
-                    </ul>
-                </div>
+                <h4>Tabla: Contratos</h4>
+                <pre><code>{
+    id: number,                    // Clave primaria
+    numeroProveedor: string,       // Identificador único
+    fechaFirma: Date,             // Fecha de firma
+    fechaInicio: Date,            // Fecha de inicio
+    fechaTerminacion: Date,       // Fecha de terminación
+    montoTotal: number,           // Monto total del contrato
+    estatus: string,              // Estado actual
+    modalidad: string,            // Modalidad de contratación
+    moneda: string,               // Tipo de moneda
+    observaciones: string,        // Notas adicionales
+    archivos: Array<File>,        // Archivos adjuntos
+    fechaCreacion: Date,          // Fecha de creación
+    fechaModificacion: Date,      // Última modificación
+    usuarioCreacion: string,      // Usuario que creó
+    usuarioModificacion: string   // Último usuario que modificó
+}</code></pre>
 
-                <div class="feature-box">
-                    <h3><i class="fas fa-tasks"></i> HES (Hitos de Entregables y Servicios)</h3>
-                    <p>Gestión de hitos y entregables del contrato.</p>
-                    <ul>
-                        <li>Creación de hitos</li>
-                        <li>Seguimiento de entregables</li>
-                        <li>Control de fechas</li>
-                        <li>Estado de cumplimiento</li>
-                    </ul>
-                </div>
-
-                <div class="feature-box">
-                    <h3><i class="fas fa-chart-pie"></i> Avances</h3>
-                    <p>Control de avances físicos y financieros.</p>
-                    <ul>
-                        <li>Registro de avances</li>
-                        <li>Comparación de porcentajes</li>
-                        <li>Gráficos de progreso</li>
-                        <li>Alertas de desviación</li>
-                    </ul>
-                </div>
+                <h4>Tabla: Partidas</h4>
+                <pre><code>{
+    id: number,                    // Clave primaria
+    contratoId: number,           // Referencia a Contratos
+    descripcion: string,          // Descripción detallada
+    cantidad: number,             // Cantidad contratada
+    umd: string,                  // Unidad de medida
+    precioUnitario: number,       // Precio por unidad
+    total: number,                // Total calculado
+    fechaCreacion: Date,          // Fecha de creación
+    fechaModificacion: Date       // Última modificación
+}</code></pre>
             </section>
 
-            <section id="instalacion" class="help-section">
-                <h2>Instalación</h2>
-                <p>Para instalar el sistema, sigue estos pasos:</p>
-                <ol>
-                    <li>Descarga el archivo de instalación</li>
-                    <li>Ejecuta el instalador</li>
-                    <li>Sigue las instrucciones en pantalla</li>
-                    <li>Configura tu base de datos</li>
-                </ol>
+            <section id="interfaz" class="doc-section">
+                <h2>Interfaz de Usuario</h2>
+                <h3>Componentes Principales</h3>
+                
+                <h4>Header</h4>
+                <pre><code><header class="header bg-light-blue">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center py-3">
+            <div class="logo d-flex align-items-center">
+                <i class="fas fa-file-contract me-2"></i>
+                <h1 class="mb-0">Gestión de Contratos Empresariales</h1>
+            </div>
+            <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
+                <i class="fas fa-question-circle me-2"></i> Ayuda
+            </a>
+        </div>
+    </div>
+</header></code></pre>
 
-                <div class="help-code">
-                    npm install sistema-gestion-contratos
+                <h4>Variables CSS Globales</h4>
+                <pre><code>:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #2196F3;
+    --accent-color: #FFC107;
+    --danger-color: #F44336;
+    --success-color: #4CAF50;
+}</code></pre>
+            </section>
+
+            <section id="logica" class="doc-section">
+                <h2>Lógica de Negocio</h2>
+                <h3>Módulos Principales</h3>
+                
+                <h4>Gestión de Contratos</h4>
+                <pre><code>async function crearContrato(datos) {
+    try {
+        // Validaciones
+        validarDatosContrato(datos);
+        
+        // Cálculos
+        const montos = calcularMontosContrato(datos.partidas);
+        
+        // Creación en DB
+        const contratoId = await db.contratos.add({
+            ...datos,
+            ...montos,
+            fechaCreacion: new Date(),
+            usuarioCreacion: obtenerUsuarioActual()
+        });
+        
+        // Notificación
+        mostrarNotificacion('Contrato creado exitosamente');
+        
+        return contratoId;
+    } catch (error) {
+        manejarError(error);
+    }
+}</code></pre>
+            </section>
+
+            <section id="seguridad" class="doc-section">
+                <h2>Seguridad</h2>
+                <div class="warning">
+                    <strong>Importante:</strong> Siga estas prácticas de seguridad para proteger su instalación.
                 </div>
-
-                <h3>Requisitos del Sistema</h3>
-                <ul>
-                    <li>Navegador web moderno (Chrome, Firefox, Edge)</li>
-                    <li>Conexión a internet</li>
-                    <li>Permisos de administrador para la instalación</li>
+                <ul class="doc-list">
+                    <li>Validaciones robustas de datos</li>
+                    <li>Autenticación y autorización</li>
+                    <li>Manejo seguro de archivos</li>
+                    <li>Protección contra inyección</li>
                 </ul>
             </section>
 
-            <section id="uso" class="help-section">
-                <h2>Guía de Uso</h2>
-                
-                <h3>Crear un Nuevo Contrato</h3>
-                <ol>
-                    <li>Haz clic en "Nuevo Contrato"</li>
-                    <li>Completa el formulario con los datos requeridos</li>
-                    <li>Adjunta los documentos necesarios</li>
-                    <li>Guarda el contrato</li>
-                </ol>
-
-                <h3>Gestionar HES</h3>
-                <ol>
-                    <li>Selecciona el contrato</li>
-                    <li>Accede a la sección HES</li>
-                    <li>Agrega nuevos hitos</li>
-                    <li>Actualiza el estado de los entregables</li>
-                </ol>
-
-                <div class="help-warning">
-                    <strong>Importante:</strong> Asegúrate de tener todos los documentos necesarios antes de crear un contrato.
-                </div>
-            </section>
-
-            <section id="avances" class="help-section">
-                <h2>Gestión de Avances</h2>
-                
-                <h3>Avance Físico</h3>
-                <p>El avance físico se calcula basado en los HES completados:</p>
-                <ul>
-                    <li>Selecciona el contrato</li>
-                    <li>Ingresa a la sección de avances físicos</li>
-                    <li>Registra el porcentaje de avance</li>
-                    <li>Adjunta evidencia si es necesario</li>
-                </ul>
-
-                <h3>Avance Financiero</h3>
-                <p>El avance financiero se calcula según los pagos realizados:</p>
-                <ul>
-                    <li>Accede a la sección de avances financieros</li>
-                    <li>Registra los montos pagados</li>
-                    <li>Adjunta comprobantes de pago</li>
-                    <li>Verifica el porcentaje de avance</li>
+            <section id="optimizacion" class="doc-section">
+                <h2>Optimización</h2>
+                <ul class="doc-list">
+                    <li>Uso de IndexedDB para almacenamiento local eficiente</li>
+                    <li>Carga asíncrona de datos</li>
+                    <li>Optimización de consultas a la base de datos</li>
+                    <li>Lazy loading de componentes</li>
                 </ul>
             </section>
 
-            <section id="reportes" class="help-section">
-                <h2>Reportes</h2>
-                
-                <h3>Tipos de Reportes</h3>
-                <ul>
-                    <li>Reporte de avances</li>
-                    <li>Reporte de HES</li>
-                    <li>Reporte financiero</li>
-                    <li>Reporte de vencimientos</li>
+            <section id="mantenimiento" class="doc-section">
+                <h2>Mantenimiento</h2>
+                <h3>Tareas Diarias</h3>
+                <ul class="doc-list">
+                    <li>Verificar logs del sistema</li>
+                    <li>Revisar notificaciones</li>
+                    <li>Hacer backup de la base de datos</li>
                 </ul>
 
-                <h3>Generar Reportes</h3>
-                <ol>
-                    <li>Selecciona el tipo de reporte</li>
-                    <li>Define el período</li>
-                    <li>Selecciona los contratos</li>
-                    <li>Genera y descarga el reporte</li>
-                </ol>
-            </section>
-
-            <section id="troubleshooting" class="help-section">
-                <h2>Solución de Problemas</h2>
-                
-                <h3>Problemas Comunes</h3>
-                <table class="help-table">
-                    <thead>
-                        <tr>
-                            <th>Problema</th>
-                            <th>Solución</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Error al cargar la página</td>
-                            <td>Verifica tu conexión a internet y recarga la página</td>
-                        </tr>
-                        <tr>
-                            <td>No se pueden guardar cambios</td>
-                            <td>Verifica los permisos de la base de datos</td>
-                        </tr>
-                        <tr>
-                            <td>Error al generar reportes</td>
-                            <td>Verifica que los datos estén completos</td>
-                        </tr>
-                        <tr>
-                            <td>Problemas con las notificaciones</td>
-                            <td>Verifica la configuración de correo</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Contacto de Soporte</h3>
-                <p>Si necesitas ayuda adicional, contacta a nuestro equipo de soporte:</p>
-                <ul>
-                    <li>Email: soporte@sistema.com</li>
-                    <li>Teléfono: (123) 456-7890</li>
-                    <li>Horario: Lunes a Viernes, 9:00 - 18:00</li>
+                <h3>Tareas Semanales</h3>
+                <ul class="doc-list">
+                    <li>Limpiar logs antiguos</li>
+                    <li>Verificar espacio en disco</li>
+                    <li>Revisar rendimiento</li>
                 </ul>
             </section>
         </main>
     </div>
 
-    <footer>
-        <p class="footer-text">© 2024 Sistema de Gestión de Contratos. Todos los derechos reservados.</p>
-        <p class="footer-text">Versión 1.0.0</p>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <ul>
+                    <li>Email: info@rojastech.com</li>
+                    <li>Teléfono: +51 123 456 789</li>
+                    <li>Dirección: Lima, Perú</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="ayuda.html">Ayuda</a></li>
+                    <li><a href="documentacion.html">Documentación</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 RojasTech. Todos los derechos reservados.</p>
+        </div>
     </footer>
 </body>
 </html> 

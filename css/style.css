@@ -27,44 +27,13 @@ body {
 .header {
     background-color: var(--light-blue-header); /* Aplicando el nuevo color */
     color: white;
-    padding: 15px 20px; /* Ajustar padding horizontal */
+    padding: 10px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.header .container-fluid {
-    display: flex;
-    justify-content: space-between; /* Espacio entre grupos */
-    align-items: center;
-    flex-wrap: wrap; /* Permitir que se envuelvan */
-}
-
-.header .logo {
-    flex-grow: 1; /* Permitir que el logo ocupe espacio flexible */
-    text-align: center; /* Centrar el texto e icono dentro del logo div */
 }
 
 .header .logo h1 {
     font-size: 1.8rem;
     font-weight: 600;
-    display: inline-block; /* Permite text-align: center; en el div padre */
-    vertical-align: middle; /* Alineación vertical con el icono */
-    margin-left: 10px; /* Espacio entre icono y título */
-}
-
-.header .logo i {
-     vertical-align: middle; /* Alineación vertical con el título */
-}
-
-.header .btn-primary.help-btn {
-    order: -1; /* Mover el botón de ayuda al inicio (izquierda) */
-    margin-right: auto; /* Empujar hacia la derecha */
-    margin-left: 0 !important; /* Anular margin de Bootstrap si existe */
-}
-
-.header .btn-secondary.ms-2 {
-    order: 1; /* Mover el botón MDP al final (derecha) */
-    margin-left: auto !important; /* Empujar hacia la izquierda */
-    margin-right: 0 !important; /* Anular margin de Bootstrap si existe */
 }
 
 .main-container {
@@ -79,7 +48,6 @@ body {
     padding: 20px 0;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     flex-shrink: 0; /* Evita que el sidebar se encoja */
-    transition: transform 0.3s ease-in-out;
 }
 
 .sidebar .nav-link {
@@ -343,199 +311,77 @@ h2 i {
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
-    /* Adjust main layout for tablets and smaller */
+@media (max-width: 768px) {
     .main-container {
-        flex-direction: column; /* Stack sidebar and content */
+        flex-direction: column;
     }
 
     .sidebar {
-        width: 100%; /* Full width */
-        height: auto; /* Auto height */
-        padding: 10px 0; /* Adjust padding */
-        position: relative; /* Remove fixed positioning */
-        box-shadow: none; /* Remove side shadow */
-        transition: none; /* Remove transform transition for this breakpoint */
+        width: 100%;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
 
     .sidebar .nav {
-        flex-direction: row; /* Arrange nav items horizontally */
-        justify-content: center; /* Center nav items */
-        flex-wrap: wrap; /* Allow wrapping if needed */
+        flex-direction: row;
+        overflow-x: auto; /* Permite scroll horizontal para botones */
+        white-space: nowrap;
+        justify-content: space-between;
     }
 
     .sidebar .nav-link {
-        padding: 8px 15px; /* Adjust padding */
-        border-left: none; /* Remove border */
-        border-bottom: 3px solid transparent; /* Add bottom border for active state */
-        margin: 0 5px; /* Add some horizontal margin */
+        padding: 10px;
+        font-size: 0.85rem;
+        flex-shrink: 0; /* Evita que los botones se encojan demasiado */
+        text-align: center;
+        flex-direction: column; /* Icono arriba, texto abajo */
+    }
+
+    .sidebar .nav-link i {
+        margin-right: 0;
+        margin-bottom: 5px;
     }
 
     .sidebar .nav-link.active {
-        border-left: none; /* Ensure no left border */
-        border-bottom-color: var(--primary-color); /* Active indicator */
-        padding-left: 15px; /* Keep original padding */
+        border-left: none;
+        border-bottom: 3px solid var(--primary-color);
+        padding-left: 10px; /* Restablecer padding-left */
     }
 
     .content {
-        margin: 10px; /* Adjust margin */
-        padding: 15px; /* Adjust padding */
-    }
-
-    /* Header adjustments for smaller screens */
-     .header .container-fluid {
-         flex-direction: column; /* Stack logo and buttons */
-         align-items: center;
-         gap: 10px; /* Space between stacked items */
-     }
-
-     .header .logo {
-         flex-grow: 0; /* Prevent logo from growing */
-         text-align: center; /* Ensure logo is centered */
-         width: 100%; /* Allow logo to take full width */
-     }
-
-     .header .logo h1 {
-         font-size: 1.5rem; /* Smaller font size */
-     }
-
-     .header .btn-primary.help-btn,
-     .header .btn-secondary.ms-2 {
-         margin: 5px; /* Add margin between buttons */
-         order: 0; /* Reset order */
-     }
-
-    /* Summary Cards */
-    .summary-cards {
-        grid-template-columns: 1fr; /* Stack cards on small screens */
-        gap: 10px;
-    }
-
-    /* Contract Form Grid */
-    .contract-form-grid {
-        grid-template-columns: 1fr; /* Stack form inputs */
-        gap: 15px;
-    }
-
-    .contract-form-grid .col-span-2 {
-        grid-column: span 1; /* Ensure full width for spanned elements */
-    }
-}
-
-@media (max-width: 768px) {
-    /* Hide sidebar completely by default on smaller phones */
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: -250px; /* Start off-screen */
-        bottom: 0;
-        width: 250px; /* Fixed width when open */
-        height: 100vh; /* Full height */
-        padding-top: 70px; /* Space for fixed header */
-        z-index: 1000; /* Above content */
-        overflow-y: auto; /* Scrollable */
-        background-color: var(--dark-blue-sidebar);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    /* Class to show sidebar */
-    body.sidebar-open .sidebar {
-        transform: translateX(250px); /* Slide in */
-    }
-
-    /* Adjust content margin when sidebar is open (optional overlay) */
-    /* body.sidebar-open .content { margin-left: 250px; } */
-
-    /* Header adjustments */
-    .header {
-        padding: 10px 15px;
-    }
-
-    .header .container-fluid {
-        flex-direction: row; /* Row layout for header */
-        justify-content: space-between; /* Space between items */
-        align-items: center;
-        flex-wrap: nowrap; /* Prevent wrapping */
-    }
-
-    .header .logo {
-        flex-grow: 0; /* Don't grow */
-        text-align: left; /* Align logo left */
-        width: auto; /* Auto width */
-    }
-
-    .header .logo h1 {
-         font-size: 1.4rem; /* Smaller font size */
-     }
-
-    .header .btn-primary.help-btn,
-    .header .btn-secondary.ms-2 {
-        margin: 0 5px; /* Space between buttons */
-        order: 0; /* Default order */
-    }
-
-    /* Tables responsiveness */
-    .table-responsive {
-        overflow-x: auto; /* Add horizontal scroll to tables */
-    }
-
-    /* Adjust main content margin */
-    .content {
-        margin: 10px; /* Keep consistent margin */
+        margin: 10px;
         padding: 15px;
     }
 
-     /* Hide the default nav in sidebar at this breakpoint */
-     .sidebar .nav {
-         flex-direction: column; /* Stack nav items */
-         align-items: flex-start; /* Align to the left */
-         margin-top: 10px; /* Space from the top */
-     }
-
-     .sidebar .nav-link {
-         width: 100%; /* Full width links */
-         margin: 0; /* Remove horizontal margin */
-         border-bottom: none; /* Remove bottom border */
-         border-left: 5px solid transparent; /* Add left border for active */
-         padding: 12px 20px; /* Restore padding */
-     }
-
-     .sidebar .nav-link.active {
-          border-bottom: none; /* Ensure no bottom border */
-          border-left-color: var(--primary-color); /* Active indicator */
-     }
-
-     /* Add overlay when sidebar is open */
-     body.sidebar-open::after {
-         content: '';
-         position: fixed;
-         top: 0;
-         left: 0;
-         right: 0;
-         bottom: 0;
-         background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-         z-index: 999; /* Below sidebar, above content */
-     }
-}
-
-@media (max-width: 576px) {
-    /* Even smaller adjustments for very small phones */
     .header .logo h1 {
-        font-size: 1.2rem; /* Even smaller font size */
+        font-size: 1.5rem;
     }
 
-    .header .btn {
-         padding: 6px 10px; /* Smaller button padding */
-         font-size: 0.8rem; /* Smaller font size */
+    .summary-cards {
+        grid-template-columns: 1fr;
     }
 
-    .content {
-        margin: 5px; /* Smaller margin */
-        padding: 10px; /* Smaller padding */
+    .contract-form-grid {
+        grid-template-columns: 1fr;
     }
 
-    h2 {
-        font-size: 1.5rem; /* Smaller heading size */
+    .contract-form-grid .col-span-2 {
+        grid-column: span 1;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .export-buttons {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 
@@ -730,26 +576,4 @@ h2 i {
 #hes-total {
     color: #28a745;
     font-size: 1.1em;
-}
-
-/* Layout principal */
-.help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 100vh;
-    background-color: var(--help-background);
-}
-
-/* Navegación */
-.help-nav {
-    /* ... estilos de color, padding, etc. ... */
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-/* Contenido principal */
-.help-content {
-    /* ... estilos de padding, margin, etc. ... */
 }

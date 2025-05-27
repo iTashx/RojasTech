@@ -3,255 +3,233 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ayuda - Sistema de Gestión de Contratos</title>
+    <title>Ayuda - SIGESCON</title>
 
     <!-- Estilos -->
-    <link rel="stylesheet" href="css/core/reset.css" />
-    <link rel="stylesheet" href="css/core/variables.css" />
-    <link rel="stylesheet" href="css/themes/theme-light.css" /> <!-- O theme-dark.css -->
-    <link rel="stylesheet" href="css/components/buttons.css" />
-    <link rel="stylesheet" href="css/components/forms.css" />
-    <link rel="stylesheet" href="css/components/tabs.css" />
-    <link rel="stylesheet" href="css/modules/notifications.css" />
-    <!-- Descomentar la siguiente línea y crear este archivo si necesitas estilos específicos para la página de ayuda -->
-    <!-- <link rel="stylesheet" href="css/pages/ayuda.css" /> -->
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-
-    <!-- Eliminar o comentar la siguiente línea si Bootstrap no es necesario -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="css/ayuda.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css " />
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .help-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .help-section {
+            margin-bottom: 30px;
+        }
+        .help-section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .help-section h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        .help-section ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .help-section li {
+            margin-bottom: 10px;
+        }
+        .help-section li:before {
+            content: "•";
+            color: #3498db;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+        .help-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .help-note {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <h1><i class="fas fa-question-circle"></i> Ayuda del Sistema</h1>
-            <div class="notifications-icon">
-                <i class="fas fa-bell"></i>
-                <span class="notifications-counter">0</span>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
+    <div class="help-container">
         <nav class="help-nav">
+            <div class="help-nav-header">
+                <h1>SIGESCON</h1>
+                <p>Manual de Usuario</p>
+            </div>
             <ul>
-                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#introduccion">Introducción</a></li>
                 <li><a href="#contratos">Gestión de Contratos</a></li>
-                <li><a href="#partidas">Gestión de Partidas</a></li>
-                <li><a href="#exportacion">Exportación</a></li>
-                <li><a href="#notificaciones">Notificaciones</a></li>
-                <li><a href="#faq">Preguntas Frecuentes</a></li>
+                <li><a href="#hes">Gestión de HES</a></li>
+                <li><a href="#avances">Seguimiento de Avances</a></li>
+                <li><a href="#reportes">Reportes</a></li>
+                <li><a href="#papelera">Papelera de Reciclaje</a></li>
             </ul>
         </nav>
 
         <main class="help-content">
-            <section id="inicio" class="help-section">
-                <h2>Bienvenido al Sistema de Ayuda</h2>
-                <p>Este sistema le ayudará a gestionar sus contratos de manera eficiente. A continuación encontrará guías detalladas para cada funcionalidad.</p>
-                
-                <div class="quick-start">
-                    <h3>Inicio Rápido</h3>
-                    <ol>
-                        <li>Crear un nuevo contrato</li>
-                        <li>Agregar partidas al contrato</li>
-                        <li>Gestionar el estado del contrato</li>
-                        <li>Exportar reportes</li>
-                    </ol>
+            <section id="introduccion" class="help-section">
+                <h2>Introducción a SIGESCON</h2>
+                <div class="help-image-container">
+                    <img src="assets/images/help/dashboard-overview.png" alt="Vista general del dashboard" class="help-image">
+                    <p class="image-caption">Figura 1: Vista general del dashboard principal de SIGESCON</p>
                 </div>
+                <p>SIGESCON es un sistema integral para la gestión de contratos empresariales que te permite:</p>
+                <ul>
+                    <li>Gestionar contratos y sus partidas</li>
+                    <li>Administrar HES (Hojas de Estimación de Servicios)</li>
+                    <li>Seguir el avance físico y financiero</li>
+                    <li>Generar reportes detallados</li>
+                </ul>
             </section>
 
             <section id="contratos" class="help-section">
                 <h2>Gestión de Contratos</h2>
                 
                 <h3>Crear un Nuevo Contrato</h3>
-                <ol>
-                    <li>Haga clic en "Nuevo Contrato"</li>
-                    <li>Complete los datos del proveedor</li>
-                    <li>Ingrese las fechas de inicio y fin</li>
-                    <li>Seleccione la modalidad de contratación</li>
-                    <li>Agregue las partidas necesarias</li>
-                    <li>Revise y guarde el contrato</li>
-                </ol>
-
-                <h3>Editar un Contrato Existente</h3>
-                <ol>
-                    <li>Busque el contrato en la lista</li>
-                    <li>Haga clic en "Editar"</li>
-                    <li>Modifique los campos necesarios</li>
-                    <li>Guarde los cambios</li>
-                </ol>
-
-                <div class="note">
-                    <strong>Nota:</strong> Los contratos en estado "Finalizado" no pueden ser editados.
+                <div class="help-image-container">
+                    <img src="assets/images/help/new-contract-form.png" alt="Formulario de nuevo contrato" class="help-image">
+                    <p class="image-caption">Figura 2: Formulario para crear un nuevo contrato</p>
                 </div>
-            </section>
-
-            <section id="partidas" class="help-section">
-                <h2>Gestión de Partidas</h2>
-                
-                <h3>Agregar Partidas</h3>
                 <ol>
-                    <li>Seleccione el contrato</li>
-                    <li>Haga clic en "Agregar Partida"</li>
-                    <li>Complete la descripción</li>
-                    <li>Ingrese cantidad y unidad de medida</li>
-                    <li>Especifique el precio unitario</li>
-                    <li>El sistema calculará automáticamente el total</li>
+                    <li>Haz clic en "Nuevo/Editar Contrato" en el menú lateral</li>
+                    <li>Completa los campos requeridos (marcados con *)</li>
+                    <li>Agrega las partidas del contrato</li>
+                    <li>Haz clic en "Guardar Contrato"</li>
                 </ol>
 
-                <h3>Modificar Partidas</h3>
-                <ol>
-                    <li>Seleccione la partida a modificar</li>
-                    <li>Haga clic en "Editar"</li>
-                    <li>Actualice los datos necesarios</li>
-                    <li>Guarde los cambios</li>
-                </ol>
-
-                <div class="tip">
-                    <strong>Consejo:</strong> Use la función de copiar partidas para agilizar la creación de partidas similares.
+                <h3>Gestionar Partidas</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/contract-items.png" alt="Gestión de partidas" class="help-image">
+                    <p class="image-caption">Figura 3: Sección de gestión de partidas del contrato</p>
                 </div>
-            </section>
-
-            <section id="exportacion" class="help-section">
-                <h2>Exportación de Datos</h2>
-                
-                <h3>Exportar a PDF</h3>
+                <p>Para agregar partidas a un contrato:</p>
                 <ol>
-                    <li>Seleccione el contrato</li>
-                    <li>Haga clic en "Exportar"</li>
-                    <li>Elija "PDF" como formato</li>
-                    <li>Seleccione las secciones a incluir</li>
-                    <li>Haga clic en "Generar PDF"</li>
-                </ol>
-
-                <h3>Exportar a Excel</h3>
-                <ol>
-                    <li>Seleccione el contrato</li>
-                    <li>Haga clic en "Exportar"</li>
-                    <li>Elija "Excel" como formato</li>
-                    <li>Seleccione las columnas a incluir</li>
-                    <li>Haga clic en "Generar Excel"</li>
-                </ol>
-
-                <h3>Exportar a Imagen</h3>
-                <ol>
-                    <li>Seleccione el contrato</li>
-                    <li>Haga clic en "Exportar"</li>
-                    <li>Elija "Imagen" como formato</li>
-                    <li>Ajuste la calidad si es necesario</li>
-                    <li>Haga clic en "Generar Imagen"</li>
+                    <li>Haz clic en "Añadir Partida"</li>
+                    <li>Completa la descripción, cantidad y precio unitario</li>
+                    <li>El total se calculará automáticamente</li>
                 </ol>
             </section>
 
-            <section id="notificaciones" class="help-section">
-                <h2>Sistema de Notificaciones</h2>
+            <section id="hes" class="help-section">
+                <h2>Gestión de HES</h2>
                 
-                <div id="notifications-container" class="notifications-container">
-                    <!-- El contenido se generará dinámicamente -->
+                <h3>Crear una HES</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/new-hes-form.png" alt="Formulario de nueva HES" class="help-image">
+                    <p class="image-caption">Figura 4: Formulario para crear una nueva HES</p>
                 </div>
+                <ol>
+                    <li>Selecciona el contrato asociado</li>
+                    <li>Ingresa el número de HES</li>
+                    <li>Define las fechas de inicio y fin</li>
+                    <li>Selecciona las partidas a ejecutar</li>
+                </ol>
 
-                <div class="notification-help">
-                    <h3>Tipos de Notificaciones</h3>
-                    <ul>
-                        <li><strong>Errores:</strong> Problemas críticos que requieren atención inmediata</li>
-                        <li><strong>Advertencias:</strong> Situaciones que podrían causar problemas</li>
-                        <li><strong>Información:</strong> Actualizaciones y mensajes del sistema</li>
-                    </ul>
-
-                    <h3>Cómo Usar las Notificaciones</h3>
-                    <ol>
-                        <li>Haga clic en el icono de campana para ver todas las notificaciones</li>
-                        <li>Use los filtros para ver tipos específicos de notificaciones</li>
-                        <li>Haga clic en "Ver detalles" para obtener más información</li>
-                        <li>Marque como leídas las notificaciones que ya ha revisado</li>
-                    </ol>
-
-                    <div class="notification-tips">
-                        <h4>Consejos</h4>
-                        <ul>
-                            <li>Revise regularmente las notificaciones para mantener su sistema actualizado</li>
-                            <li>Las notificaciones de error incluyen soluciones sugeridas</li>
-                            <li>Puede filtrar las notificaciones por tipo y estado</li>
-                            <li>Las notificaciones no leídas se marcan automáticamente</li>
-                        </ul>
-                    </div>
+                <h3>Ejecutar Partidas en HES</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/hes-items.png" alt="Ejecución de partidas en HES" class="help-image">
+                    <p class="image-caption">Figura 5: Sección de ejecución de partidas en HES</p>
                 </div>
+                <p>Para ejecutar partidas:</p>
+                <ol>
+                    <li>Selecciona la cantidad a ejecutar</li>
+                    <li>Verifica los totales calculados</li>
+                    <li>Confirma la ejecución</li>
+                </ol>
             </section>
 
-            <section id="faq" class="help-section">
-                <h2>Preguntas Frecuentes</h2>
+            <section id="avances" class="help-section">
+                <h2>Seguimiento de Avances</h2>
                 
-                <div class="faq-item">
-                    <h3>¿Cómo puedo recuperar un contrato eliminado?</h3>
-                    <p>Los contratos eliminados se pueden recuperar desde la papelera de reciclaje durante 30 días.</p>
+                <h3>Avance Físico</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/physical-progress.png" alt="Vista de avance físico" class="help-image">
+                    <p class="image-caption">Figura 6: Panel de control de avance físico</p>
                 </div>
+                <p>El avance físico muestra:</p>
+                <ul>
+                    <li>Porcentaje de ejecución por partida</li>
+                    <li>Progreso global del contrato</li>
+                    <li>Gráficos de seguimiento</li>
+                </ul>
 
-                <div class="faq-item">
-                    <h3>¿Puedo modificar un contrato ya finalizado?</h3>
-                    <p>No, los contratos finalizados no pueden ser modificados. Debe crear una modificación de contrato.</p>
+                <h3>Avance Financiero</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/financial-progress.png" alt="Vista de avance financiero" class="help-image">
+                    <p class="image-caption">Figura 7: Panel de control de avance financiero</p>
                 </div>
+                <p>El avance financiero incluye:</p>
+                <ul>
+                    <li>Monto ejecutado vs. total</li>
+                    <li>Desglose por HES</li>
+                    <li>Proyecciones financieras</li>
+                </ul>
+            </section>
 
-                <div class="faq-item">
-                    <h3>¿Cómo puedo hacer una copia de seguridad?</h3>
-                    <p>Use la función de exportación para guardar una copia de sus contratos en formato PDF o Excel.</p>
+            <section id="reportes" class="help-section">
+                <h2>Reportes</h2>
+                
+                <h3>Generar Reportes</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/reports-menu.png" alt="Menú de reportes" class="help-image">
+                    <p class="image-caption">Figura 8: Menú de opciones de reportes</p>
                 </div>
+                <p>Tipos de reportes disponibles:</p>
+                <ul>
+                    <li>Reporte de contrato individual</li>
+                    <li>Resumen de HES</li>
+                    <li>Avances físicos y financieros</li>
+                    <li>Estadísticas globales</li>
+                </ul>
 
-                <div class="faq-item">
-                    <h3>¿Qué hacer si olvidé mi contraseña?</h3>
-                    <p>Contacte al administrador del sistema para restablecer su contraseña.</p>
+                <h3>Exportar Reportes</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/export-options.png" alt="Opciones de exportación" class="help-image">
+                    <p class="image-caption">Figura 9: Opciones de exportación de reportes</p>
                 </div>
+                <p>Formatos de exportación:</p>
+                <ul>
+                    <li>Excel (.xlsx)</li>
+                    <li>PDF</li>
+                    <li>Imagen (.png)</li>
+                </ul>
+            </section>
+
+            <section id="papelera" class="help-section">
+                <h2>Papelera de Reciclaje</h2>
+                
+                <h3>Gestionar Elementos Eliminados</h3>
+                <div class="help-image-container">
+                    <img src="assets/images/help/recycle-bin.png" alt="Papelera de reciclaje" class="help-image">
+                    <p class="image-caption">Figura 10: Vista de la papelera de reciclaje</p>
+                </div>
+                <p>En la papelera puedes:</p>
+                <ul>
+                    <li>Ver elementos eliminados</li>
+                    <li>Restaurar contratos o HES</li>
+                    <li>Eliminar permanentemente</li>
+                </ul>
             </section>
         </main>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2024 RojasTech. Todos los derechos reservados.</p>
-            <p>Para soporte técnico, contacte a: <a href="mailto:soporte@rojastech.com">soporte@rojastech.com</a></p>
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 SIGESCON - Todos los derechos reservados</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <!-- Eliminar o comentar la siguiente línea si Bootstrap no es necesario -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
-    <script type="module">
-        import systemNotifications from './js/modules/notifications/SystemNotifications.js';
-
-        // Inicializar sistema de notificaciones
-        document.addEventListener('DOMContentLoaded', () => {
-            systemNotifications.init('notifications-container');
-
-            // Ejemplo de notificaciones
-            systemNotifications.addNotification({
-                type: 'error',
-                title: 'Error en el Módulo de Contratos',
-                message: 'No se pudo guardar el contrato',
-                details: 'El error ocurrió al intentar guardar el contrato #12345',
-                module: 'ContractManager',
-                solution: 'Verifique que todos los campos requeridos estén completos y que el servidor esté funcionando correctamente.'
-            });
-
-            systemNotifications.addNotification({
-                type: 'warning',
-                title: 'Contrato Próximo a Vencer',
-                message: 'El contrato #12345 vencerá en 7 días',
-                module: 'ContractManager'
-            });
-
-            systemNotifications.addNotification({
-                type: 'info',
-                title: 'Actualización del Sistema',
-                message: 'Se ha actualizado el módulo de notificaciones',
-                module: 'System'
-            });
-        });
-
-        // Event listener para el icono de notificaciones
-        document.querySelector('.notifications-icon').addEventListener('click', () => {
-            const container = document.getElementById('notifications-container');
-            container.style.display = container.style.display === 'none' ? 'block' : 'none';
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/ayuda.js"></script>
 </body>
 </html>
