@@ -1,0 +1,53 @@
+GUÍA DE USO DEL SISTEMA GESCON
+
+1. INICIO DE SESIÓN
+   - Usuario: admin
+   - Contraseña: admin123
+
+2. FUNCIONES PRINCIPALES
+   - Gestión de Contratos
+   - Gestión de HES
+   - Reportes y Gráficos
+   - Papelera de Reciclaje
+
+3. GESTIÓN DE CONTRATOS
+   - Para crear un nuevo contrato:
+     * Complete todos los campos obligatorios
+     * Agregue las partidas necesarias
+     * Adjunte los documentos requeridos
+     * Guarde el contrato
+
+   - Para editar un contrato:
+     * Seleccione el contrato de la lista
+     * Modifique los campos necesarios
+     * Guarde los cambios
+
+4. GESTIÓN DE HES
+   - Para crear una nueva HES:
+     * Seleccione el contrato
+     * Complete los datos de ejecución
+     * Agregue las cantidades ejecutadas
+     * Guarde la HES
+
+5. REPORTES
+   - Exportar a Excel: Haga clic en "Exportar a Excel"
+   - Exportar a PDF: Haga clic en "Exportar a PDF"
+   - Ver gráficos: Seleccione el tipo de gráfico deseado
+
+6. PAPELERA DE RECICLAJE
+   - Ver elementos eliminados
+   - Restaurar elementos
+   - Eliminar permanentemente
+
+7. CONFIGURACIÓN
+   - Días de alerta para vencimientos
+   - Modalidades de contratación
+   - Respaldo de base de datos
+
+8. SOPORTE
+   - Para reportar problemas o solicitar ayuda:
+     * Contacte al administrador del sistema
+     * Proporcione detalles del problema
+     * Incluya capturas de pantalla si es posible
+
+NOTA: Asegúrese de guardar sus cambios antes de cerrar la sesión. 

@@ -1,0 +1,178 @@
+/* Estilos para el componente de pestañas */
+.tabs-container {
+    width: 100%;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 2px;
+    border-bottom: var(--border-width) solid var(--border-color);
+    margin-bottom: var(--spacing-md);
+    padding: 0 var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.tab-button {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    position: relative;
+    transition: var(--transition-base);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+    background: var(--bg-light);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    font-weight: var(--font-weight-bold);
+    background: var(--card-bg);
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    padding: var(--spacing-lg);
+    background: var(--card-bg);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Estados */
+.tab-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--btn-disabled-bg);
+    color: var(--btn-disabled-color);
+}
+
+.tab-button.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.tab-button.loading::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid var(--primary-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tabs-nav {
+        flex-wrap: wrap;
+        padding: var(--spacing-sm);
+    }
+
+    .tab-button {
+        flex: 1;
+        text-align: center;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        white-space: nowrap;
+    }
+
+    .tab-content {
+        padding: var(--spacing-md);
+    }
+}
+
+/* Variantes */
+.tabs-container.vertical {
+    display: flex;
+}
+
+.tabs-container.vertical .tabs-nav {
+    flex-direction: column;
+    border-right: var(--border-width) solid var(--border-color);
+    border-bottom: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    padding: var(--spacing-md) 0;
+}
+
+.tabs-container.vertical .tab-button {
+    border-radius: 0;
+    text-align: left;
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.tabs-container.vertical .tab-button.active::after {
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    left: auto;
+    width: 2px;
+    height: 100%;
+}
+
+.tabs-container.vertical .tab-content {
+    flex: 1;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+/* Temas */
+.tabs-container.dark {
+    --card-bg: var(--bg-dark);
+    --bg-secondary: var(--bg-secondary);
+    --bg-light: var(--bg-light);
+    --text-primary: var(--text-light);
+    --border-color: var(--border-color);
+}
+
+.tabs-container.light {
+    --card-bg: var(--bg-light);
+    --bg-secondary: var(--bg-secondary);
+    --bg-light: var(--bg-light);
+    --text-primary: var(--text-dark);
+    --border-color: var(--border-color);
+} 
