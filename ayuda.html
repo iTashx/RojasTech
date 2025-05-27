@@ -1,187 +1,206 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Ayuda - SIGESCON</title>
-
-    <!-- Estilos -->
-    <link rel="stylesheet" href="css/ayuda.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda - Sistema de Gestión de Contratos Empresariales</title>
+    <link rel="stylesheet" href="css/ayuda.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos específicos para la página de ayuda */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9eff2; /* Fondo claro general */
+            color: #333;
+            line-height: 1.6;
+        }
+        .help-wrapper {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            position: relative; /* Para posicionar el botón de volver */
+        }
+        .help-header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin: -20px -20px 20px -20px; /* Ajusta para que ocupe todo el ancho de la tarjeta */
+            text-align: center;
+        }
+        .help-header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        .help-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #eee;
+        }
+        .help-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .help-section h2 {
+            color: #007bff;
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-left: 10px;
+            border-left: 5px solid #007bff;
+        }
+        .help-section h3 {
+            color: #0056b3;
+            font-size: 1.4rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .help-section p, .help-section ul {
+            font-size: 1.05rem;
+            color: #555;
+            margin-bottom: 10px;
+            padding-left: 5px;
+        }
+        .help-section ul {
+            list-style-type: disc;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        .help-section ol {
+            list-style-type: decimal;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        .help-section ul li, .help-section ol li {
+            margin-bottom: 8px;
+        }
+        .help-section code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95rem;
+        }
+        .back-button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .back-button {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+        /* Iconos */
+        .help-section .fas {
+            margin-right: 5px;
+            color: #007bff;
+        }
+    </style>
 </head>
 <body>
-    <div class="help-container">
-        <nav class="help-nav">
-            <div class="help-nav-header">
-                <h1>SIGESCON</h1>
-                <p>Manual de Usuario</p>
-            </div>
-            <ul>
-                <li><a href="#introduccion">Introducción</a></li>
-                <li><a href="#contratos">Gestión de Contratos</a></li>
-                <li><a href="#hes">Gestión de HES</a></li>
-                <li><a href="#avances">Seguimiento de Avances</a></li>
-                <li><a href="#reportes">Reportes</a></li>
-                <li><a href="#papelera">Papelera de Reciclaje</a></li>
-            </ul>
-        </nav>
-
-        <main class="help-content">
-            <section id="introduccion" class="help-section">
-                <h2>Introducción a SIGESCON</h2>
-                <div class="help-image-container">
-                    <img src="assets/images/help/dashboard-overview.png" alt="Vista general del dashboard" class="help-image">
-                    <p class="image-caption">Figura 1: Vista general del dashboard principal de SIGESCON</p>
-                </div>
-                <p>SIGESCON es un sistema integral para la gestión de contratos empresariales que te permite:</p>
-                <ul>
-                    <li>Gestionar contratos y sus partidas</li>
-                    <li>Administrar HES (Hojas de Estimación de Servicios)</li>
-                    <li>Seguir el avance físico y financiero</li>
-                    <li>Generar reportes detallados</li>
-                </ul>
-            </section>
-
-            <section id="contratos" class="help-section">
-                <h2>Gestión de Contratos</h2>
-                
-                <h3>Crear un Nuevo Contrato</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/new-contract-form.png" alt="Formulario de nuevo contrato" class="help-image">
-                    <p class="image-caption">Figura 2: Formulario para crear un nuevo contrato</p>
-                </div>
-                <ol>
-                    <li>Haz clic en "Nuevo/Editar Contrato" en el menú lateral</li>
-                    <li>Completa los campos requeridos (marcados con *)</li>
-                    <li>Agrega las partidas del contrato</li>
-                    <li>Haz clic en "Guardar Contrato"</li>
-                </ol>
-
-                <h3>Gestionar Partidas</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/contract-items.png" alt="Gestión de partidas" class="help-image">
-                    <p class="image-caption">Figura 3: Sección de gestión de partidas del contrato</p>
-                </div>
-                <p>Para agregar partidas a un contrato:</p>
-                <ol>
-                    <li>Haz clic en "Añadir Partida"</li>
-                    <li>Completa la descripción, cantidad y precio unitario</li>
-                    <li>El total se calculará automáticamente</li>
-                </ol>
-            </section>
-
-            <section id="hes" class="help-section">
-                <h2>Gestión de HES</h2>
-                
-                <h3>Crear una HES</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/new-hes-form.png" alt="Formulario de nueva HES" class="help-image">
-                    <p class="image-caption">Figura 4: Formulario para crear una nueva HES</p>
-                </div>
-                <ol>
-                    <li>Selecciona el contrato asociado</li>
-                    <li>Ingresa el número de HES</li>
-                    <li>Define las fechas de inicio y fin</li>
-                    <li>Selecciona las partidas a ejecutar</li>
-                </ol>
-
-                <h3>Ejecutar Partidas en HES</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/hes-items.png" alt="Ejecución de partidas en HES" class="help-image">
-                    <p class="image-caption">Figura 5: Sección de ejecución de partidas en HES</p>
-                </div>
-                <p>Para ejecutar partidas:</p>
-                <ol>
-                    <li>Selecciona la cantidad a ejecutar</li>
-                    <li>Verifica los totales calculados</li>
-                    <li>Confirma la ejecución</li>
-                </ol>
-            </section>
-
-            <section id="avances" class="help-section">
-                <h2>Seguimiento de Avances</h2>
-                
-                <h3>Avance Físico</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/physical-progress.png" alt="Vista de avance físico" class="help-image">
-                    <p class="image-caption">Figura 6: Panel de control de avance físico</p>
-                </div>
-                <p>El avance físico muestra:</p>
-                <ul>
-                    <li>Porcentaje de ejecución por partida</li>
-                    <li>Progreso global del contrato</li>
-                    <li>Gráficos de seguimiento</li>
-                </ul>
-
-                <h3>Avance Financiero</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/financial-progress.png" alt="Vista de avance financiero" class="help-image">
-                    <p class="image-caption">Figura 7: Panel de control de avance financiero</p>
-                </div>
-                <p>El avance financiero incluye:</p>
-                <ul>
-                    <li>Monto ejecutado vs. total</li>
-                    <li>Desglose por HES</li>
-                    <li>Proyecciones financieras</li>
-                </ul>
-            </section>
-
-            <section id="reportes" class="help-section">
-                <h2>Reportes</h2>
-                
-                <h3>Generar Reportes</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/reports-menu.png" alt="Menú de reportes" class="help-image">
-                    <p class="image-caption">Figura 8: Menú de opciones de reportes</p>
-                </div>
-                <p>Tipos de reportes disponibles:</p>
-                <ul>
-                    <li>Reporte de contrato individual</li>
-                    <li>Resumen de HES</li>
-                    <li>Avances físicos y financieros</li>
-                    <li>Estadísticas globales</li>
-                </ul>
-
-                <h3>Exportar Reportes</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/export-options.png" alt="Opciones de exportación" class="help-image">
-                    <p class="image-caption">Figura 9: Opciones de exportación de reportes</p>
-                </div>
-                <p>Formatos de exportación:</p>
-                <ul>
-                    <li>Excel (.xlsx)</li>
-                    <li>PDF</li>
-                    <li>Imagen (.png)</li>
-                </ul>
-            </section>
-
-            <section id="papelera" class="help-section">
-                <h2>Papelera de Reciclaje</h2>
-                
-                <h3>Gestionar Elementos Eliminados</h3>
-                <div class="help-image-container">
-                    <img src="assets/images/help/recycle-bin.png" alt="Papelera de reciclaje" class="help-image">
-                    <p class="image-caption">Figura 10: Vista de la papelera de reciclaje</p>
-                </div>
-                <p>En la papelera puedes:</p>
-                <ul>
-                    <li>Ver elementos eliminados</li>
-                    <li>Restaurar contratos o HES</li>
-                    <li>Eliminar permanentemente</li>
-                </ul>
-            </section>
-        </main>
-    </div>
-
-    <footer class="bg-dark text-light py-3 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2025 SIGESCON - Todos los derechos reservados</p>
+    <div class="help-wrapper">
+        <div class="help-header">
+            <h1><i class="fas fa-info-circle"></i> Centro de Ayuda y Documentación</h1>
         </div>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/ayuda.js"></script>
+        <p>Bienvenido al Centro de Ayuda del Sistema de Gestión de Contratos Empresariales. Aquí encontrarás una guía completa para utilizar todas las funcionalidades del sistema.</p>
+
+        <div class="help-section">
+            <h2><i class="fas fa-th-large"></i> Paneles Principales</h2>
+            <p>El sistema se organiza en varias pestañas para una navegación intuitiva y una gestión eficiente:</p>
+            <ul>
+                <li><strong>Resumen General (Dashboard):</strong> <i class="fas fa-tachometer-alt"></i> Muestra un panorama rápido de los indicadores clave de los contratos: total de contratos activos, monto total contratado, contratos próximos a vencer (en los siguientes 30 días) y el número total de modalidades de contratación registradas. Es el punto de partida ideal para una supervisión rápida.</li>
+                <li><strong>Nuevo/Editar Contrato:</strong> <i class="fas fa-file-contract"></i> Permite el ingreso de nuevos contratos al sistema o la modificación de los existentes. Aquí se detallan todas las características del contrato, incluyendo sus partidas asociadas.</li>
+                <li><strong>Lista de Contratos:</strong> <i class="fas fa-list"></i> Proporciona una tabla interactiva con todos los contratos registrados. Desde aquí se pueden aplicar filtros para búsquedas específicas, editar, ver los detalles y mover contratos a la papelera. También permite exportar la lista a Excel o PDF.</li>
+                <li><strong>Avance Físico:</strong> <i class="fas fa-chart-line"></i> Dedicado al registro y seguimiento del progreso físico de cada contrato. Permite añadir nuevas entradas de avance (porcentaje y descripción) y visualizar el historial de avances de un contrato seleccionado.</li>
+                <li><strong>Resumen Gráfico:</strong> <i class="fas fa-chart-pie"></i> Ofrece una visualización gráfica de los datos de los contratos, específicamente la distribución de contratos por modalidad. Puedes elegir entre diferentes tipos de gráficos (barras, torta, rosquilla) y exportar tanto los datos como el gráfico en varios formatos.</li>
+                <li><strong>Papelera:</strong> <i class="fas fa-trash"></i> Almacena temporalmente los contratos que han sido eliminados del listado principal. Desde aquí, los elementos pueden ser restaurados (devueltos a su sección original) o eliminados de forma permanente del sistema.</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h2><i class="fas fa-cogs"></i> Funcionalidades Clave</h2>
+
+            <h3><i class="fas fa-file-contract"></i> Creación y Edición de Contratos</h3>
+            <ol>
+                <li>Navega a la pestaña "Nuevo/Editar Contrato".</li>
+                <li>Completa todos los campos obligatorios (*). La <strong>Duración (días)</strong> se calcula automáticamente al ingresar las <strong>Fechas de Inicio y Final</strong>.</li>
+                <li><strong>Gestión de Modalidades:</strong> Al lado del campo "Modalidad de Contratación", puedes:
+                    <ul>
+                        <li>Seleccionar una modalidad existente.</li>
+                        <li>Ingresar una nueva modalidad en el campo de texto y hacer clic en <button class="success-btn small-btn"><i class="fas fa-plus"></i></button> para añadirla.</li>
+                        <li>Seleccionar una modalidad del desplegable y hacer clic en <button class="danger-btn small-btn"><i class="fas fa-minus"></i></button> para eliminarla (esto también afectará a los contratos asociados).</li>
+                    </ul>
+                </li>
+                <li><strong>Partidas del Contrato:</strong> Haz clic en <button class="primary-btn small-btn"><i class="fas fa-plus"></i> Añadir Partida</button> para agregar filas. Ingresa la Descripción, Cantidad, UMD (Unidad de Medida) y Precio Unitario. El Total de cada partida y el <strong>Monto Total del Contrato</strong> se actualizan automáticamente. Puedes eliminar partidas individuales con el botón <button class="danger-btn small-btn"><i class="fas fa-trash"></i></button> en cada fila.</li>
+                <li>Haz clic en <button class="success-btn"><i class="fas fa-save"></i> Guardar/Actualizar Contrato</button> para almacenar o actualizar los datos.</li>
+                <li>Usa <button class="secondary-btn"><i class="fas fa-eraser"></i> Limpiar Formulario</button> para resetear todos los campos.</li>
+            </ol>
+
+            <h3><i class="fas fa-filter"></i> Filtrado y Exportación de Contratos</h3>
+            <ol>
+                <li>Dirígete a la pestaña "Lista de Contratos".</li>
+                <li>Utiliza los campos de filtro (N° Proveedor, N° SICAC, Fecha Inicio, Fecha Final) para restringir la lista de contratos.</li>
+                <li>Haz clic en <button class="primary-btn"><i class="fas fa-filter"></i> Aplicar Filtros</button> para ver los resultados.</li>
+                <li><button class="secondary-btn"><i class="fas fa-eraser"></i> Limpiar Filtros</button> restablece la lista completa de contratos.</li>
+                <li>Para exportar, usa <button class="excel-btn"><i class="fas fa-file-excel"></i> Exportar a Excel</button> o <button class="pdf-btn"><i class="fas fa-file-pdf"></i> Exportar a PDF</button>.</li>
+            </ol>
+
+            <h3><i class="fas fa-chart-line"></i> Registro de Avance Físico</h3>
+            <ol>
+                <li>Ve a la pestaña "Avance Físico".</li>
+                <li><strong>Selecciona un Contrato</strong> del desplegable. El sistema cargará el historial de avances de ese contrato.</li>
+                <li>Ingresa la <strong>Fecha de Avance</strong> y el <strong>Porcentaje de Avance (%)</strong>. El <strong>Monto del Avance</strong> se calculará automáticamente.</li>
+                <li>Añade una <strong>Descripción del Avance</strong> (opcional).</li>
+                <li>Haz clic en <button class="success-btn"><i class="fas fa-plus-circle"></i> Registrar Avance</button> para guardar el registro.</li>
+                <li>El historial de avances se mostrará en la tabla inferior. Puedes eliminar un avance con el botón <button class="danger-btn small-btn"><i class="fas fa-trash"></i></button></li>
+            </ol>
+
+            <h3><i class="fas fa-trash"></i> Gestión de Papelera</h3>
+            <ol>
+                <li>Accede a la pestaña "Papelera".</li>
+                <li>Aquí verás una lista de todos los elementos que han sido movidos a la papelera.</li>
+                <li>Para restaurar un elemento, haz clic en <button class="success-btn small-btn"><i class="fas fa-undo"></i> Restaurar</button>. El elemento volverá a su sección original.</li>
+                <li>Para eliminar un elemento permanentemente (acción irreversible), haz clic en <button class="danger-btn small-btn"><i class="fas fa-minus-circle"></i> Eliminar Permanente</button>.</li>
+                <li>Para vaciar toda la papelera de una vez, haz clic en <button class="danger-btn"><i class="fas fa-trash-restore-alt"></i> Vaciar Papelera</button>. ¡Esta acción es irreversible!</li>
+            </ol>
+        </div>
+
+        <div class="help-section">
+            <h2><i class="fas fa-question-circle"></i> Preguntas Frecuentes (FAQ)</h2>
+            <ul>
+                <li><strong>¿Cómo se calcula la "Duración (días)" de un contrato?</strong>
+                    <p>Se calcula automáticamente la diferencia en días entre la "Fecha Final" y la "Fecha de Inicio".</p></li>
+                <li><strong>¿Puedo eliminar una modalidad de contratación si ya tiene contratos asociados?</strong>
+                    <p>Sí, pero ten en cuenta que al eliminar una modalidad, **todos los contratos que estén asociados a esa modalidad también serán eliminados del sistema y movidos a la papelera**. Ten precaución al realizar esta acción.</p></li>
+                <li><strong>¿Qué sucede cuando muevo un contrato a la papelera?</strong>
+                    <p>El contrato se elimina de la "Lista de Contratos" principal y se traslada a la "Papelera", donde se conserva temporalmente. Desde allí, puedes restaurarlo si fue un error, o eliminarlo permanentemente.</p></li>
+                <li><strong>¿La eliminación permanente es realmente irreversible?</strong>
+                    <p>Sí, una vez que un contrato es eliminado permanentemente de la "Papelera", no hay forma de recuperarlo dentro de la aplicación. Se recomienda verificar cuidadosamente antes de realizar esta acción.</p></li>
+                <li><strong>¿Cómo puedo ver los detalles completos de un contrato desde la lista?</strong>
+                    <p>Puedes hacer clic en el botón de edición (<i class="fas fa-edit"></i>) junto a cada contrato en la "Lista de Contratos". Esto cargará todos los detalles del contrato en la pestaña "Nuevo/Editar Contrato" para su revisión o modificación.</p></li>
+            </ul>
+        </div>
+
+        <div class="back-button-container">
+            <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Volver a la Aplicación</a>
+        </div>
+    </div>
 </body>
 </html>

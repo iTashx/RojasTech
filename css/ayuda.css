@@ -1,647 +1,166 @@
-/* ayuda.css */
+/* --- Estilos específicos para la página de ayuda (ayuda.html) --- */
 
-/* Importación de fuentes */
-@import url('https://fonts.googleapis.com/css2?family=Roboto :wght@300;400;700&display=swap');
-
-/* Variables CSS */
-:root {
-    --primary-color: #4CAF50;
-    --secondary-color: #2196F3;
-    --accent-color: #FFC107;
-    --danger-color: #F44336;
-    --success-color: #4CAF50;
-    --info-color: #03A9F4;
-    --background-color: #f0f2f5;
-    --card-background: #ffffff;
-    --text-color: #333;
-    --light-text-color: #666;
-    --border-color: #ddd;
-    --header-bg: #3f51b5;
-
-    --spacing-xs: 5px;
-    --spacing-sm: 10px;
-    --spacing-md: 20px;
-    --spacing-lg: 30px;
-
-    --border-radius: 8px;
-    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    --help-primary: #2c3e50;
-    --help-secondary: #34495e;
-    --help-accent: #3498db;
-    --help-background: #f8f9fa;
-    --help-text: #2c3e50;
-    --help-border: #e9ecef;
+/* Contenedor principal de la ayuda */
+.help-wrapper {
+    max-width: 1000px;
+    margin: 30px auto; /* Centra el contenido y da espacio arriba/abajo */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-header {
-    background-color: var(--header-bg);
+/* Encabezado de la página de ayuda */
+.help-header {
+    background-color: #007bff; /* Azul primario */
     color: white;
-    padding: var(--spacing-md) var(--spacing-lg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--box-shadow);
-    flex-wrap: wrap;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 1.8em;
-    display: flex;
-    align-items: center;
-}
-
-header h1 .fas {
-    margin-right: var(--spacing-sm);
-}
-
-.header-buttons {
-    display: flex;
-    gap: var(--spacing-sm);
-}
-
-main {
-    flex-grow: 1;
-    padding: var(--spacing-md) var(--spacing-lg);
-    max-width: 900px;
-    margin: 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.card {
-    background-color: var(--card-background);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    margin-bottom: var(--spacing-md);
-}
-
-.card h2 {
-    color: var(--header-bg);
-    margin-top: 0;
-    margin-bottom: var(--spacing-md);
-    font-size: 1.5em;
-    display: flex;
-    align-items: center;
-}
-
-.card h2 .fas {
-    margin-right: var(--spacing-sm);
-}
-
-.card h3 {
-    color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: var(--spacing-sm);
-    font-size: 1.2em;
-    display: flex;
-    align-items: center;
-}
-
-.card h3 .fas {
-    margin-right: var(--spacing-xs);
-    font-size: 0.9em;
-    color: var(--text-color);
-}
-
-.card ul, .card ol {
-    margin-bottom: var(--spacing-sm);
-    padding-left: var(--spacing-md);
-}
-
-.card ul li, .card ol li {
-    margin-bottom: var(--spacing-xs);
-    color: var(--light-text-color);
-}
-
-.card ul li strong, .card ol li strong {
-    color: var(--text-color);
-}
-
-/* Botones */
-.primary-btn,
-.success-btn,
-.danger-btn,
-.secondary-btn,
-.excel-btn,
-.pdf-btn {
-    padding: var(--spacing-sm) var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: bold;
-    color: white;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs);
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.primary-btn {
-    background-color: var(--secondary-color);
-}
-.primary-btn:hover {
-    background-color: #1976D2;
-    transform: translateY(-1px);
-}
-
-.success-btn {
-    background-color: var(--success-color);
-}
-.success-btn:hover {
-    background-color: #388E3C;
-    transform: translateY(-1px);
-}
-
-.danger-btn {
-    background-color: var(--danger-color);
-}
-.danger-btn:hover {
-    background-color: #D32F2F;
-    transform: translateY(-1px);
-}
-
-.secondary-btn {
-    background-color: #6c757d;
-    color: white;
-}
-.secondary-btn:hover {
-    background-color: #5a6268;
-    transform: translateY(-1px);
-}
-
-.excel-btn {
-    background-color: #28a745;
-}
-.excel-btn:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
-}
-
-.pdf-btn {
-    background-color: #dc3545;
-}
-.pdf-btn:hover {
-    background-color: #c82333;
-    transform: translateY(-1px);
-}
-
-.small-btn {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: 0.85em;
-    vertical-align: middle;
-    line-height: 1;
-}
-
-/* Toast */
-.toast {
-    display: inline-block;
-    background-color: var(--header-bg);
-    color: white;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--border-radius);
-    font-size: 0.9em;
-    box-shadow: var(--box-shadow);
-    vertical-align: middle;
-    margin: 0 var(--spacing-xs);
-}
-
-.toast.show {
-    opacity: 1;
-    animation: fadeSlideIn 0.3s ease forwards;
-}
-
-@keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Footer */
-footer {
-    background-color: var(--header-bg);
-    color: white;
+    padding: 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    /* Ajusta para que ocupe todo el ancho de la tarjeta sin desbordar el redondeado */
+    margin: -20px -20px 20px -20px;
     text-align: center;
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-size: 0.9em;
-    margin-top: var(--spacing-md);
-    flex-shrink: 0;
 }
 
-footer a {
-    color: var(--accent-color);
-    text-decoration: none;
+.help-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
 }
 
-footer a:hover {
-    text-decoration: underline;
+/* Secciones individuales de ayuda */
+.help-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #eee; /* Línea divisoria suave */
 }
 
-.footer-text {
-    margin-top: 5px;
-    display: block;
+/* La última sección no lleva borde inferior */
+.help-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
 }
 
-/* Responsive Design */
+/* Títulos de sección (ej. "Paneles Principales") */
+.help-section h2 {
+    color: #007bff; /* Azul primario */
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-left: 10px;
+    border-left: 5px solid #007bff; /* Borde izquierdo distintivo */
+}
+
+/* Subtítulos de sección (ej. "Creación y Edición de Contratos") */
+.help-section h3 {
+    color: #0056b3; /* Azul más oscuro para subtítulos */
+    font-size: 1.4rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Párrafos y elementos de lista generales */
+.help-section p, .help-section ul, .help-section ol {
+    font-size: 1.05rem;
+    color: #555;
+    margin-bottom: 10px;
+    padding-left: 5px; /* Pequeña indentación */
+}
+
+/* Listas sin ordenar */
+.help-section ul {
+    list-style-type: disc; /* Puntos */
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+/* Listas ordenadas */
+.help-section ol {
+    list-style-type: decimal; /* Números */
+    margin-left: 30px;
+    margin-bottom: 20px;
+}
+
+/* Elementos individuales de lista */
+.help-section ul li, .help-section ol li {
+    margin-bottom: 8px;
+}
+
+/* Estilo para código en línea (ej. `variable`) */
+.help-section code {
+    background-color: #f0f0f0; /* Fondo gris claro */
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace; /* Fuente monoespaciada */
+    font-size: 0.95rem;
+}
+
+/* Contenedor del botón de volver */
+.back-button-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Estilo para el botón de volver */
+.back-button {
+    display: inline-block; /* Para aplicar padding y gap */
+    background-color: #6c757d; /* Gris secundario */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none; /* Elimina el subrayado por defecto */
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: inline-flex; /* Para alinear ícono y texto */
+    align-items: center;
+    gap: 8px; /* Espacio entre ícono y texto */
+}
+
+.back-button:hover {
+    background-color: #5a6268; /* Tono más oscuro al pasar el mouse */
+}
+
+/* Iconos dentro de las secciones de ayuda */
+.help-section .fas {
+    margin-right: 5px; /* Espacio a la derecha del icono */
+    color: #007bff; /* Color azul primario para los iconos */
+}
+
+/* Media Queries para responsividad en ayuda.html */
 @media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: var(--spacing-md) var(--spacing-sm);
+    .help-wrapper {
+        margin: 20px 15px; /* Menos margen lateral en móviles */
+        padding: 15px;
     }
-
-    .header-buttons {
-        margin-top: var(--spacing-sm);
+    .help-header h1 {
+        font-size: 1.8rem;
     }
-
-    main {
-        padding: var(--spacing-sm);
+    .help-section h2 {
+        font-size: 1.5rem;
+    }
+    .help-section h3 {
+        font-size: 1.2rem;
+    }
+    .help-section p, .help-section ul, .help-section ol {
+        font-size: 1rem;
+    }
+    .back-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }
 
 @media (max-width: 480px) {
-    header h1 {
-        font-size: 1.5em;
+    .help-header h1 {
+        font-size: 1.6rem;
     }
-
-    .primary-btn, .success-btn, .danger-btn, .secondary-btn, .excel-btn, .pdf-btn {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
+    .help-section h2 {
+        font-size: 1.3rem;
     }
-
-    .small-btn {
-        font-size: 0.75em;
-        display: inline-block;
-        padding: var(--spacing-xs) var(--spacing-sm);
+    .help-section h3 {
+        font-size: 1.1rem;
     }
-
-    .card h2 {
-        font-size: 1.3em;
+    .help-section ul, .help-section ol {
+        margin-left: 20px; /* Reducir indentación de listas */
     }
-
-    .card h3 {
-        font-size: 1.1em;
-    }
-
-    .card ul, .card ol {
-        padding-left: var(--spacing-md);
-    }
-}
-
-/* Estilos específicos de ayuda.html */
-.section-title {
-    border-left: 4px solid var(--primary-color);
-    padding-left: 10px;
-    margin-bottom: 20px;
-}
-
-.feature-box {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease;
-}
-
-.feature-box:hover {
-    transform: translateY(-3px);
-}
-
-.code-example {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 6px;
-    font-family: monospace;
-    overflow-x: auto;
-}
-
-.help-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.help-section {
-    margin-bottom: 30px;
-}
-
-.help-section h2 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.help-section h3 {
-    color: #34495e;
-    margin-top: 25px;
-}
-
-.help-section ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-.help-section li {
-    margin-bottom: 10px;
-}
-
-.help-section li:before {
-    content: "•";
-    color: #3498db;
-    font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-}
-
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 10px 0;
-}
-
-.help-note {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
-    padding: 15px;
-    margin: 15px 0;
-}
-
-/* Estilos para la documentación de ayuda */
-
-/* Layout principal */
-.help-container {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    min-height: 100vh;
-    background-color: var(--help-background);
-}
-
-/* Navegación */
-.help-nav {
-    background-color: var(--help-primary);
-    color: white;
-    padding: 1rem;
-    position: fixed;
-    width: 250px;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.help-nav-header {
-    text-align: center;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
-}
-
-.help-nav-header h1 {
-    font-size: 1.5rem;
-    margin: 0;
-}
-
-.help-nav-header p {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin: 0.5rem 0 0;
-}
-
-.help-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.help-nav li {
-    margin: 0.5rem 0;
-}
-
-.help-nav a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-.help-nav a:hover {
-    background-color: var(--help-accent);
-}
-
-/* Contenido principal */
-.help-content {
-    margin-left: 250px;
-    padding: 2rem;
-    max-width: 1200px;
-}
-
-/* Secciones */
-.help-section {
-    margin-bottom: 3rem;
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.help-section h2 {
-    color: var(--help-primary);
-    border-bottom: 2px solid var(--help-accent);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.help-section h3 {
-    color: var(--help-secondary);
-    margin: 1.5rem 0 1rem;
-}
-
-/* Contenedor de imágenes */
-.help-image-container {
-    margin: 2rem 0;
-    text-align: center;
-}
-
-.help-image {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.image-caption {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--help-secondary);
-    font-style: italic;
-}
-
-/* Listas */
-.help-section ul,
-.help-section ol {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
-}
-
-.help-section li {
-    margin: 0.5rem 0;
-    line-height: 1.5;
-}
-
-/* Notas y advertencias */
-.help-note {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.help-warning {
-    background-color: #fff3e0;
-    border-left: 4px solid #ff9800;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .help-container {
-        grid-template-columns: 1fr;
-    }
-
-    .help-nav {
-        position: static;
-        width: 100%;
-        height: auto;
-    }
-
-    .help-content {
-        margin-left: 0;
-        padding: 1rem;
-    }
-
-    .help-section {
-        padding: 1rem;
-    }
-}
-
-/* Animaciones */
-.help-section {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Estilos para código */
-.help-code {
-    background-color: #f8f9fa;
-    border: 1px solid var(--help-border);
-    border-radius: 4px;
-    padding: 1rem;
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    overflow-x: auto;
-    margin: 1rem 0;
-}
-
-/* Estilos para tablas */
-.help-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-}
-
-.help-table th,
-.help-table td {
-    border: 1px solid var(--help-border);
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.help-table th {
-    background-color: var(--help-primary);
-    color: white;
-}
-
-.help-table tr:nth-child(even) {
-    background-color: var(--help-background);
-}
-
-/* Estilos para botones */
-.help-button {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: var(--help-accent);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.help-button:hover {
-    background-color: #2980b9;
-}
-
-/* Estilos para tooltips */
-.help-tooltip {
-    position: relative;
-    display: inline-block;
-}
-
-.help-tooltip .tooltip-text {
-    visibility: hidden;
-    background-color: var(--help-primary);
-    color: white;
-    text-align: center;
-    padding: 0.5rem;
-    border-radius: 4px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.help-tooltip:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
 }
