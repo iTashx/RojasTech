@@ -1210,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalExecutedQuantity += executedInHES;
         }
 
-        const physicalAdvancePercentage = totalContractQuantity > 0 ? (totalExecutedQuantity / totalContractQuantity) * 100 : 0;
+        let physicalAdvancePercentage = totalContractQuantity > 0 ? (totalExecutedQuantity / totalContractQuantity) * 100 : 0;
 
         // Calcular avance financiero
         for (const hes of hesList) {
