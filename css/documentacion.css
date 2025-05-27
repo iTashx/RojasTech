@@ -1,0 +1,417 @@
+/* Estilos base */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-color: #333;
+    --light-gray: #f5f6fa;
+    --border-color: #dcdde1;
+    --code-bg: #f8f9fa;
+    --code-border: #e9ecef;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-gray);
+}
+
+/* Contenedor principal */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Encabezado */
+.header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Navegación de documentación */
+.doc-nav {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.doc-nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.doc-nav a {
+    color: var(--primary-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.doc-nav a:hover {
+    background-color: var(--light-gray);
+}
+
+/* Contenido de documentación */
+.doc-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.doc-section {
+    margin-bottom: 2rem;
+}
+
+.doc-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.doc-section h3 {
+    color: var(--secondary-color);
+    margin: 1.5rem 0 1rem;
+}
+
+/* Bloques de código */
+pre {
+    background-color: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+}
+
+/* Tablas */
+.doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.doc-table th,
+.doc-table td {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.doc-table th {
+    background-color: var(--light-gray);
+    font-weight: bold;
+}
+
+.doc-table tr:nth-child(even) {
+    background-color: var(--light-gray);
+}
+
+/* Listas */
+.doc-list {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.doc-list li {
+    margin-bottom: 0.5rem;
+}
+
+/* Notas y advertencias */
+.note {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.warning {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Footer común */
+/* Comentado para usar el footer común */
+/*
+.footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 1rem;
+}
+
+.footer-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 1rem;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .doc-content {
+        padding: 1.5rem;
+    }
+
+    .doc-nav ul {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .doc-content {
+        padding: 1rem;
+    }
+
+    .doc-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    /* Asegurarse de que el footer use los estilos del archivo común */
+    /* .footer-content y .footer-section ahora vienen de components/footer.css */
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .doc-content {
+        padding: 0.8rem;
+    }
+
+    pre {
+        padding: 0.8rem;
+    }
+}
+*/
+
+/* Media Queries (manteniendo las media queries específicas de documentacion.css y añadiendo 1024px) */
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .doc-content {
+        padding: 1.5rem;
+    }
+
+    .doc-nav ul {
+        flex-direction: column;
+        gap: 0.5rem; /* Reducir el espacio entre elementos de navegación */
+    }
+
+    .doc-nav a {
+        padding: 0.4rem 0.8rem; /* Ajustar padding */
+        font-size: 0.95rem;
+    }
+
+    .doc-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .doc-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .doc-table th,
+    .doc-table td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .doc-content {
+        padding: 1rem;
+    }
+
+    .doc-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+     .doc-nav ul {
+        gap: 0.3rem; /* Reducir más el espacio */
+    }
+
+     .doc-nav a {
+        padding: 0.3rem 0.6rem; /* Ajustar padding */
+        font-size: 0.9rem;
+    }
+
+     .doc-section h2 {
+        font-size: 1.6rem;
+    }
+
+    .doc-section h3 {
+        font-size: 1.2rem;
+    }
+
+    .doc-table th,
+    .doc-table td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    /* Asegurarse de que el footer use los estilos del archivo común */
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 1.2rem;
+    }
+
+    .doc-content {
+        padding: 0.8rem;
+    }
+
+    pre {
+        padding: 0.8rem;
+    }
+
+     .doc-nav ul {
+         flex-direction: column;
+         gap: 0.5rem;
+     }
+
+     .doc-nav a {
+         text-align: center;
+         padding: 0.5rem 1rem; /* Restablecer padding para stacked items */
+         font-size: 1rem;
+     }
+
+      .doc-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .doc-section h3 {
+        font-size: 1.1rem;
+    }
+
+    .doc-table th,
+    .doc-table td {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Animaciones (manteniendo las animaciones específicas de documentacion.css) */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.doc-section {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Utilidades (manteniendo las utilidades específicas de documentacion.css) */
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; } 

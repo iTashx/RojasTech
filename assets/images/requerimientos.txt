@@ -1,0 +1,165 @@
+REQUERIMIENTOS DE IMÁGENES PARA SIGESCON
+=====================================
+
+IMÁGENES PARA DOCUMENTACIÓN (docs/documentacion.html)
+---------------------------------------------------
+1. introduccion.png/jpg
+   - Descripción: Vista general del sistema SIGESCON
+   - Contenido: Captura de pantalla del dashboard principal
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+2. introduccion-2.png/jpg
+   - Descripción: Dashboard principal
+   - Contenido: Captura detallada del dashboard
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+3. introduccion-3.png/jpg
+   - Descripción: Resumen de actividades
+   - Contenido: Captura del resumen de actividades
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+4. arquitectura.png/jpg
+   - Descripción: Diagrama de arquitectura del sistema
+   - Contenido: Diagrama de flujo mostrando la interacción entre componentes
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+5. arquitectura-2.png/jpg
+   - Descripción: Flujo de datos
+   - Contenido: Diagrama de flujo de datos
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+6. arquitectura-3.png/jpg
+   - Descripción: Componentes principales
+   - Contenido: Diagrama de componentes
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+7. estructura-archivos.png/jpg
+   - Descripción: Estructura de directorios del proyecto
+   - Contenido: Árbol de directorios visual
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+8. base-datos.png/jpg
+   - Descripción: Diagrama de base de datos
+   - Contenido: Esquema de tablas y relaciones
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+9. logica-programacion.png/jpg
+   - Descripción: Diagrama de flujo de la lógica principal
+   - Contenido: Flujo de procesos y funciones principales
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+10. componentes-ui.png/jpg
+    - Descripción: Componentes de interfaz de usuario
+    - Contenido: Capturas de los principales componentes UI
+    - Resolución recomendada: 1920x1080
+    - Formato: PNG o JPG
+
+11. guia-desarrollador.png/jpg
+    - Descripción: Guía de desarrollo
+    - Contenido: Capturas de ejemplos de código y explicaciones
+    - Resolución recomendada: 1920x1080
+    - Formato: PNG o JPG
+
+12. guia-usuario.png/jpg
+    - Descripción: Guía de usuario
+    - Contenido: Capturas de procesos principales
+    - Resolución recomendada: 1920x1080
+    - Formato: PNG o JPG
+
+13. faq.png/jpg
+    - Descripción: Preguntas frecuentes
+    - Contenido: Captura de la sección FAQ
+    - Resolución recomendada: 1920x1080
+    - Formato: PNG o JPG
+
+IMÁGENES PARA AYUDA (ayuda.html)
+-------------------------------
+1. introduccion-ayuda.png/jpg
+   - Descripción: Vista general del sistema
+   - Contenido: Captura del dashboard principal
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+2. navegacion.png/jpg
+   - Descripción: Barra de navegación
+   - Contenido: Captura del menú lateral
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+3. nuevo-contrato.png/jpg
+   - Descripción: Formulario de contrato
+   - Contenido: Captura del formulario de nuevo contrato
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+4. lista-contratos.png/jpg
+   - Descripción: Lista de contratos
+   - Contenido: Captura de la vista de lista
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+5. gestion-hes.png/jpg
+   - Descripción: Gestión de HES
+   - Contenido: Captura del módulo de HES
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+6. avance-fisico.png/jpg
+   - Descripción: Avance físico
+   - Contenido: Captura del módulo de avance
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+7. resumen-grafico.png/jpg
+   - Descripción: Resumen gráfico
+   - Contenido: Captura de gráficos y estadísticas
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+8. informes.png/jpg
+   - Descripción: Informes
+   - Contenido: Captura del módulo de informes
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+9. exportaciones.png/jpg
+   - Descripción: Exportaciones
+   - Contenido: Captura de opciones de exportación
+   - Resolución recomendada: 1920x1080
+   - Formato: PNG o JPG
+
+10. responsive.png/jpg
+    - Descripción: Diseño responsivo
+    - Contenido: Captura de la vista móvil
+    - Resolución recomendada: 1920x1080
+    - Formato: PNG o JPG
+
+ESPECIFICACIONES GENERALES
+-------------------------
+- Formato: PNG o JPG (ambos aceptados)
+- Resolución: 1920x1080 o similar
+- Tamaño máximo: 1MB por imagen
+- Calidad: Alta, con buena legibilidad
+- Tema: Claro, para mejor visibilidad
+- Nombres de archivo: Todo en minúsculas, sin espacios
+- Extensión: .png o .jpg (ambas aceptadas)
+
+NOTAS IMPORTANTES
+----------------
+1. Todas las imágenes deben ser capturas de pantalla claras y nítidas
+2. Evitar información sensible en las capturas
+3. Usar un tema claro para mejor legibilidad
+4. Asegurar que los textos sean legibles
+5. Mantener consistencia en el estilo visual
+6. Optimizar las imágenes para web
+7. Se aceptan tanto PNG como JPG, usa el formato que mejor se adapte a tus capturas
+8. Para el carrusel, asegúrate de que las imágenes relacionadas tengan el mismo tamaño y formato 

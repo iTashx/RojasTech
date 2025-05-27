@@ -1,0 +1,135 @@
+ESTRUCTURA DEL PROGRAMA SIGESCON
+=============================
+
+1. ESTRUCTURA DE CARPETAS
+------------------------
+/
+├── css/
+│   └── styles.css          # Estilos principales de la aplicación
+├── js/
+│   ├── modules/           # Módulos de la aplicación
+│   │   ├── ui.js         # Manejo de la interfaz de usuario
+│   │   ├── utils.js      # Funciones utilitarias
+│   │   ├── notifications.js # Sistema de notificaciones
+│   │   ├── contracts.js  # Gestión de contratos
+│   │   ├── hes.js        # Gestión de HES
+│   │   ├── reports.js    # Generación de reportes
+│   │   └── charts.js     # Gráficos y visualizaciones
+│   ├── database.js       # Configuración y manejo de la base de datos
+│   └── main.js          # Punto de entrada principal
+├── img/                  # Imágenes y recursos gráficos
+├── docs/                 # Documentación
+│   ├── documentacion.html # Documentación completa
+│   └── estructura_programa.txt # Este archivo
+└── index.html           # Página principal
+
+2. MÓDULOS PRINCIPALES
+----------------------
+a) UI (ui.js)
+   - Manejo de pestañas
+   - Sistema de notificaciones toast
+   - Interacción con elementos de la interfaz
+   - Eventos de la interfaz
+
+b) Utils (utils.js)
+   - Formateo de montos y fechas
+   - Cálculos de períodos
+   - Manejo de archivos
+   - Funciones de utilidad general
+
+c) Notifications (notifications.js)
+   - Sistema de notificaciones
+   - Gestión de notificaciones no leídas
+   - Almacenamiento local de notificaciones
+   - Interfaz de notificaciones
+
+d) Contracts (contracts.js)
+   - Gestión de contratos
+   - CRUD de contratos
+   - Cálculos de avances
+   - Validaciones de contratos
+
+e) HES (hes.js)
+   - Gestión de HES
+   - Cálculos de avances físicos
+   - Relación con contratos
+   - Validaciones de HES
+
+f) Reports (reports.js)
+   - Generación de reportes
+   - Exportación a Excel/PDF
+   - Configuración del sistema
+   - Gestión de datos
+
+g) Charts (charts.js)
+   - Gráficos de avances
+   - Visualizaciones de datos
+   - Exportación de gráficos
+   - Personalización de gráficos
+
+3. BASE DE DATOS
+---------------
+- Implementada con Dexie.js
+- Almacenamiento local
+- Tablas principales:
+  * Contratos
+  * HES
+  * Partidas
+  * Archivos
+  * Configuración
+
+4. FLUJO DE DATOS
+----------------
+1. El usuario interactúa con la interfaz (UI)
+2. Las acciones se procesan en los módulos correspondientes
+3. Los datos se almacenan en la base de datos
+4. Las notificaciones se manejan según sea necesario
+5. La interfaz se actualiza para reflejar los cambios
+
+5. DEPENDENCIAS EXTERNAS
+-----------------------
+- Dexie.js: Base de datos
+- Chart.js: Gráficos
+- XLSX: Exportación a Excel
+- jsPDF: Exportación a PDF
+- Font Awesome: Iconos
+- Bootstrap: Estilos y componentes
+
+6. MANTENIMIENTO
+---------------
+Para modificar o corregir funcionalidades:
+
+1. Identificar el módulo correspondiente
+2. Realizar los cambios necesarios
+3. Probar la funcionalidad específica
+4. Verificar la integración con otros módulos
+
+7. BUENAS PRÁCTICAS
+------------------
+- Mantener la modularidad
+- Documentar cambios importantes
+- Seguir el patrón de diseño establecido
+- Realizar pruebas antes de implementar cambios
+- Mantener la consistencia en el código
+
+8. CONSIDERACIONES DE SEGURIDAD
+------------------------------
+- Validación de datos en el cliente
+- Sanitización de entradas
+- Manejo seguro de archivos
+- Protección contra inyección de datos
+
+9. OPTIMIZACIÓN
+--------------
+- Carga perezosa de módulos
+- Caché de datos frecuentes
+- Minimización de operaciones de base de datos
+- Optimización de renderizado
+
+10. SOPORTE
+----------
+Para reportar problemas o solicitar mejoras:
+- Revisar la documentación
+- Verificar los logs de consola
+- Contactar al equipo de desarrollo
+- Proporcionar detalles del problema 
