@@ -1,0 +1,111 @@
+GUÍA COMPLETA DE SIGESCON
+========================
+
+1. INTRODUCCIÓN
+--------------
+SIGESCON es un sistema integral de gestión de contratos empresariales diseñado para optimizar y automatizar los procesos de gestión contractual en organizaciones.
+
+2. CARACTERÍSTICAS PRINCIPALES
+-----------------------------
+- Gestión completa de contratos
+- Seguimiento de partidas
+- Gestión de extensiones
+- Reportes y estadísticas
+- Interfaz intuitiva y moderna
+
+3. REQUISITOS DEL SISTEMA
+------------------------
+- Java 11 o superior
+- MySQL 8.0 o superior
+- Navegador web moderno
+- Conexión a internet estable
+
+4. INSTALACIÓN
+-------------
+1. Clonar el repositorio
+2. Configurar la base de datos
+3. Compilar el proyecto
+4. Ejecutar la aplicación
+
+5. CONFIGURACIÓN
+---------------
+- Configuración de base de datos
+- Configuración de correo
+- Configuración de seguridad
+- Personalización de interfaz
+
+6. MÓDULOS PRINCIPALES
+---------------------
+a) Gestión de Contratos
+   - Creación de contratos
+   - Modificación de contratos
+   - Anulación de contratos
+   - Búsqueda y filtrado
+
+b) Gestión de Partidas
+   - Registro de partidas
+   - Seguimiento de partidas
+   - Reportes de partidas
+   - Análisis de partidas
+
+c) Gestión de Extensiones
+   - Solicitud de extensiones
+   - Aprobación de extensiones
+   - Seguimiento de extensiones
+   - Reportes de extensiones
+
+7. SEGURIDAD
+-----------
+- Autenticación de usuarios
+- Control de acceso basado en roles
+- Encriptación de datos sensibles
+- Registro de auditoría
+
+8. MANTENIMIENTO
+---------------
+- Actualizaciones del sistema
+- Respaldo de datos
+- Limpieza de registros
+- Optimización de rendimiento
+
+9. SOPORTE
+---------
+- Documentación técnica
+- Guías de usuario
+- Soporte técnico
+- Capacitación
+
+10. MEJORES PRÁCTICAS
+--------------------
+- Uso eficiente del sistema
+- Gestión de datos
+- Seguridad de la información
+- Optimización de procesos
+
+11. SOLUCIÓN DE PROBLEMAS
+------------------------
+- Problemas comunes
+- Soluciones rápidas
+- Contacto de soporte
+- Procedimientos de emergencia
+
+12. ACTUALIZACIONES FUTURAS
+--------------------------
+- Nuevas funcionalidades
+- Mejoras planificadas
+- Integraciones futuras
+- Roadmap del proyecto
+
+13. GLOSARIO
+-----------
+- Términos técnicos
+- Definiciones importantes
+- Acrónimos
+- Referencias
+
+14. CONTACTO
+-----------
+- Soporte técnico
+- Desarrollo
+- Administración
+- Sugerencias y mejoras 

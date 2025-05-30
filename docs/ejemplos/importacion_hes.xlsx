@@ -1,0 +1,16 @@
+Hoja: HES
+| numero_hes | numero_proveedor | fecha_inicio | fecha_final | fecha_creado | aprobado | fecha_aprobado | texto_hes | texto_breve | valuacion | lugar_prestacion_servicio | responsable_sdo | ejecutada | valuado |
+|------------|------------------|--------------|-------------|--------------|----------|----------------|-----------|-------------|-----------|--------------------------|-----------------|-----------|---------|
+| HES001 | PROV001 | 2024-01-15 | 2024-02-15 | 2024-01-10 | Aprobado | 2024-01-12 | Mantenimiento preventivo enero | Mto Preventivo Ene | 2000.00 | Planta Principal | Juan Pérez | true | true |
+| HES002 | PROV001 | 2024-02-15 | 2024-03-15 | 2024-02-10 | Pendiente | | Mantenimiento preventivo febrero | Mto Preventivo Feb | 2000.00 | Planta Principal | Juan Pérez | false | false |
+| HES003 | PROV002 | 2024-02-15 | 2024-03-15 | 2024-02-10 | Aprobado | 2024-02-12 | Excavación y cimentación | Exc y Cim | 50000.00 | Sitio de obra | María López | true | true |
+
+Hoja: Partidas_HES
+| numero_hes | numero_partida | cantidad_ejecutar |
+|------------|----------------|-------------------|
+| HES001 | 1 | 1 |
+| HES001 | 2 | 10 |
+| HES002 | 1 | 1 |
+| HES002 | 2 | 5 |
+| HES003 | 1 | 500 |
+| HES003 | 2 | 200 | 

@@ -1,0 +1,161 @@
+SEGUIMIENTO DE MEJORAS SIGESCON
+=============================
+
+Última Actualización: 2024-06-10
+
+1. MEJORAS IMPLEMENTADAS
+-----------------------
+
+1.1 Mejoras en index.html
+- [COMPLETADO] Optimización del head con meta tags y preload
+- [COMPLETADO] Implementación de roles ARIA para accesibilidad
+- [COMPLETADO] Carga diferida de scripts con defer
+- [COMPLETADO] Mejoras en la estructura semántica
+- [COMPLETADO] Optimización de la interactividad
+
+1.2 Sistema de Notificaciones
+- [COMPLETADO] Implementación completa del sistema
+- [COMPLETADO] Contador de notificaciones no leídas
+- [COMPLETADO] Limpieza automática de notificaciones antiguas
+- [COMPLETADO] Interfaz mejorada de notificaciones
+
+1.3 Gestión de Contratos
+- [COMPLETADO] Validación de SICAC único
+- [COMPLETADO] Sistema de extensiones mejorado
+- [COMPLETADO] Cálculo automático de gasto administrativo
+- [COMPLETADO] Optimización de consultas
+
+1.4 Gestión de HES
+- [COMPLETADO] Validaciones mejoradas
+- [COMPLETADO] Cálculos automáticos
+- [COMPLETADO] Gestión de partidas optimizada
+- [COMPLETADO] Sistema de aprobación
+
+2. CAMBIOS EN PROGRESO
+---------------------
+
+2.1 Bloque 3: Correcciones Pendientes
+1. Barra Lateral CSS [EN PROGRESO]
+   - [ ] Ajuste de altura completa
+   - [ ] Corrección de z-index
+   - [ ] Mejora de posicionamiento
+
+2. Modalidad de Contratación [PENDIENTE]
+   - [ ] Implementación de eliminación completa
+   - [ ] Validación de celdas vacías
+   - [ ] Mejora en la interfaz
+
+3. Gasto Administrativo [EN PROGRESO]
+   - [ ] Reposicionamiento del checkbox
+   - [ ] Validación de porcentaje
+   - [ ] Mejora en cálculos
+
+4. Partidas [PENDIENTE]
+   - [ ] Corrección de búsqueda SICAC
+   - [ ] Integración con GA
+   - [ ] Mejora en totales
+
+2.2 Bloque 4: Importación Excel [EN PROGRESO]
+1. Desarrollo Inicial
+   - [ ] Implementación de lectura Excel
+   - [ ] Mapeo de columnas
+   - [ ] Validación de datos
+   - [ ] Integración con BD
+
+2.3 Bloque 5: Optimización [PENDIENTE]
+1. Sistema de Logs
+   - [ ] Diseño de estructura
+   - [ ] Implementación de registro
+   - [ ] Sistema de rotación
+
+2. Manejo de Errores
+   - [ ] Implementación de try-catch
+   - [ ] Mensajes de error amigables
+   - [ ] Registro de errores
+
+3. PRÓXIMAS MEJORAS PLANIFICADAS
+-------------------------------
+
+3.1 Prioridad Alta
+1. Sistema de Logs
+   - Implementación de registro detallado
+   - Rotación automática de logs
+   - Interfaz de visualización
+
+2. Optimización de Rendimiento
+   - Implementación de caché
+   - Optimización de consultas
+   - Mejora en carga de recursos
+
+3.2 Prioridad Media
+1. Mejoras en UI/UX
+   - Rediseño de interfaces
+   - Mejora en responsividad
+   - Optimización de flujos
+
+2. Validaciones
+   - Mejora en validaciones de datos
+   - Mensajes de error más claros
+   - Prevención de errores comunes
+
+3.3 Prioridad Baja
+1. Documentación
+   - Actualización de manuales
+   - Documentación técnica
+   - Guías de usuario
+
+2. Tests
+   - Implementación de pruebas unitarias
+   - Pruebas de integración
+   - Pruebas de rendimiento
+
+4. NOTAS DE IMPLEMENTACIÓN
+-------------------------
+
+4.1 Consideraciones Técnicas
+- Mantener compatibilidad con Windows 10/11
+- Asegurar respaldo antes de cambios
+- Documentar todos los cambios
+- Realizar pruebas después de cada modificación
+
+4.2 Proceso de Desarrollo
+1. Revisión de requerimientos
+2. Desarrollo de funcionalidad
+3. Pruebas unitarias
+4. Pruebas de integración
+5. Documentación
+6. Despliegue
+
+4.3 Control de Calidad
+- Revisión de código
+- Pruebas de funcionalidad
+- Verificación de rendimiento
+- Validación de seguridad
+
+Nota: Este documento se actualiza con cada nueva mejora o cambio en el sistema.
+
+SEGUIMIENTO REGULAR DE MEJORAS Y PRUEBAS
+========================================
+
+- Tras cada mejora o prueba, se documenta el estado de los bloques principales, prioridades y resultados en este archivo y en sugerencias.txt.
+- El mapeo global y los puntos críticos se actualizan periódicamente para mantener trazabilidad.
+- Se recomienda revisar también historial.txt y documentacion_guia.txt para contexto completo.
+
+Última actualización:
+- Se implementó validación cruzada de fechas, mapeo global, y estrategia de integración con backend/Electron.
+- Estado global: 92% completado. Prioridad en partidas, GA, avances físicos/financieros y reportes.
+
+[2024-06-10] VERIFICACIÓN Y MAPEOS FUNCIONALES
+---------------------------------------------
+- Partidas: El cálculo de totales y la integración de GA funcionan, pero se recomienda revisar el recalculo al editar partidas y evitar duplicados de GA.
+- Contratos: Al guardar, los contratos se reflejan en los módulos principales, pero se sugiere reforzar la actualización en selectores y avances.
+- Avances físicos/financieros: Se actualizan correctamente al añadir/modificar HES y partidas, pero se recomienda pruebas de consistencia tras cambios masivos.
+- Extensiones: El historial se guarda y se refleja el último cambio, pero sería ideal mostrar el historial completo en informes.
+- Notificaciones: Todos los eventos clave generan notificaciones claras y útiles.
+- Siguiente: Reforzar recalculo de totales, evitar duplicados de GA, y mostrar historial completo de extensiones en informes.
+
+[2024-06-10] MEJORAS APLICADAS
+-----------------------------
+- Recalculo de totales y prevención de duplicados de GA en partidas.
+- Historial completo de extensiones visible en el resumen.
+- Refresco automático de selectores y avances tras guardar o editar contratos. 

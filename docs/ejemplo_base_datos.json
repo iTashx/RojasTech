@@ -1,0 +1,56 @@
+{
+    "contracts": [
+        {
+            "numeroProveedor": "PROV001",
+            "numeroSicac": "SICAC001",
+            "fechaInicio": "2024-01-01",
+            "fechaTerminacion": "2024-12-31",
+            "montoTotal": 100000,
+            "estatus": "Activo",
+            "partidas": [
+                {
+                    "descripcion": "Servicio de Mantenimiento",
+                    "cantidad": 1,
+                    "umd": "Lote",
+                    "precioUnitario": 50000,
+                    "total": 50000
+                },
+                {
+                    "descripcion": "Materiales",
+                    "cantidad": 100,
+                    "umd": "Unidad",
+                    "precioUnitario": 500,
+                    "total": 50000
+                }
+            ]
+        }
+    ],
+    "hes": [
+        {
+            "numeroHes": "HES001",
+            "contractId": 1,
+            "fechaInicio": "2024-01-15",
+            "fechaFinal": "2024-01-31",
+            "montoTotal": 25000,
+            "estatus": "Aprobado",
+            "partidas": [
+                {
+                    "descripcion": "Servicio de Mantenimiento",
+                    "cantidad": 0.5,
+                    "umd": "Lote",
+                    "precioUnitario": 50000,
+                    "total": 25000
+                }
+            ]
+        }
+    ],
+    "notifications": [
+        {
+            "title": "Nuevo Contrato Creado",
+            "message": "Se ha creado el contrato PROV001",
+            "type": "success",
+            "timestamp": "2024-01-01T10:00:00",
+            "read": false
+        }
+    ]
+} 

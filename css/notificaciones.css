@@ -1,0 +1,55 @@
+/* Estilos para la burbuja y lista de notificaciones */
+#notificationCount {
+    background: #e74c3c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
+.notification-dropdown {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    width: 320px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 1000;
+    display: none;
+}
+.notification-list {
+    max-height: 350px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.notification-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.notification-item.unread {
+    background: #eaf6ff;
+    font-weight: bold;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notif-type {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.notif-success { background: #27ae60; }
+.notif-error { background: #e74c3c; }
+.notif-warning { background: #f1c40f; }
+.notif-info { background: #3498db; } 

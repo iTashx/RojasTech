@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ayuda - SIGESCON</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/ayuda.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <div class="help-container">
+        <nav class="help-nav">
+            <div class="help-nav-header">
+                <h1>SIGESCON</h1>
+                <p>Manual de Usuario</p>
+            </div>
+            <ul>
+                <li><a href="#introduccion">Introducción</a></li>
+                <li><a href="#contratos">Gestión de Contratos</a></li>
+                <li><a href="#partidas">Partidas y Gasto Administrativo</a></li>
+                <li><a href="#extensiones">Extensiones</a></li>
+                <li><a href="#hes">Gestión de HES</a></li>
+                <li><a href="#avances">Avances Físico y Financiero</a></li>
+                <li><a href="#notificaciones">Notificaciones</a></li>
+                <li><a href="#informes">Informes y Reportes</a></li>
+                <li><a href="#papelera">Papelera de Reciclaje</a></li>
+                <li><a href="#configuracion">Configuración y Catálogos</a></li>
+                <li><a href="#integracion">Integración Backend/Electron</a></li>
+                <li><a href="#soporte">Soporte</a></li>
+            </ul>
+        </nav>
+
+        <main class="help-content">
+            <section id="introduccion" class="help-section">
+                <h2>Bienvenido a SIGESCON v4.0</h2>
+                <ul>
+                    <li>Gestión integral de contratos, partidas, extensiones, HES y más.</li>
+                    <li>Notificaciones centralizadas y detalladas.</li>
+                    <li>Exportación/importación avanzada y papelera de reciclaje.</li>
+                    <li>Configuración dinámica y catálogos personalizables.</li>
+                    <li>Preparado para integración con backend y empaquetado con Electron.</li>
+                </ul>
+                <h2>Flujo de Trabajo Recomendado</h2>
+                <ol>
+                    <li>Crear/editar contrato → Añadir partidas y GA → Registrar HES → Registrar extensiones → Consultar avances e informes → Exportar/Importar datos → Gestionar papelera.</li>
+                </ol>
+                <div class="help-note">
+                    <strong>Consejo:</strong> Usa los botones de exportación y la campana de notificaciones para mantenerte informado de cada acción relevante.
+                </div>
+            </section>
+
+            <section id="contratos" class="help-section">
+                <h2>Gestión de Contratos</h2>
+                <p>Alta, edición, listado, filtros, importación/exportación, validaciones avanzadas.</p>
+                <ol>
+                    <li>Click en "Nuevo/Editar Contrato"</li>
+                    <li>Llenar datos básicos y fechas (firma, inicio, terminación)</li>
+                    <li>Guardar contrato (se reflejará en todos los módulos)</li>
+                </ol>
+            </section>
+
+            <section id="partidas" class="help-section">
+                <h2>Partidas y Gasto Administrativo</h2>
+                <p>Gestión por contrato, edición en línea, integración con GA, totales automáticos.</p>
+                <ol>
+                    <li>Seleccionar contrato en "Crear/Editar Partida"</li>
+                    <li>Añadir partidas y configurar GA</li>
+                    <li>Verificar totales y guardar</li>
+                </ol>
+            </section>
+
+            <section id="extensiones" class="help-section">
+                <h2>Extensiones</h2>
+                <p>Registro, resumen, cálculo de días y erogaciones, historial de cambios.</p>
+                <ol>
+                    <li>Seleccionar contrato y abrir "Crear Extensión"</li>
+                    <li>Registrar tipo, fechas y motivo</li>
+                    <li>Ver historial y resumen en el dashboard</li>
+                </ol>
+            </section>
+
+            <section id="hes" class="help-section">
+                <h2>Gestión de HES</h2>
+                <p>Gestión, asociación a contratos, cálculo de avances físicos y financieros.</p>
+                <ol>
+                    <li>Seleccionar contrato y crear nueva HES</li>
+                    <li>Asignar partidas y cantidades</li>
+                    <li>Verificar avances y guardar</li>
+                </ol>
+            </section>
+
+            <section id="avances" class="help-section">
+                <h2>Avances Físico y Financiero</h2>
+                <p>Visualización, cálculo global y por contrato, exportación.</p>
+                <ul>
+                    <li>Ver avances en los módulos correspondientes</li>
+                    <li>Exportar reportes y gráficos</li>
+                </ul>
+            </section>
+
+            <section id="notificaciones" class="help-section">
+                <h2>Notificaciones</h2>
+                <p>Sistema centralizado, burbuja, modal de detalle, feedback inmediato.</p>
+                <ul>
+                    <li>Click en la campana para ver todas las notificaciones</li>
+                    <li>Click en una notificación para ver detalles completos</li>
+                    <li>Click en el ícono de papelera para limpiar todas las notificaciones</li>
+                </ul>
+            </section>
+
+            <section id="informes" class="help-section">
+                <h2>Informes y Reportes</h2>
+                <p>Exportación PDF/Excel, informes detallados por contrato, partidas, HES, extensiones.</p>
+                <ol>
+                    <li>Seleccionar tipo de informe y formato</li>
+                    <li>Configurar opciones y exportar</li>
+                </ol>
+            </section>
+
+            <section id="papelera" class="help-section">
+                <h2>Papelera de Reciclaje</h2>
+                <p>Eliminación y restauración de contratos y HES.</p>
+                <ul>
+                    <li>Ver elementos eliminados</li>
+                    <li>Restaurar o eliminar permanentemente</li>
+                </ul>
+            </section>
+
+            <section id="configuracion" class="help-section">
+                <h2>Configuración y Catálogos</h2>
+                <p>Modalidad de contratación, GA, porcentajes, persistencia en localStorage.</p>
+                <ul>
+                    <li>Configura catálogos y opciones en los módulos correspondientes</li>
+                </ul>
+            </section>
+
+            <section id="integracion" class="help-section">
+                <h2>Integración Backend/Electron</h2>
+                <p>Preparado para integración con backend y empaquetado con Electron.</p>
+                <ul>
+                    <li>Consulta la documentación técnica para detalles de endpoints y estructura de datos</li>
+                </ul>
+            </section>
+
+            <section id="soporte" class="help-section">
+                <h2>Soporte Técnico</h2>
+                <ul>
+                    <li>Email: angeljrojasm@gmail.com</li>
+                    <li>Desarrollado por: RojasTech</li>
+                    <li>Versión: 4.0.0</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="footer text-center py-3">
+            <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
+            <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-home"></i>Inicio</a></li>
+                    <li><a href="ayuda.html"><i class="fas fa-question-circle"></i>Ayuda</a></li>
+                    <li><a href="documentacion.html"><i class="fas fa-book"></i>Documentación</a></li>
+                    <li><a href="documentacion.html"><i class="fas fa-file-alt"></i>MDP</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/ayuda.js"></script>
+</body>
+</html>

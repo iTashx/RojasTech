@@ -1,0 +1,5 @@
+1- "E:\proyecto de GESCON\RojasTech"
+2- Remove-Item -Path "dist" -Recurse -Force -ErrorAction SilentlyContinue
+3- Remove-Item -Path "node_modules" -Recurse -Force -ErrorAction SilentlyContinue
+4- npm install
+5- npm run dist 

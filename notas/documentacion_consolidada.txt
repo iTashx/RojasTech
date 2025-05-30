@@ -1,0 +1,152 @@
+DOCUMENTACIÓN CONSOLIDADA SIGESCON
+=================================
+
+1. HISTORIAL DE VERSIONES
+------------------------
+
+Versión 1.0 (Inicial)
+- Sistema básico de gestión de contratos
+- Gestión de partidas
+- Sistema de notificaciones
+- Interfaz básica de usuario
+- Exportación de datos
+
+Versión 2.0
+- Implementación de HES
+- Mejoras en gestión de contratos
+- Sistema de extensiones
+- Mejoras en interfaz de usuario
+- Sistema de respaldo automático
+
+Versión 3.0
+- Simplificación de creación de contratos
+- Nueva gestión de extensiones
+- Implementación de gasto administrativo
+- Mejoras en interfaz y carrusel
+- Optimización de rendimiento
+
+Versión 3.1 (Actual)
+- Implementación de respaldos automáticos
+- Mejoras en sistema de notificaciones
+- Validaciones mejoradas
+- Optimización de consultas
+- Mejoras en seguridad
+
+2. DIAGNÓSTICO DEL SISTEMA
+-------------------------
+
+Requisitos del Sistema
+- Sistema Operativo: Windows 10/11
+- Memoria RAM: 4GB mínimo
+- Espacio en disco: 500MB mínimo
+- Conexión a internet: No requerida
+
+Compatibilidad
+- Versión actual: 3.1.0
+- Última actualización: 2024-06-10
+- Compatible con Windows 10/11
+
+3. SEGURIDAD Y RESPALDO
+----------------------
+
+Acceso de Emergencia
+- Credenciales de administrador en archivo seguro
+- Procedimiento de recuperación documentado
+- Contacto de soporte técnico
+
+Sistema de Respaldo
+- Respaldo automático cada 24 horas
+- Retención de respaldos por 90 días
+- Ubicación: carpeta bd/backups/
+- Formato: JSON comprimido
+
+4. INSTRUCCIONES DE BASE DE DATOS
+--------------------------------
+
+Estructura
+- Ubicación: carpeta bd/
+- Formato: JSON
+- Archivos principales:
+  * contratos.json
+  * hes.json
+  * partidas.json
+  * config.json
+
+Mantenimiento
+- Respaldo antes de modificaciones
+- Validación de integridad
+- Limpieza periódica de datos obsoletos
+
+5. BLOQUES DE DESARROLLO
+-----------------------
+
+Bloque 1: Simplificación de Contratos [COMPLETADO]
+- Campos avanzados solo visibles en edición
+- Implementado y funcional
+
+Bloque 2: Gasto Administrativo [COMPLETADO]
+- Checkbox y modal funcionales
+- Validación de porcentaje máximo (100%)
+- Alerta al cerrar sin guardar
+- Creación automática de partida #1
+
+Bloque 3: Correcciones Pendientes
+1. Barra Lateral CSS
+   - Ajustar para que sea completa desde top hasta footer
+   - Modificar z-index y posicionamiento
+
+2. Modalidad de Contratación
+   - Permitir eliminar completamente
+   - Validar que quede vacía la celda
+
+3. Gasto Administrativo
+   - Mover checkbox a posición más visible
+   - Validar porcentaje máximo 100%
+   - Alerta al cerrar sin guardar
+   - Calcular totales correctamente
+
+4. Partidas
+   - Corregir búsqueda por SICAC
+   - Agregar automáticamente gasto administrativo
+   - Calcular totales incluyendo GA
+   - Agregar pestaña de GA en informes
+
+Bloque 4: Importación Excel
+1. Implementar importación desde Excel
+2. Mapeo de columnas
+3. Validación de datos
+4. Integración con base de datos
+
+Bloque 5: Optimización
+1. Sistema de logs detallado
+2. Mejora en manejo de errores
+3. Optimización de rendimiento
+4. Implementación de caché
+
+6. PRÓXIMOS PASOS
+----------------
+
+Prioridad Alta
+1. Implementar sistema de logs
+2. Mejorar manejo de errores
+3. Optimizar rendimiento
+
+Prioridad Media
+1. Implementar caché
+2. Mejorar validaciones
+3. Optimizar consultas
+
+Prioridad Baja
+1. Mejoras en UI/UX
+2. Documentación adicional
+3. Tests automatizados
+
+7. ESTRUCTURA DEL PROGRAMA
+-------------------------
+- Módulos principales en js/modules/
+- Base de datos en bd/
+- Recursos en assets/
+- Configuración en config/
+- Documentación en docs/
+
+Nota: Este documento se actualiza con cada nueva versión del sistema. 

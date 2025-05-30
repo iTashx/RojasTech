@@ -1,0 +1,37 @@
+# Plantillas para la importación al programa SIGESCON
+
+## 1. Contratos
+
+**Encabezados:**
+N° SICAC	Proveedor	Monto Total	Fecha Inicio	Estatus	N° Proveedor	Fecha Firma del Contrato	Fecha Creado	División/Área	Naturaleza de la Contratación	Línea de Servicio	No. Petición de Oferta	Modalidad de Contratación	Régimen Laboral	Objeto Contractual / Descripción	Monto Modificado	Monto Total del Contrato	No. Contrato (Interno)	Observaciones	Moneda
+
+**Ejemplo de fila:**
+2024-001	Proveedor Ejemplo S.A.	150000	2024-06-20	Activo	12345	2024-06-15	2024-06-10	División Técnica	Servicios Generales	Mantenimiento	PO-2024-001	Directa	Obrero	Servicio de mantenimiento preventivo y correctivo de equipos.	0	150000	CT-2024-001	Contrato anual para mantenimiento de equipos.	USD
+
+---
+
+## 2. Partidas
+
+**Encabezados:**
+N° SICAC	Descripción	Cantidad	UMD	Precio Unitario	Total
+
+**Ejemplo de fila:**
+2024-001	Mantenimiento de aire acondicionado	10	Servicio	500	5000
+
+---
+
+## 3. HES (Hojas de Estimación de Servicios)
+
+**Encabezados:**
+N° SICAC	No. HES	Fecha Inicio HES	Fecha Final HES	Fecha Creado HES	Aprobado	Fecha Aprobado	Descripción HES	Texto Breve	Valuación	Lugar de Prestación del Servicio	Responsable SDO	Ejecutada	Valuado
+
+**Ejemplo de fila:**
+2024-001	HES-001	2024-07-01	2024-07-15	2024-07-01	Aprobado	2024-07-16	Servicio mensual de mantenimiento	Mant. Julio	5000	Sede Central	Juan Pérez	Sí	Sí
+
+---
+
+**Instrucciones:**
+- Copia los encabezados en la primera fila de tu archivo Excel.
+- Agrega tus datos en las filas siguientes siguiendo el ejemplo.
+- Guarda el archivo como .xlsx antes de importarlo al sistema.
+- Puedes agregar más filas según tus necesidades. 

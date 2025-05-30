@@ -1,0 +1,13 @@
+Hoja: Contratos
+| numero_proveedor | numero_sicac | fecha_firma | fecha_inicio | fecha_terminacion | division_area | eemn | region | naturaleza_contratacion | linea_servicio | no_peticion_oferta | modalidad_contratacion | regimen_laboral | objeto_contractual | monto_original | monto_modificado | estatus | moneda |
+|-----------------|--------------|-------------|--------------|-------------------|---------------|------|--------|------------------------|----------------|-------------------|----------------------|-----------------|-------------------|---------------|------------------|---------|--------|
+| PROV001 | SICAC001 | 2024-01-01 | 2024-01-15 | 2024-12-31 | División A | EEMN1 | Norte | Servicios | Mantenimiento | PO001 | Licitación | Tiempo Completo | Mantenimiento de equipos | 50000.00 | 0.00 | Activo | USD |
+| PROV002 | SICAC002 | 2024-02-01 | 2024-02-15 | 2024-12-31 | División B | EEMN2 | Sur | Obras | Construcción | PO002 | Adjudicación Directa | Tiempo Completo | Construcción de oficinas | 100000.00 | 0.00 | Activo | USD |
+
+Hoja: Partidas
+| numero_proveedor | numero_partida | descripcion | cantidad | umd | precio_unitario |
+|-----------------|----------------|-------------|-----------|-----|-----------------|
+| PROV001 | 1 | Mantenimiento preventivo | 12 | Mes | 2000.00 |
+| PROV001 | 2 | Reparaciones | 50 | Hora | 100.00 |
+| PROV002 | 1 | Excavación | 1000 | m3 | 50.00 |
+| PROV002 | 2 | Concreto | 500 | m3 | 150.00 | 

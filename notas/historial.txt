@@ -1,0 +1,6 @@
+- [MEJORA] Ahora al guardar o actualizar un contrato se genera una notificación automática en la campana de notificaciones (SIGESCON). 
+- [MEJORA] Se integraron notificaciones automáticas en extensiones, partidas y validaciones de formularios/archivos. 
+- [MEJORA] Se agregó modal de detalle de notificación, soporte para detalles en errores, y mejoras en cálculo automático de días y gestión de partidas GA. 
+- [MEJORA] Se robusteció el cálculo automático de días de contrato, integración de notificaciones de error en fechas, y mejora en la visualización de contratos en el carrusel y componentes por SICAC. 
+- [MEJORA] Se agregó validación para que la fecha de inicio no sea anterior a la fecha de firma del contrato, con notificación detallada al usuario. 
+- [MAPEO GLOBAL] Estado de bloques principales, prioridades de mejora, y plan de integración con backend/Electron documentados. Se realizará seguimiento regular tras cada mejora o prueba. 

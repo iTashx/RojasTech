@@ -1,0 +1,18 @@
+Pasos para la Instalación de la Versión Portable de SIGESCON
+
+Este documento describe cómo utilizar la versión portable de SIGESCON, que no requiere un proceso de instalación tradicional.
+
+1.  **Obtener los archivos:**
+    Asegúrate de tener la carpeta completa generada por el proceso de empaquetado (probablemente llamada `win-unpacked` o similar dentro de la carpeta `dist`). Esta carpeta contiene todos los archivos necesarios para ejecutar la aplicación.
+
+2.  **Copiar la carpeta:**
+    Copia esta carpeta (la que contiene el ejecutable y todos los demás archivos y carpetas) a la ubicación deseada en tu computadora (por ejemplo, en tu escritorio, en Archivos de Programa, o en una unidad USB si deseas usarla en diferentes equipos).
+
+3.  **Abrir la carpeta:**
+    Navega hasta la carpeta que acabas de copiar.
+
+4.  **Ejecutar la aplicación:**
+    Dentro de esta carpeta, busca el archivo ejecutable de la aplicación. Su nombre probablemente sea `SIGESCON 2.0.0.exe` (o un nombre similar que incluya el nombre del producto y la versión).
+    Haz doble clic en este archivo para iniciar la aplicación SIGESCON.
+
+¡Listo! La aplicación se ejecutará directamente desde esta carpeta sin necesidad de instalar nada en el sistema operativo. 

@@ -1,0 +1,91 @@
+/* Estilos para el componente de formularios */
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    display: inline-block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: var(--input-bg);
+    background-clip: padding-box;
+    border: var(--border-width) solid var(--input-border);
+    appearance: none;
+    border-radius: var(--border-radius);
+    transition: border-color var(--transition-fast) ease-in-out,
+                box-shadow var(--transition-fast) ease-in-out;
+}
+
+.form-control:focus {
+    color: var(--text-primary);
+    background-color: var(--input-bg);
+    border-color: var(--input-focus-border);
+    outline: 0;
+    box-shadow: var(--input-focus-shadow);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: var(--bg-secondary);
+    opacity: 1;
+}
+
+textarea.form-control {
+    min-height: 80px;
+}
+
+/* Validación */
+.is-valid {
+    border-color: var(--success-color);
+}
+
+.is-valid:focus {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 0.25rem rgba(var(--success-color), 0.25);
+}
+
+.is-invalid {
+    border-color: var(--danger-color);
+}
+
+.is-invalid:focus {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 0.25rem rgba(var(--danger-color), 0.25);
+}
+
+.valid-feedback,
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+.valid-feedback {
+    color: var(--success-color);
+}
+
+.invalid-feedback {
+    color: var(--danger-color);
+}
+
+.form-group.is-valid .form-control ~ .valid-feedback,
+.form-group.is-invalid .form-control ~ .invalid-feedback {
+    display: block;
+} 

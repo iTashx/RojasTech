@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Documentación - SIGESCON</title>
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/ayuda.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+    <div class="help-container">
+        <nav class="help-nav">
+            <div class="help-nav-header">
+                <h1>SIGESCON</h1>
+                <p>Documentación del Sistema</p>
+            </div>
+            <ul>
+                <li><a href="#introduccion">Introducción</a></li>
+                <li><a href="#estructura">Estructura del Proyecto</a></li>
+                <li><a href="#modulos">Módulos y Arquitectura</a></li>
+                <li><a href="#flujos">Flujos y Reglas de Negocio</a></li>
+                <li><a href="#base-datos">Base de Datos y Persistencia</a></li>
+                <li><a href="#integracion">Integración Backend/Electron</a></li>
+                <li><a href="#recomendaciones">Recomendaciones de Uso</a></li>
+                <li><a href="#soporte">Soporte</a></li>
+            </ul>
+        </nav>
+        <main class="help-content">
+            <section id="introduccion" class="help-section">
+                <h2>Introducción</h2>
+                <p>SIGESCON v4.0 es un sistema integral para la gestión de contratos empresariales, preparado para integración con backend y empaquetado con Electron.</p>
+            </section>
+            <section id="estructura" class="help-section">
+                <h2>Estructura del Proyecto</h2>
+                <pre><code>SIGESCON/
+├── index.html
+├── ayuda.html
+├── documentacion.html
+├── css/
+├── js/
+├── docs/
+├── notas/
+├── assets/
+└── ...</code></pre>
+            </section>
+            <section id="modulos" class="help-section">
+                <h2>Módulos y Arquitectura</h2>
+                <ul>
+                    <li>Gestión de Contratos</li>
+                    <li>Partidas y Gasto Administrativo</li>
+                    <li>Extensiones</li>
+                    <li>HES</li>
+                    <li>Avance Físico y Financiero</li>
+                    <li>Notificaciones</li>
+                    <li>Informes y Reportes</li>
+                    <li>Papelera y Recuperación</li>
+                    <li>Configuración y Catálogos</li>
+                </ul>
+                <p>Arquitectura modular, cada bloque funcional tiene su propio archivo JS y CSS.</p>
+            </section>
+            <section id="flujos" class="help-section">
+                <h2>Flujos y Reglas de Negocio</h2>
+                <ol>
+                    <li>Crear/editar contrato → Añadir partidas y GA → Registrar HES → Registrar extensiones → Consultar avances e informes → Exportar/Importar datos → Gestionar papelera.</li>
+                </ol>
+                <p>Validaciones cruzadas, feedback inmediato y notificaciones centralizadas.</p>
+            </section>
+            <section id="base-datos" class="help-section">
+                <h2>Base de Datos y Persistencia</h2>
+                <p>Soporte para IndexedDB/localStorage y preparado para integración con bases de datos reales (SQLite, MySQL, PostgreSQL, etc.).</p>
+                <ul>
+                    <li>Contratos, partidas, HES, extensiones, notificaciones, papelera.</li>
+                </ul>
+            </section>
+            <section id="integracion" class="help-section">
+                <h2>Integración Backend/Electron</h2>
+                <ul>
+                    <li>API REST para sincronización de datos</li>
+                    <li>Empaquetado con Electron para escritorio</li>
+                    <li>Backup/restore y multiusuario (planificado)</li>
+                </ul>
+            </section>
+            <section id="recomendaciones" class="help-section">
+                <h2>Recomendaciones de Uso</h2>
+                <ul>
+                    <li>Probar cada módulo tras una actualización</li>
+                    <li>Revisar notificaciones y feedback visual</li>
+                    <li>Consultar la ayuda y documentación regularmente</li>
+                </ul>
+            </section>
+            <section id="soporte" class="help-section">
+                <h2>Soporte Técnico</h2>
+                <ul>
+                    <li>Email: angeljrojasm@gmail.com</li>
+                    <li>Desarrollado por: RojasTech</li>
+                    <li>Versión: 4.0.0</li>
+                </ul>
+            </section>
+        </main>
+        <footer class="footer text-center py-3">
+            <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
+            <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
+            <div class="footer-section">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-home"></i>Inicio</a></li>
+                    <li><a href="ayuda.html"><i class="fas fa-question-circle"></i>Ayuda</a></li>
+                    <li><a href="documentacion.html"><i class="fas fa-book"></i>Documentación</a></li>
+                    <li><a href="documentacion.html"><i class="fas fa-file-alt"></i>MDP</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/ayuda.js"></script>
+</body>
+</html> 

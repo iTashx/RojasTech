@@ -1,0 +1,6 @@
+- Integrar notificaciones automáticas en todas las acciones clave del sistema (exportar, importar, eliminar, error, etc.) para centralizar el feedback al usuario y mejorar la experiencia. 
+- Seguir integrando notificaciones automáticas en todos los módulos y eventos clave para centralizar el feedback y mejorar la experiencia del usuario. 
+- Asegurar que el cálculo de días de contrato sea automático y robusto, y que la gestión de partidas GA y visualización de contratos por SICAC sea consistente en todos los módulos. 
+- Mantener sincronización entre contratos, partidas y visualización en todos los módulos, y seguir mejorando la experiencia de usuario con feedback inmediato. 
+- Seguir reforzando validaciones cruzadas entre fechas y campos clave, y mantener feedback inmediato y claro al usuario en cada acción relevante. 
+- Mantener mapeo regular de bloques y estado, y documentar cada mejora/prueba en los archivos de notas para seguimiento. Unificar seguimiento de mejoras y sugerencias en este archivo. 

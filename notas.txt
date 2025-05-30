@@ -1,0 +1,58 @@
+# Resumen de Actualizaciones SIGESCON
+
+## Bloque 1: Simplificación de Contratos ✅
+- Campos avanzados solo visibles en edición
+- Implementado y funcional
+
+## Bloque 2: Gasto Administrativo ✅
+- Checkbox y modal funcionales
+- Validación de porcentaje máximo (100%)
+- Alerta al cerrar sin guardar
+- Creación automática de partida #1
+
+## Bloque 3: Correcciones Pendientes
+1. Barra Lateral CSS
+   - Ajustar para que sea completa desde top hasta footer
+   - Modificar z-index y posicionamiento
+
+2. Modalidad de Contratación
+   - Permitir eliminar completamente
+   - Validar que quede vacía la celda
+
+3. Gasto Administrativo
+   - Mover checkbox a posición más visible
+   - Validar porcentaje máximo 100%
+   - Alerta al cerrar sin guardar
+   - Calcular totales correctamente
+
+4. Partidas
+   - Corregir búsqueda por SICAC (no por número de proveedor)
+   - Agregar automáticamente gasto administrativo al seleccionar partida
+   - Calcular totales incluyendo gasto administrativo
+   - Agregar pestaña de gasto administrativo en informes
+
+## Implementación
+1. CSS:
+   - Modificar index.css para barra lateral
+   - Ajustar posicionamiento y z-index
+
+2. JavaScript:
+   - Actualizar ui.js para modalidad y gasto administrativo
+   - Modificar partidas.js para búsqueda SICAC y totales
+   - Implementar validaciones y alertas
+
+3. HTML:
+   - Reorganizar estructura del gasto administrativo
+   - Agregar pestaña en informes
+
+## Próximos Pasos
+1. Implementar correcciones del Bloque 3
+2. Probar funcionalidad completa
+3. Documentar cambios
+4. Preparar siguiente fase de desarrollo
+
+## Notas Adicionales
+- Mantener historial de cambios
+- Documentar todas las modificaciones
+- Realizar pruebas después de cada cambio
+- Verificar compatibilidad móvil 

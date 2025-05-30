@@ -1,0 +1,55 @@
+# Comparativa de Electron y Alternativas para Apps de Escritorio (SIGESCON)
+
+## Electron
+- **Ventajas:**
+  - Máxima compatibilidad multiplataforma (Windows, Mac, Linux)
+  - Acceso completo a Node.js y APIs de escritorio
+  - Comunidad y documentación muy amplia
+  - Fácil de empaquetar y distribuir
+- **Desventajas:**
+  - El ejecutable final suele pesar entre 150MB y 400MB (incluye Chromium y Node.js)
+  - Mayor consumo de RAM comparado con apps nativas
+  - No es ideal para apps muy ligeras o de recursos limitados
+
+## Tauri
+- **Ventajas:**
+  - Ejecutable muy ligero (5MB a 30MB)
+  - Usa el motor web nativo del sistema (WebView)
+  - Seguridad y rendimiento mejorados
+- **Desventajas:**
+  - Requiere Rust para el build
+  - Algunas APIs de Node.js no están disponibles directamente
+  - Comunidad más pequeña (pero en crecimiento)
+
+## NW.js
+- **Ventajas:**
+  - Similar a Electron, pero a veces permite builds un poco más pequeños
+  - Acceso a Node.js y Chromium
+- **Desventajas:**
+  - El peso sigue siendo alto (100MB+)
+  - Menor popularidad que Electron
+
+## PWA (Progressive Web App)
+- **Ventajas:**
+  - No requiere empaquetar Chromium, ocupa casi cero espacio extra
+  - Se instala desde el navegador, actualizaciones automáticas
+- **Desventajas:**
+  - No tiene acceso a todas las APIs de escritorio
+  - No es un ejecutable real, depende del navegador
+
+## WebView2 (solo Windows 10/11)
+- **Ventajas:**
+  - Ejecutable muy ligero (menos de 10MB)
+  - Usa el motor Edge ya instalado en Windows
+- **Desventajas:**
+  - Solo funciona en Windows moderno
+  - Menos flexible que Electron
+
+## Recomendación para SIGESCON
+- **Electron sigue siendo la mejor opción** para compatibilidad, facilidad de desarrollo y acceso a todas las APIs de escritorio.
+- El peso de 400MB es normal y aceptable para apps empresariales modernas.
+- Si en el futuro el peso es crítico, considerar migrar a Tauri.
+
+## Notas
+- Todas las comparativas y sugerencias quedan en la carpeta `notas/` para referencia futura.
+- No se recomienda usar alternativas menos conocidas o experimentales para sistemas empresariales en producción. 

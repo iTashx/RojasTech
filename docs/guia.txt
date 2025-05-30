@@ -1,0 +1,213 @@
+GUÍA DE USO DEL SISTEMA SIGESCON
+=============================
+
+1. SISTEMA DE NOTIFICACIONES
+---------------------------
+El sistema de notificaciones permite monitorear eventos importantes del sistema:
+
+1.1 Tipos de Notificaciones:
+- Error: Problemas críticos que requieren atención inmediata
+- Advertencia: Situaciones que requieren revisión
+- Info: Información general del sistema
+- Éxito: Confirmación de acciones realizadas
+- Vencimiento: Alertas de contratos por vencer
+
+1.2 Uso del Sistema de Notificaciones:
+- Click en la campana para ver todas las notificaciones
+- Click en una notificación para ver detalles completos
+- Click en el ícono de papelera para limpiar todas las notificaciones
+- Las notificaciones se guardan en localStorage
+
+2. GESTIÓN DE BASE DE DATOS
+--------------------------
+El sistema utiliza IndexedDB para almacenamiento local:
+
+2.1 Operaciones Principales:
+- Exportar Base de Datos:
+  * Click en "Exportar Base de Datos"
+  * Se descargará un archivo JSON con todos los datos
+  * Incluye contratos, HES, partidas y configuraciones
+
+- Importar Base de Datos:
+  * Click en "Importar Base de Datos"
+  * Seleccionar archivo JSON válido
+  * El sistema validará y restaurará los datos
+
+2.2 Respaldos Automáticos:
+- Se realizan cada 24 horas
+- Se mantienen por 90 días
+- Se pueden restaurar desde la sección de respaldos
+
+3. FUNCIONES DEL GESTOR DE BASE DE DATOS
+-------------------------------------
+3.1 Exportación:
+- Exporta todos los datos a un archivo JSON
+- Incluye:
+  * Contratos
+  * HES
+  * Partidas
+  * Configuraciones
+  * Historial de cambios
+
+3.2 Importación:
+- Restaura datos desde un archivo JSON
+- Validaciones:
+  * Estructura del archivo
+  * Integridad de datos
+  * Relaciones entre entidades
+- Opciones de importación:
+  * Reemplazar todo
+  * Actualizar existentes
+  * Agregar nuevos
+
+3.3 Respaldos:
+- Automáticos:
+  * Diarios
+  * Semanales
+  * Mensuales
+- Manuales:
+  * On-demand
+  * Programados
+- Gestión:
+  * Ver historial
+  * Restaurar
+  * Eliminar
+
+4. EJEMPLOS DE USO
+----------------
+4.1 Exportar Base de Datos:
+```javascript
+// Exportar toda la base de datos
+db.export()
+  .then(data => {
+    // Guardar archivo
+    saveAsJSON(data, 'backup_' + new Date().toISOString() + '.json');
+  })
+  .catch(error => {
+    notificationManager.notifyError('Error al exportar', error.message);
+  });
+```
+
+4.2 Importar Base de Datos:
+```javascript
+// Importar desde archivo
+db.import(file)
+  .then(() => {
+    notificationManager.notifySuccess('Importación exitosa', 'Datos restaurados correctamente');
+  })
+  .catch(error => {
+    notificationManager.notifyError('Error al importar', error.message);
+  });
+```
+
+4.3 Crear Respaldo:
+```javascript
+// Crear respaldo manual
+db.createBackup()
+  .then(backup => {
+    notificationManager.notifySuccess('Respaldo creado', 'ID: ' + backup.id);
+  })
+  .catch(error => {
+    notificationManager.notifyError('Error al crear respaldo', error.message);
+  });
+```
+
+5. CONSIDERACIONES IMPORTANTES
+----------------------------
+5.1 Antes de Importar:
+- Hacer respaldo de datos actuales
+- Verificar espacio disponible
+- Cerrar sesiones activas
+
+5.2 Durante la Importación:
+- No cerrar el navegador
+- No realizar otras operaciones
+- Esperar mensaje de confirmación
+
+5.3 Después de Importar:
+- Verificar integridad de datos
+- Revisar relaciones
+- Comprobar funcionalidad
+
+6. SOLUCIÓN DE PROBLEMAS
+-----------------------
+6.1 Errores Comunes:
+- "Error al exportar":
+  * Verificar permisos de escritura
+  * Comprobar espacio en disco
+  * Cerrar otras pestañas del sistema
+
+- "Error al importar":
+  * Validar formato del archivo
+  * Verificar versión compatible
+  * Comprobar integridad de datos
+
+6.2 Recuperación:
+- Usar último respaldo automático
+- Restaurar desde archivo de exportación
+- Contactar soporte técnico
+
+7. CONTACTO Y SOPORTE
+-------------------
+Para asistencia técnica:
+- Email: angeljrojasm@gmail.com
+- Horario: Lunes a Viernes 8:00 AM - 5:00 PM
+- Prioridad: Alta para problemas críticos
+
+GUÍA DE MANEJO DE BASE DE DATOS - SIGESCON
+
+1. EXPORTAR BASE DE DATOS
+   - Ir a la sección "Gestión de Base de Datos"
+   - Hacer clic en el botón "Exportar Base de Datos"
+   - Se descargará un archivo JSON con todos los datos
+   - Guardar este archivo en una ubicación segura
+
+2. IMPORTAR BASE DE DATOS
+   - Ir a la sección "Gestión de Base de Datos"
+   - Hacer clic en el botón "Importar Base de Datos"
+   - Seleccionar el archivo JSON de respaldo
+   - Confirmar la importación
+   - Los datos se restaurarán automáticamente
+
+3. RESPALDOS AUTOMÁTICOS
+   - El sistema realiza respaldos automáticos cada 24 horas
+   - Los respaldos se mantienen por 90 días
+   - Se pueden ver en la sección "Respaldos Automáticos"
+   - Para restaurar un respaldo automático:
+     * Seleccionar el respaldo deseado
+     * Hacer clic en "Restaurar"
+     * Confirmar la restauración
+
+4. ESTRUCTURA DE LA BASE DE DATOS
+   - Contratos: Información principal de contratos
+   - Partidas: Detalles de partidas por contrato
+   - HES: Hojas de Ejecución de Servicios
+   - Usuarios: Información de usuarios del sistema
+   - Configuración: Ajustes del sistema
+
+5. RECOMENDACIONES
+   - Realizar respaldos manuales antes de actualizaciones importantes
+   - Mantener copias de seguridad en diferentes ubicaciones
+   - Verificar la integridad de los datos después de importar
+   - No modificar manualmente los archivos de respaldo
+
+6. SOLUCIÓN DE PROBLEMAS
+   - Si la importación falla:
+     * Verificar que el archivo no esté corrupto
+     * Asegurarse de que sea un archivo JSON válido
+     * Comprobar que la estructura coincida con la actual
+   - Si hay errores de datos:
+     * Restaurar el último respaldo válido
+     * Verificar los logs del sistema
+     * Contactar al soporte técnico
+
+7. MANTENIMIENTO
+   - Limpiar respaldos antiguos periódicamente
+   - Verificar el espacio disponible
+   - Monitorear el rendimiento de la base de datos
+   - Realizar pruebas de restauración periódicamente
+
+Para soporte técnico o consultas adicionales:
+Email: angeljrojasm@gmail.com 
+
+import('/js/tests/autoTestGESCON.js').then(m => m.runAllTests()); 

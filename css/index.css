@@ -1,0 +1,1169 @@
+/* Variables CSS (opcional, pero buena práctica) */
+:root {
+    --primary-color: #4A90E2; /* Azul principal */
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+
+    /* Nuevos colores para la interfaz */
+    --light-blue-header: #5B7FFF; /* Azul claro para el header */
+    --dark-blue-sidebar: #4A3BFF; /* Azul morado para el sidebar */
+    --sidebar-text-color: #ffffff; /* Texto blanco para el sidebar */
+    --sidebar-active-bg: #6B5BFF; /* Azul morado más claro para elementos activos */
+    --footer-bg: #2C1F7D; /* Morado oscuro para el footer */
+    --footer-text: #ffffff;
+    --footer-link: #8B7FFF; /* Morado claro para links */
+    --footer-link-hover: #B4AFFF; /* Morado más claro para hover */
+
+    /* Nuevos colores para notificaciones */
+    --notification-info-bg: #e3f2fd;
+    --notification-info-border: #2196f3;
+    --notification-warning-bg: #fff3e0;
+    --notification-warning-border: #ff9800;
+    --notification-error-bg: #ffebee;
+    --notification-error-border: #f44336;
+    --notification-success-bg: #e8f5e9;
+    --notification-success-border: #4caf50;
+    --notification-expiry-bg: #fff8e1;
+    --notification-expiry-border: #ffc107;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6; /* Fondo más claro */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 1001;
+    background-color: var(--light-blue);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header .container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.2rem; /* Reducir padding horizontal header */
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Reducir gap logo */
+}
+
+.header .logo i {
+    font-size: 2rem; /* Ajustar tamaño icono logo */
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.header .logo h1 {
+    font-size: 1.5rem; /* Ajustar tamaño fuente logo */
+    margin: 0;
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.header .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* Ajustar gap acciones header */
+}
+
+.notification-container {
+    position: relative;
+    display: inline-block;
+}
+
+.help-btn, .mdp-btn, #notificationBell {
+    background: #3b5998;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    margin-left: 8px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.help-btn:hover, .mdp-btn:hover, #notificationBell:hover {
+    background: #2d4373;
+    color: #ffd700;
+}
+
+#notificationCount {
+    background: #e74c3c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    font-weight: bold;
+    box-shadow: 0 0 2px #000;
+}
+
+.main-container {
+    padding-top: 60px; /* Espacio para el header */
+    min-height: calc(100vh - 60px);
+    position: relative;
+    margin-left: 250px;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px;
+    background-color: var(--dark-blue);
+    color: white;
+    padding-top: 60px; /* Altura del header */
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    color: var(--sidebar-text-color);
+    padding: 10px 15px; /* Ajustar padding nav-link */
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    margin: 3px 6px; /* Ajustar margen nav-link */
+    font-size: 0.95rem; /* Ajustar tamaño fuente nav-link */
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: none; /* Eliminar transformación */
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: #fff;
+    border-left: 4px solid var(--primary-color); /* Ajustar borde activo */
+    padding-left: 11px; /* Ajustar padding para borde */
+    transform: none;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Sombra más sutil */
+}
+
+.sidebar .nav-link i {
+    margin-right: 8px; /* Ajustar margen icono nav-link */
+    font-size: 1rem; /* Ajustar tamaño icono nav-link */
+}
+
+/* Estilo para el separador en la barra lateral */
+.sidebar-separator {
+    border: none;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 10px 15px; /* Ajustar margen separador */
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    margin-top: 60px; /* Altura del header */
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05); /* Sombra más sutil */
+    margin: 15px; /* Ajustar margen contenido */
+    border-radius: 6px;
+    min-height: calc(100vh - 150px); /* Ajustar altura mínima contenido */
+    margin-left: 0;
+}
+
+.content-section {
+    display: none;
+    padding: 20px;
+}
+
+.content-section.active {
+    display: block;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px; /* Ajustar margen h2 */
+    font-size: 1.6rem; /* Ajustar tamaño fuente h2 */
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee; /* Borde más sutil */
+    padding-bottom: 8px; /* Ajustar padding h2 */
+}
+
+h2 i {
+    margin-right: 8px; /* Ajustar margen icono h2 */
+    color: var(--primary-color);
+}
+
+.summary-cards {
+    margin-top: 20px; /* Ajustar margen top summary-cards */
+}
+
+.summary-cards .card {
+    background-color: #ffffff;
+    padding: 20px; /* Ajustar padding card */
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Sombra más sutil */
+    text-align: center;
+    border-left: 4px solid var(--primary-color); /* Ajustar borde card */
+    margin-bottom: 15px; /* Ajustar margen bottom card */
+}
+
+.summary-cards .card h3 {
+    font-size: 1.1rem; /* Ajustar tamaño fuente card h3 */
+    color: #555;
+    margin-bottom: 10px; /* Ajustar margen bottom card h3 */
+}
+
+.summary-cards .card p {
+    font-size: 2rem; /* Ajustar tamaño fuente card p */
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0;
+}
+
+/* Formularios y controles */
+.form-group {
+    margin-bottom: 12px; /* Ajustar margen bottom form-group */
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 4px; /* Ajustar margen bottom form-group label */
+    display: block;
+}
+
+.form-control, .form-select {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 7px 10px; /* Ajustar padding form-control */
+    font-size: 0.9rem; /* Ajustar tamaño fuente form-control */
+    width: 100%;
+}
+
+.contract-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Ajustar minmax */
+    gap: 15px; /* Ajustar gap form grid */
+}
+
+.contract-form-grid .col-span-2 {
+    grid-column: span 2;
+}
+
+/* Tablas */
+.table {
+    width: 100%;
+    margin-top: 15px; /* Ajustar margen top table */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 8px 12px; /* Ajustar padding table cells */
+    border: 1px solid #e9ecef;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.9rem; /* Ajustar tamaño fuente table cells */
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fdfdfd;
+}
+
+.btn {
+    padding: 7px 12px; /* Ajustar padding btn */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    font-size: 0.9rem; /* Ajustar tamaño fuente btn */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn i {
+    margin-right: 4px; /* Ajustar margen icono btn */
+}
+
+.btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); color: white; }
+.btn-primary:hover { background-color: #0056b3; border-color: #0056b3; }
+.btn-secondary { background-color: var(--secondary-color); border-color: var(--secondary-color); color: white; }
+.btn-secondary:hover { background-color: #5a6268; border-color: #545b62; }
+.btn-success { background-color: var(--success-color); border-color: var(--success-color); color: white; }
+.btn-success:hover { background-color: #218838; border-color: #1e7e34; }
+.btn-danger { background-color: var(--danger-color); border-color: var(--danger-color); color: white; }
+.btn-danger:hover { background-color: #c82333; border-color: #bd2130; }
+.btn-info { background-color: var(--info-color); border-color: var(--info-color); color: white; }
+.btn-info:hover { background-color: #138496; border-color: #117a8b; }
+.btn-warning { background-color: var(--warning-color); border-color: var(--warning-color); color: #212529; }
+.btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+
+.btn-sm {
+    padding: 4px 8px; /* Ajustar padding btn-sm */
+    font-size: 0.75rem; /* Ajustar tamaño fuente btn-sm */
+}
+
+.button-group button {
+    min-width: 120px; /* Ajustar min-width button group */
+}
+
+/* Contenedor de Toast */
+#toast-container {
+    position: fixed;
+    bottom: 15px; /* Ajustar bottom toast */
+    right: 15px; /* Ajustar right toast */
+    z-index: 1050;
+}
+
+.toast {
+    background-color: #333;
+    color: white;
+    padding: 8px 15px; /* Ajustar padding toast */
+    border-radius: 4px;
+    margin-bottom: 8px; /* Ajustar margin bottom toast */
+    opacity: 0.9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Ajustar sombra toast */
+    animation: fadeInOut 3s forwards;
+}
+
+.toast.success { background-color: #28a745; }
+.toast.error { background-color: #dc3545; }
+.toast.warning { background-color: #ffc107; color: #333; }
+.toast.info { background-color: #17a2b8; }
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(15px); }
+    10% { opacity: 0.9; transform: translateY(0); }
+    90% { opacity: 0.9; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(15px); }
+}
+
+/* Filtros */
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Ajustar gap filter container */
+    margin-bottom: 15px; /* Ajustar margin bottom filter container */
+    padding: 10px; /* Ajustar padding filter container */
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 180px; /* Ajustar min-width filter group */
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 8px; /* Ajustar gap filter buttons */
+}
+
+/* Exportación */
+.export-buttons {
+    display: flex;
+    gap: 8px; /* Ajustar gap export buttons */
+    margin-bottom: 15px; /* Ajustar margin bottom export buttons */
+    justify-content: flex-end;
+}
+
+/* Footer profesional siempre al final */
+.footer {
+    background-color: #4A3BFF;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    position: relative;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+    z-index: 100;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.footer a {
+    color: #FFD700;
+    text-decoration: underline;
+}
+
+.footer a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-section {
+    margin-top: 15px; /* Ajustar margin top footer section */
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px; /* Ajustar padding top footer section */
+}
+
+.footer-section h3 {
+    font-size: 1.2rem; /* Ajustar tamaño fuente footer section h3 */
+    margin-bottom: 10px; /* Ajustar margin bottom footer section h3 */
+    color: var(--footer-text);
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 6px; /* Ajustar margin bottom footer section li */
+}
+
+.footer-section ul li a {
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-section ul li a i {
+    margin-right: 6px; /* Ajustar margin right footer section li i */
+}
+
+/* Estilos para el carrusel de contratos */
+#contracts-slider {
+    position: relative;
+    margin: 20px 0; /* Ajustar margen carrusel */
+    min-height: 180px; /* Ajustar min-height carrusel */
+    background: #f8f9fa;
+    border-radius: 10px; /* Ajustar border-radius carrusel */
+    padding: 25px; /* Ajustar padding carrusel */
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1); /* Ajustar sombra carrusel */
+}
+
+#contracts-slider .carousel-control-prev,
+#contracts-slider .carousel-control-next {
+    width: 40px; /* Ajustar ancho controles carrusel */
+    height: 40px; /* Ajustar altura controles carrusel */
+    background: var(--dark-blue-sidebar);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+    transition: all 0.3s ease;
+    border: 1px solid white; /* Ajustar borde controles carrusel */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* Ajustar sombra controles carrusel */
+}
+
+#contracts-slider .carousel-control-prev {
+    left: -20px; /* Ajustar posición left */
+}
+
+#contracts-slider .carousel-control-next {
+    right: -20px; /* Ajustar posición right */
+}
+
+#contracts-slider .carousel-control-prev:hover,
+#contracts-slider .carousel-control-next:hover {
+    background: var(--primary-color);
+    transform: translateY(-50%) scale(1.05); /* Ajustar escala hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ajustar sombra hover */
+}
+
+#contracts-slider .carousel-control-prev-icon,
+#contracts-slider .carousel-control-next-icon {
+    width: 20px; /* Ajustar tamaño icono controles */
+    height: 20px; /* Ajustar tamaño icono controles */
+    filter: brightness(0) invert(1);
+}
+
+/* Asegurar que los controles sean visibles */
+#contracts-slider:not(:has(.no-contracts-message)) .carousel-control-prev,
+#contracts-slider:not(:has(.no-contracts-message)) .carousel-control-next {
+    display: flex !important;
+    opacity: 1 !important;
+}
+
+/* Estilos para el mensaje de no hay contratos */
+#contracts-slider .no-contracts-message {
+    text-align: center;
+    padding: 30px 15px; /* Ajustar padding mensaje no contratos */
+    color: #495057;
+    font-size: 1.1rem; /* Ajustar tamaño fuente mensaje no contratos */
+    background: #f8f9fa;
+    border-radius: 6px; /* Ajustar border-radius mensaje no contratos */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Ajustar sombra mensaje no contratos */
+}
+
+#contracts-slider .no-contracts-message i {
+    font-size: 3rem; /* Ajustar tamaño icono mensaje no contratos */
+    margin-bottom: 10px; /* Ajustar margen icono mensaje no contratos */
+    display: block;
+    color: #6c757d;
+}
+
+#contracts-slider .no-contracts-message p {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Ocultar controles cuando no hay contratos */
+#contracts-slider:has(.no-contracts-message) .carousel-control-prev,
+#contracts-slider:has(.no-contracts-message) .carousel-control-next {
+    display: none;
+}
+
+/* Estilos para barras de progreso (avance) */
+.progress {
+    height: 18px; /* Ajustar altura barra progreso */
+    border-radius: 4px; /* Ajustar border-radius barra progreso */
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 18px; /* Ajustar line-height barra progreso */
+    transition: width 0.6s ease;
+    font-size: 0.85rem; /* Ajustar tamaño fuente barra progreso */
+}
+
+/* Clases específicas para el color de las barras */
+.bg-light-blue {
+    background-color: var(--light-blue-header) !important;
+}
+
+.bg-dark-blue {
+    background-color: var(--dark-blue-sidebar) !important;
+}
+
+/* Para los switches de checkbox */
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+}
+.form-check-input {
+    min-width: 2.5em; /* Ajustar min-width switch */
+    height: 1.2em; /* Ajustar altura switch */
+    margin-right: 0.4rem; /* Ajustar margen switch */
+}
+
+/* Estilo para el grupo de modalidad de contratación editable */
+.form-group.modalidad-dinamica {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Ajustar gap modalidad dinamica */
+    margin-bottom: 0;
+    grid-column: span 2;
+}
+.form-group.modalidad-dinamica label {
+    min-width: 140px; /* Ajustar min-width label modalidad */
+    margin-bottom: 0;
+    font-weight: 500;
+    color: #444;
+    font-size: 0.9rem; /* Ajustar tamaño fuente label modalidad */
+}
+.form-group.modalidad-dinamica select,
+.form-group.modalidad-dinamica input[type="text"] {
+    min-width: 100px; /* Ajustar min-width input modalidad */
+    max-width: 160px; /* Ajustar max-width input modalidad */
+    flex: 1 1 0;
+    padding: 7px 10px; /* Ajustar padding input modalidad */
+    font-size: 0.85rem; /* Ajustar tamaño fuente input modalidad */
+}
+.form-group.modalidad-dinamica .btn {
+    padding: 6px 10px; /* Ajustar padding btn modalidad */
+    font-size: 0.9rem; /* Ajustar tamaño fuente btn modalidad */
+    margin: 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+/* Sistema de Notificaciones */
+#notificationBell {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #333;
+}
+
+#notificationCount {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 300px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-header h6 {
+    margin: 0;
+    font-weight: bold;
+}
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+    background-color: #f0f7ff;
+}
+
+.notification-content {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+}
+
+.notification-content i {
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.notification-text {
+    flex: 1;
+}
+
+.notification-text p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.notification-text small {
+    color: #666;
+    font-size: 12px;
+}
+
+.btn-link {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 12px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el modal de notificaciones */
+.notification-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+}
+
+.notification-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 450px; /* Ajustar max-width modal notificaciones */
+    max-height: 80vh; /* Ajustar max-height modal notificaciones */
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.notification-modal-header {
+    padding: 0.7rem 1rem; /* Ajustar padding modal header */
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.notification-modal-header h3 {
+    margin: 0;
+    color: #333;
+    font-size: 1.05rem; /* Ajustar tamaño fuente modal header h3 */
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.3rem; /* Ajustar tamaño fuente close modal */
+    cursor: pointer;
+    color: #666;
+    padding: 0.1rem; /* Ajustar padding close modal */
+    line-height: 1;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.close-modal:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.notification-modal-body {
+    padding: 1rem; /* Ajustar padding modal body */
+}
+
+.notification-message {
+    font-size: 0.95rem; /* Ajustar tamaño fuente modal message */
+    margin-bottom: 0.8rem; /* Ajustar margin bottom modal message */
+    color: #333;
+    line-height: 1.4; /* Ajustar line-height modal message */
+}
+
+.notification-details,
+.notification-solution,
+.notification-errors {
+    margin-top: 0.7rem; /* Ajustar margin top modal details/solution/errors */
+    padding: 0.7rem; /* Ajustar padding modal details/solution/errors */
+    border-radius: 4px;
+}
+
+.notification-details h4,
+.notification-solution h4,
+.notification-errors h4 {
+    font-size: 1em; /* Ajustar tamaño fuente modal h4 */
+    margin-bottom: 0.4rem; /* Ajustar margin bottom modal h4 */
+}
+
+.notification-details p,
+.notification-solution p,
+.notification-errors pre {
+     font-size: 0.9em; /* Ajustar tamaño fuente modal p/pre */
+}
+
+.notification-details {
+    background-color: #f8f9fa;
+}
+
+.notification-solution {
+    background-color: #e8f5e9;
+}
+
+.notification-errors {
+    background-color: #ffebee;
+}
+
+.notification-errors pre {
+    white-space: pre-wrap;
+    font-family: monospace;
+    margin: 0;
+    padding: 0.3rem; /* Ajustar padding modal pre */
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 0.8rem; /* Ajustar tamaño fuente modal pre */
+}
+
+.notification-meta {
+    margin-top: 1rem; /* Ajustar margin top modal meta */
+    padding-top: 0.6rem; /* Ajustar padding top modal meta */
+    border-top: 1px solid #eee;
+    font-size: 0.8rem; /* Ajustar tamaño fuente modal meta */
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Estilos para el mensaje de no hay notificaciones */
+.no-notifications {
+    text-align: center;
+    padding: 1rem; /* Ajustar padding no notifications */
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Estilos para el indicador de más notificaciones */
+.more-notifications {
+    text-align: center;
+    padding: 0.5rem; /* Ajustar padding more notifications */
+    color: #6c757d;
+    background-color: #f8f9fa;
+    font-size: 0.8rem; /* Ajustar tamaño fuente more notifications */
+    border-top: 1px solid #e9ecef;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 8px 0; /* Ajustar padding sidebar móvil */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar .nav {
+        flex-direction: row;
+        overflow-x: auto; /* Asegura scroll horizontal */
+        white-space: nowrap;
+        justify-content: flex-start; /* Ajustar justificación */
+    }
+
+    .sidebar .nav-link {
+        padding: 8px; /* Ajustar padding nav-link móvil */
+        font-size: 0.8rem; /* Ajustar tamaño fuente nav-link móvil */
+        flex-shrink: 0;
+        text-align: center;
+        flex-direction: column; /* Icono arriba, texto abajo */
+    }
+
+    .sidebar .nav-link i {
+        margin-right: 0;
+        margin-bottom: 3px; /* Ajustar margen icono nav-link móvil */
+        font-size: 1.1rem; /* Ajustar tamaño icono nav-link móvil */
+    }
+
+    .sidebar .nav-link.active {
+        border-left: none;
+        border-bottom: 2px solid var(--primary-color); /* Ajustar borde activo móvil */
+        padding-left: 8px; /* Ajustar padding para borde móvil */
+    }
+
+    .content {
+        margin: 8px; /* Ajustar margen contenido móvil */
+        padding: 10px; /* Ajustar padding contenido móvil */
+    }
+
+    .header .container-fluid {
+        padding: 0 1rem; /* Ajustar padding header móvil */
+    }
+
+    .header .logo i {
+        font-size: 1.8rem; /* Ajustar tamaño icono logo móvil */
+    }
+
+     .header .logo h1 {
+        font-size: 1.3rem; /* Ajustar tamaño fuente logo móvil */
+    }
+
+    .header .actions {
+        gap: 0.6rem; /* Ajustar gap acciones header móvil */
+    }
+
+    .help-btn, .mdp-btn {
+        padding: 0.3rem 0.6rem; /* Ajustar padding botones header móvil */
+        font-size: 0.8rem; /* Ajustar tamaño fuente botones header móvil */
+    }
+
+    .notification-container {
+        margin-right: 0.3rem; /* Ajustar margen notificaciones móvil */
+    }
+
+    #notificationBell {
+         width: 32px; /* Ajustar ancho notificaciones móvil */
+         height: 32px; /* Ajustar altura notificaciones móvil */
+    }
+
+    #notificationBell i {
+        font-size: 1.2rem; /* Ajustar tamaño icono notificaciones móvil */
+    }
+
+     #notificationCount {
+         top: -2px; /* Ajustar top contador notificaciones móvil */
+         right: -2px; /* Ajustar right contador notificaciones móvil */
+         font-size: 0.7rem; /* Ajustar tamaño fuente contador notificaciones móvil */
+         padding: 0.1rem 0.4rem; /* Ajustar padding contador notificaciones móvil */
+         min-width: 16px; /* Ajustar min-width contador notificaciones móvil */
+         height: 16px; /* Ajustar altura contador notificaciones móvil */
+     }
+
+    .notification-dropdown {
+        min-width: 240px; /* Ajustar min-width dropdown notificaciones móvil */
+        max-height: 300px; /* Ajustar max-height dropdown notificaciones móvil */
+    }
+
+     .notification-header h6 {
+         font-size: 0.85em; /* Ajustar tamaño fuente notification header h6 móvil */
+     }
+
+     .notification-header .btn-link {
+         font-size: 0.65em; /* Ajustar tamaño fuente notification header btn-link móvil */
+     }
+
+     .notification-title {
+         font-size: 0.75em; /* Ajustar tamaño fuente notification title móvil */
+     }
+
+     .notification-time {
+         font-size: 0.6em; /* Ajustar tamaño fuente notification time móvil */
+     }
+
+     .notification-preview {
+         font-size: 0.7em; /* Ajustar tamaño fuente notification preview móvil */
+     }
+
+    .notification-modal-content {
+        width: 98%; /* Ajustar ancho modal notificaciones móvil */
+        max-width: none;
+    }
+
+    .summary-cards .card h3 {
+        font-size: 0.9rem; /* Ajustar tamaño fuente card h3 móvil */
+    }
+
+    .summary-cards .card p {
+        font-size: 1.6rem; /* Ajustar tamaño fuente card p móvil */
+    }
+
+    .filter-container {
+        gap: 8px; /* Ajustar gap filter container móvil */
+        padding: 8px; /* Ajustar padding filter container móvil */
+    }
+
+    .filter-group {
+        min-width: auto;
+    }
+
+    .filter-buttons {
+        gap: 5px; /* Ajustar gap filter buttons móvil */
+    }
+
+    .export-buttons {
+        gap: 5px; /* Ajustar gap export buttons móvil */
+    }
+
+    .table-responsive {
+         margin-bottom: 10px; /* Ajustar margin bottom table responsive móvil */
+    }
+
+    .contract-list-table,
+    #hes-list-table,
+    #deleted-contracts-table,
+    #deleted-hes-table {
+        min-width: 600px; /* Ajustar min-width table móvil */
+    }
+
+    .progress {
+        height: 16px; /* Ajustar altura progress móvil */
+    }
+
+    .progress-bar {
+        line-height: 16px; /* Ajustar line-height progress móvil */
+        font-size: 0.8rem; /* Ajustar tamaño fuente progress móvil */
+    }
+
+    .form-check-input {
+        min-width: 2.2em; /* Ajustar min-width switch móvil */
+        height: 1.1em; /* Ajustar altura switch móvil */
+        margin-right: 0.3rem; /* Ajustar margin right switch móvil */
+    }
+
+    .form-group.modalidad-dinamica {
+         gap: 4px; /* Ajustar gap modalidad dinamica móvil */
+    }
+
+    .form-group.modalidad-dinamica label {
+         min-width: 120px; /* Ajustar min-width label modalidad móvil */
+         font-size: 0.85rem; /* Ajustar tamaño fuente label modalidad móvil */
+    }
+
+    .form-group.modalidad-dinamica select,
+    .form-group.modalidad-dinamica input[type="text"] {
+        min-width: 80px; /* Ajustar min-width input modalidad móvil */
+        max-width: 140px; /* Ajustar max-width input modalidad móvil */
+        padding: 5px 6px; /* Ajustar padding input modalidad móvil */
+        font-size: 0.85rem; /* Ajustar tamaño fuente input modalidad móvil */
+    }
+
+    .form-group.modalidad-dinamica .btn {
+        padding: 4px 6px; /* Ajustar padding btn modalidad móvil */
+        font-size: 0.85rem; /* Ajustar tamaño fuente btn modalidad móvil */
+    }
+
+    #contracts-slider {
+        margin: 10px 0; /* Ajustar margen carrusel móvil */
+        min-height: 160px; /* Ajustar min-height carrusel móvil */
+        padding: 15px; /* Ajustar padding carrusel móvil */
+    }
+
+     #contracts-slider .carousel-control-prev,
+     #contracts-slider .carousel-control-next {
+        width: 35px; /* Ajustar ancho controles carrusel móvil */
+        height: 35px; /* Ajustar altura controles carrusel móvil */
+        left: -15px; /* Ajustar posición left */
+        right: -15px; /* Ajustar posición right */
+     }
+
+     #contracts-slider .carousel-control-prev-icon,
+     #contracts-slider .carousel-control-next-icon {
+          width: 18px; /* Ajustar tamaño icono controles móvil */
+          height: 18px; /* Ajustar tamaño icono controles móvil */
+     }
+
+     #contracts-slider .no-contracts-message {
+          padding: 20px 10px; /* Ajustar padding mensaje no contratos móvil */
+          font-size: 1rem; /* Ajustar tamaño fuente mensaje no contratos móvil */
+     }
+
+     #contracts-slider .no-contracts-message i {
+          font-size: 2.5rem; /* Ajustar tamaño icono mensaje no contratos móvil */
+          margin-bottom: 8px; /* Ajustar margen icono mensaje no contratos móvil */
+     }
+
+}
+
+/* --- Gestión de HES --- */
+#hes-management {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 12px 8px 12px;
+}
+#hes-management .form-label,
+#hes-management label {
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+#hes-management .form-control,
+#hes-management .form-select {
+  font-size: 0.95rem;
+  padding: 2px 6px;
+  height: 32px;
+}
+#hes-management textarea.form-control {
+  min-height: 40px;
+  max-height: 80px;
+  font-size: 0.95rem;
+}
+#hes-management .row.g-3.mb-4 {
+  margin-bottom: 10px !important;
+}
+#hes-management .table {
+  font-size: 0.93rem;
+  margin-bottom: 10px;
+}
+#hes-management .button-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#hes-management .card,
+#hes-management .table-responsive {
+  margin-bottom: 10px;
+}
+
+.graficos-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.graficos-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.graficos-header h3 {
+    color: #2c3e50;
+    font-weight: bold;
+    margin: 0;
+}
+.graficos-selectores {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.graficos-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.graficos-card h5 {
+    color: #2980b9;
+    margin-bottom: 1rem;
+}
+.graficos-export {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+    justify-content: flex-end;
+}
+@media (max-width: 768px) {
+    .graficos-header, .graficos-selectores, .graficos-export {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .graficos-card {
+        padding: 1rem;
+    }
+}

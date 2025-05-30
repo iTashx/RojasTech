@@ -1,0 +1,40 @@
+GUÍA Y DOCUMENTACIÓN DEL SISTEMA SIGESCON
+========================================
+
+1. ESTRUCTURA DE MÓDULOS PRINCIPALES
+------------------------------------
+- Gestión de Contratos
+- Partidas y Gasto Administrativo
+- Extensiones
+- HES (Hoja de Entrada de Servicio)
+- Avance Físico y Financiero
+- Notificaciones
+- Informes y Reportes
+- Papelera y Recuperación
+- Configuración y Catálogos
+
+2. FLUJO DE USO RECOMENDADO
+---------------------------
+- Crear/editar contrato → Añadir partidas y GA → Registrar HES → Registrar extensiones → Consultar avances e informes → Exportar/Importar datos → Gestionar papelera.
+
+3. RECOMENDACIONES DE PRUEBAS
+-----------------------------
+- Probar creación y edición de contratos y partidas.
+- Verificar cálculo de totales y GA automático.
+- Probar registro y visualización de extensiones e historial.
+- Probar avances físicos y financieros tras añadir/modificar HES.
+- Probar notificaciones en cada acción relevante.
+- Probar exportación/importación y recuperación desde papelera.
+
+4. PLAN DE INTEGRACIÓN CON BACKEND/ELECTRON
+--------------------------------------------
+- Definir estructura de datos y endpoints para API.
+- Sincronizar datos locales con base de datos real.
+- Implementar backup/restore real y multiusuario.
+- Integrar con Electron para pruebas y empaquetado.
+
+5. SEGUIMIENTO Y DOCUMENTACIÓN
+------------------------------
+- Mantener mapeo regular de bloques y estado.
+- Documentar cada mejora/prueba en los archivos de notas (txt).
+- Unificar seguimiento de mejoras y sugerencias en el archivo de sugerencias. 
