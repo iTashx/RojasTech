@@ -3,111 +3,22 @@ import { db } from '../../database.js';
 import { Notifications } from '../utils/Notifications.js';
 import { ValidationUtils } from '../utils/ValidationUtils.js';
 import { ConfigManager } from '../utils/ConfigManager.js';
-import { AuditManager } from './AuditManager.js';
-import CryptoJS from 'crypto-js';
 
 export class AuthManager {
     constructor() {
         this.notifications = new Notifications();
         this.configManager = new ConfigManager();
-        this.auditManager = new AuditManager();
         this.currentUser = null;
         this.sessionTimeout = null;
-        this.encryptionKey = this.generateEncryptionKey();
-    }
-
-    // Generar clave de encriptación
-    generateEncryptionKey() {
-        const key = CryptoJS.lib.WordArray.random(256/8);
-        return key.toString();
-    }
-
-    // Encriptar datos
-    encryptData(data) {
-        return CryptoJS.AES.encrypt(JSON.stringify(data), this.encryptionKey).toString();
-    }
-
-    // Desencriptar datos
-    decryptData(encryptedData) {
-        const bytes = CryptoJS.AES.decrypt(encryptedData, this.encryptionKey);
-        return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    }
-
-    // Hash de contraseña
-    hashPassword(password) {
-        return CryptoJS.SHA256(password).toString();
     }
 
     // Iniciar sesión
     async login(username, password) {
         try {
-            // Validar credenciales de emergencia
-            if ((username.toLowerCase() === 'angel' && password === 'itash1008') ||
-                (username.toLowerCase() === 'rojastech782' && password === 'jlrojas782')) {
-                
-                // Crear sesión de emergencia
-                const emergencyUser = {
-                    id: username.toLowerCase() === 'angel' ? 1 : 2,
-                    username: username.toLowerCase(),
-                    name: username.toLowerCase() === 'angel' ? 'Angel Rojas' : 'RojasTech Admin',
-                    email: username.toLowerCase() === 'angel' ? 'angeljrojasm@gmail.com' : '',
-                    role: 'admin',
-                    permissions: ['all']
-                };
-
-                // Configurar sesión
-                this.setSession(emergencyUser);
-                this.setSessionTimeout();
-
-                // Registrar evento de auditoría
-                await this.auditManager.logEvent({
-                    action: 'emergency_login',
-                    details: `Acceso de emergencia utilizado por ${username}`,
-                    user: emergencyUser.username,
-                    ip: await this.getClientIP(),
-                    userAgent: navigator.userAgent
-                });
-
-                // Notificar uso de acceso de emergencia
-                this.notifications.warning('Se ha utilizado acceso de emergencia. Por favor, cambie su contraseña.');
-                
-                return emergencyUser;
-            }
-
             // Validar credenciales
             if (!username || !password) {
                 this.notifications.error('Usuario y contraseña son requeridos');
                 return false;
-            }
-
-            // Verificar contraseña universal de administrador
-            const systemConfig = await this.configManager.getSystemConfig();
-            if (username === 'admin' && password === systemConfig.seguridad.adminUniversalPassword) {
-                // Crear sesión de administrador
-                this.currentUser = {
-                    id: 'admin',
-                    username: 'admin',
-                    nombre: 'Administrador',
-                    email: 'admin@system',
-                    rol: 'admin',
-                    permisos: ['*']
-                };
-
-                // Configurar timeout de sesión
-                this.setSessionTimeout();
-
-                // Registrar evento de auditoría
-                await this.auditManager.logEvent({
-                    userId: 'admin',
-                    action: 'admin_login',
-                    module: 'auth',
-                    details: 'Inicio de sesión como administrador universal',
-                    ipAddress: await this.getClientIP(),
-                    userAgent: navigator.userAgent
-                });
-
-                this.notifications.success('Sesión de administrador iniciada');
-                return true;
             }
 
             // Buscar usuario
@@ -128,6 +39,7 @@ export class AuthManager {
                 await db.users.put(user);
 
                 // Verificar bloqueo
+                const systemConfig = await this.configManager.getSystemConfig();
                 if (user.intentosFallidos >= systemConfig.seguridad.intentosMaximosLogin) {
                     user.bloqueado = true;
                     user.fechaBloqueo = new Date();
@@ -143,7 +55,7 @@ export class AuthManager {
             // Verificar bloqueo
             if (user.bloqueado) {
                 const systemConfig = await this.configManager.getSystemConfig();
-                const tiempoBloqueo = systemConfig.seguridad.tiempoBloqueo * 60 * 1000;
+                const tiempoBloqueo = systemConfig.seguridad.tiempoBloqueo * 60 * 1000; // minutos a milisegundos
                 const tiempoTranscurrido = new Date() - new Date(user.fechaBloqueo);
 
                 if (tiempoTranscurrido < tiempoBloqueo) {
@@ -175,33 +87,12 @@ export class AuthManager {
             // Configurar timeout de sesión
             this.setSessionTimeout();
 
-            // Registrar evento de auditoría
-            await this.auditManager.logEvent({
-                userId: user.id,
-                action: 'login',
-                module: 'auth',
-                details: 'Inicio de sesión exitoso',
-                ipAddress: await this.getClientIP(),
-                userAgent: navigator.userAgent
-            });
-
             this.notifications.success('Sesión iniciada');
             return true;
         } catch (error) {
-            console.error('Error en login:', error);
-            throw error;
-        }
-    }
-
-    // Obtener IP del cliente
-    async getClientIP() {
-        try {
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            return data.ip;
-        } catch (error) {
-            console.error('Error al obtener IP:', error);
-            return 'unknown';
+            console.error('Error al iniciar sesión:', error);
+            this.notifications.error(error.message || 'Error al iniciar sesión');
+            return false;
         }
     }
 
@@ -338,11 +229,8 @@ export class AuthManager {
         try {
             // Validar email
             if (!email) {
-                throw new Error('Email requerido');
-            }
-
-            if (!ValidationUtils.isValidEmail(email)) {
-                throw new Error('Email inválido');
+                this.notifications.error('Email requerido');
+                return false;
             }
 
             // Buscar usuario
@@ -352,7 +240,8 @@ export class AuthManager {
                 .first();
 
             if (!user) {
-                throw new Error('Email no registrado');
+                this.notifications.error('Email no registrado');
+                return false;
             }
 
             // Generar token
@@ -364,15 +253,13 @@ export class AuthManager {
             await db.tokens.add({
                 userId: user.id,
                 token,
-                tipo: 'recovery',
-                expiracion,
+                tipo: 'password',
+                expiracion: expiration,
                 usado: false
             });
 
-            // Enviar email (simulado)
-            await this.sendRecoveryEmail(email, token);
-
-            this.notifications.success('Se ha enviado un email con instrucciones');
+            // TODO: Enviar email con token
+            this.notifications.info('Se ha enviado un email con instrucciones');
             return true;
         } catch (error) {
             console.error('Error al recuperar contraseña:', error);
@@ -381,68 +268,66 @@ export class AuthManager {
         }
     }
 
-    // Enviar email de recuperación
-    async sendRecoveryEmail(email, token) {
-        try {
-            // En un entorno real, aquí se enviaría el email
-            // Por ahora, solo simulamos el envío
-            console.log(`Email de recuperación enviado a ${email} con token ${token}`);
-            return true;
-        } catch (error) {
-            console.error('Error al enviar email:', error);
-            throw new Error('Error al enviar email de recuperación');
-        }
-    }
-
-    // Resetear contraseña
+    // Restablecer contraseña
     async resetPassword(token, newPassword) {
         try {
-            // Validar token
-            if (!token) {
-                throw new Error('Token requerido');
+            // Validar datos
+            if (!token || !newPassword) {
+                this.notifications.error('Datos incompletos');
+                return false;
             }
 
             // Buscar token
-            const tokenRecord = await db.tokens
+            const tokenData = await db.tokens
                 .where('token')
                 .equals(token)
-                .and(t => t.tipo === 'recovery' && !t.usado)
                 .first();
 
-            if (!tokenRecord) {
-                throw new Error('Token inválido o ya usado');
+            if (!tokenData) {
+                this.notifications.error('Token inválido');
+                return false;
             }
 
-            // Verificar expiración
-            if (new Date() > new Date(tokenRecord.expiracion)) {
-                throw new Error('Token expirado');
+            // Validar expiración
+            if (new Date() > new Date(tokenData.expiracion)) {
+                this.notifications.error('Token expirado');
+                return false;
+            }
+
+            // Validar uso
+            if (tokenData.usado) {
+                this.notifications.error('Token ya utilizado');
+                return false;
             }
 
             // Validar nueva contraseña
             const systemConfig = await this.configManager.getSystemConfig();
             if (newPassword.length < systemConfig.seguridad.longitudMinimaPassword) {
-                throw new Error(`La contraseña debe tener al menos ${systemConfig.seguridad.longitudMinimaPassword} caracteres`);
+                this.notifications.error(`La contraseña debe tener al menos ${systemConfig.seguridad.longitudMinimaPassword} caracteres`);
+                return false;
+            }
+
+            // Buscar usuario
+            const user = await db.users.get(tokenData.userId);
+            if (!user) {
+                this.notifications.error('Usuario no encontrado');
+                return false;
             }
 
             // Actualizar contraseña
-            const user = await db.users.get(tokenRecord.userId);
-            if (!user) {
-                throw new Error('Usuario no encontrado');
-            }
-
             user.password = this.hashPassword(newPassword);
             user.fechaActualizacion = new Date();
             await db.users.put(user);
 
             // Marcar token como usado
-            tokenRecord.usado = true;
-            await db.tokens.put(tokenRecord);
+            tokenData.usado = true;
+            await db.tokens.put(tokenData);
 
-            this.notifications.success('Contraseña actualizada correctamente');
+            this.notifications.success('Contraseña restablecida');
             return true;
         } catch (error) {
-            console.error('Error al resetear contraseña:', error);
-            this.notifications.error(error.message || 'Error al resetear contraseña');
+            console.error('Error al restablecer contraseña:', error);
+            this.notifications.error(error.message || 'Error al restablecer contraseña');
             return false;
         }
     }
@@ -555,6 +440,17 @@ export class AuthManager {
             return token;
         } catch (error) {
             console.error('Error al generar token:', error);
+            return null;
+        }
+    }
+
+    // Hash de contraseña
+    hashPassword(password) {
+        try {
+            // TODO: Implementar hash seguro
+            return password;
+        } catch (error) {
+            console.error('Error al hashear contraseña:', error);
             return null;
         }
     }

@@ -1,18 +1,46 @@
 import Dexie from 'dexie';
-import { openDB } from 'idb';
-import XLSX from 'xlsx';
 
-// Sistema de Base de Datos SIGESCON
-const db = new Dexie('SIGESCON');
+// Módulo de base de datos
+export const db = new Dexie('RojasTech');
 
 // Definir esquema
 db.version(1).stores({
-    contracts: '++id, numeroProveedor, numeroSicac, fechaInicio, fechaTerminacion, estatus',
-    partidas: '++id, contratoId, descripcion, cantidad, precio, total',
-    hes: '++id, numeroHes, contratoId, fechaInicio, fechaFinal, estatus',
-    notifications: '++id, type, message, read, timestamp',
-    settings: 'key, value',
-    backups: '++id, timestamp, metadata'
+    // Usuarios
+    users: '++id, username, email, rol, activo, fechaCreacion, ultimoAcceso',
+    // Tokens
+    tokens: '++id, userId, token, tipo, expiracion, usado',
+    // Configuración
+    settings: 'key, value, fechaCreacion',
+    // Empresas
+    companies: '++id, ruc, razonSocial, nombre, direccion, contacto, logo, moneda, igv, retencion, activo, fechaCreacion',
+    // Clientes
+    clients: '++id, tipoDocumento, numeroDocumento, nombre, direccion, contacto, email, activo, fechaCreacion',
+    // Productos
+    products: '++id, codigo, nombre, descripcion, categoria, unidad, precio, stock, activo, fechaCreacion',
+    // Servicios
+    services: '++id, codigo, nombre, descripcion, categoria, unidad, precio, activo, fechaCreacion',
+    // Categorías
+    categories: '++id, codigo, nombre, descripcion, tipo, activo, fechaCreacion',
+    // Unidades
+    units: '++id, codigo, nombre, simbolo, activo, fechaCreacion',
+    // Comprobantes
+    documents: '++id, tipo, serie, numero, fecha, cliente, items, subtotal, igv, total, estado, fechaCreacion',
+    // Items
+    items: '++id, documento, tipo, codigo, nombre, cantidad, precio, subtotal, igv, total, fechaCreacion',
+    // Pagos
+    payments: '++id, documento, tipo, monto, fecha, estado, fechaCreacion',
+    // Cajas
+    cashboxes: '++id, nombre, saldo, activo, fechaCreacion',
+    // Movimientos
+    movements: '++id, caja, tipo, monto, concepto, fecha, fechaCreacion',
+    // Reportes
+    reports: '++id, tipo, nombre, parametros, fechaCreacion',
+    // Plantillas
+    templates: '++id, tipo, nombre, contenido, fechaCreacion',
+    // Archivos
+    files: '++id, nombre, tipo, tamaño, contenido, fechaCreacion',
+    // Logs
+    logs: '++id, tipo, mensaje, fechaCreacion'
 });
 
 // Índices
@@ -152,67 +180,6 @@ db.movements.hook('creating', function (primKey, obj) {
     });
 });
 
-// Hooks para contratos
-db.contracts.hook('creating', function (primKey, obj) {
-    // Validar número de contrato
-    if (!obj.numeroProveedor || !obj.numeroSicac) {
-        throw new Error('El número de contrato es requerido');
-    }
-
-    // Validar cliente
-    if (!obj.contratoId) {
-        throw new Error('El contrato es requerido');
-    }
-
-    // Validar monto
-    if (!obj.montoTotal || obj.montoTotal <= 0) {
-        throw new Error('El monto debe ser mayor a 0');
-    }
-});
-
-// Hooks para partidas
-db.partidas.hook('creating', function (primKey, obj) {
-    // Validar contrato
-    if (!obj.contrato) {
-        throw new Error('El contrato es requerido');
-    }
-
-    // Validar descripción
-    if (!obj.descripcion) {
-        throw new Error('La descripción es requerida');
-    }
-
-    // Validar cantidad y precio
-    if (!obj.cantidad || obj.cantidad <= 0) {
-        throw new Error('La cantidad debe ser mayor a 0');
-    }
-
-    if (!obj.precio || obj.precio <= 0) {
-        throw new Error('El precio debe ser mayor a 0');
-    }
-
-    // Calcular total
-    obj.total = obj.cantidad * obj.precio;
-});
-
-// Hooks para HES
-db.hes.hook('creating', function (primKey, obj) {
-    // Validar contrato
-    if (!obj.contratoId) {
-        throw new Error('El contrato es requerido');
-    }
-
-    // Validar número de HES
-    if (!obj.numeroHes) {
-        throw new Error('El número de HES es requerido');
-    }
-
-    // Validar monto
-    if (!obj.montoTotal || obj.montoTotal <= 0) {
-        throw new Error('El monto debe ser mayor a 0');
-    }
-});
-
 // Métodos
 db.users.getByUsername = function (username) {
     return this.where('username').equals(username).first();
@@ -254,218 +221,5 @@ db.cashboxes.getByName = function (nombre) {
     return this.where('nombre').equals(nombre).first();
 };
 
-// Configuración inicial
-db.on('ready', async () => {
-    try {
-        // Verificar si existe configuración inicial
-        const config = await db.config.get('system');
-        if (!config) {
-            // Crear configuración inicial
-            await db.config.add({
-                id: 'system',
-                value: {
-                    seguridad: {
-                        intentosMaximosLogin: 3,
-                        tiempoBloqueo: 30, // minutos
-                        longitudMinimaPassword: 8,
-                        sesionTimeout: 60, // minutos
-                        adminUniversalPassword: 'RojasTech2024' // Contraseña universal para administradores
-                    },
-                    backup: {
-                        interval: 24, // horas
-                        maxBackups: 30,
-                        autoBackup: true
-                    },
-                    notificaciones: {
-                        mostrarToast: true,
-                        sonido: true,
-                        duracion: 5000 // milisegundos
-                    }
-                },
-                lastModified: new Date()
-            });
-        }
-    } catch (error) {
-        console.error('Error al inicializar configuración:', error);
-    }
-});
-
-// Clase para manejar la base de datos
-class DatabaseManager {
-    constructor() {
-        this.db = db;
-        this.initialized = false;
-    }
-
-    async init() {
-        try {
-            // Verificar si la base de datos está abierta
-            if (!this.db.isOpen()) {
-                await this.db.open();
-            }
-
-            // Crear índices necesarios
-            await this.createIndexes();
-            
-            // Verificar y crear tablas si no existen
-            await this.verifyTables();
-            
-            this.initialized = true;
-            console.log('Base de datos inicializada correctamente');
-            return true;
-        } catch (error) {
-            console.error('Error al inicializar la base de datos:', error);
-            return false;
-        }
-    }
-
-    async createIndexes() {
-        try {
-            // Índices para contratos
-            await this.db.contracts.hook('creating', function(primKey, obj) {
-                if (!obj.numeroSicac) {
-                    throw new Error('El número SICAC es requerido');
-                }
-            });
-
-            // Índices para HES
-            await this.db.hes.hook('creating', function(primKey, obj) {
-                if (!obj.numeroHes) {
-                    throw new Error('El número HES es requerido');
-                }
-            });
-
-            // Índices para notificaciones
-            await this.db.notifications.hook('creating', function(primKey, obj) {
-                obj.timestamp = new Date();
-                obj.read = false;
-            });
-        } catch (error) {
-            console.error('Error al crear índices:', error);
-            throw error;
-        }
-    }
-
-    async verifyTables() {
-        try {
-            // Verificar si las tablas existen
-            const tables = await this.db.tables;
-            const requiredTables = ['contracts', 'partidas', 'hes', 'notifications', 'settings', 'backups'];
-            
-            for (const table of requiredTables) {
-                if (!tables.find(t => t.name === table)) {
-                    console.warn(`Tabla ${table} no encontrada, creando...`);
-                    await this.db[table].toCollection().count();
-                }
-            }
-        } catch (error) {
-            console.error('Error al verificar tablas:', error);
-            throw error;
-        }
-    }
-
-    // Métodos para notificaciones
-    async saveNotification(notification) {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.notifications.add(notification);
-        } catch (error) {
-            console.error('Error al guardar notificación:', error);
-            throw error;
-        }
-    }
-
-    async getNotifications() {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.notifications.orderBy('timestamp').reverse().toArray();
-        } catch (error) {
-            console.error('Error al obtener notificaciones:', error);
-            throw error;
-        }
-    }
-
-    async getUnreadNotifications() {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.notifications.where('read').equals(false).toArray();
-        } catch (error) {
-            console.error('Error al obtener notificaciones no leídas:', error);
-            throw error;
-        }
-    }
-
-    async markNotificationAsRead(id) {
-        try {
-            if (!this.initialized) await this.init();
-            await this.db.notifications.update(id, { read: true });
-        } catch (error) {
-            console.error('Error al marcar notificación como leída:', error);
-            throw error;
-        }
-    }
-
-    // Métodos para contratos
-    async saveContract(contract) {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.contracts.add(contract);
-        } catch (error) {
-            console.error('Error al guardar contrato:', error);
-            throw error;
-        }
-    }
-
-    async getContracts() {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.contracts.toArray();
-        } catch (error) {
-            console.error('Error al obtener contratos:', error);
-            throw error;
-        }
-    }
-
-    // Métodos para HES
-    async saveHES(hes) {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.hes.add(hes);
-        } catch (error) {
-            console.error('Error al guardar HES:', error);
-            throw error;
-        }
-    }
-
-    async getHES() {
-        try {
-            if (!this.initialized) await this.init();
-            return await this.db.hes.toArray();
-        } catch (error) {
-            console.error('Error al obtener HES:', error);
-            throw error;
-        }
-    }
-
-    // Métodos para respaldos
-    async createBackup() {
-        try {
-            if (!this.initialized) await this.init();
-            const backup = {
-                timestamp: new Date(),
-                metadata: {
-                    version: '1.0',
-                    tables: await this.db.tables.map(t => t.name)
-                }
-            };
-            return await this.db.backups.add(backup);
-        } catch (error) {
-            console.error('Error al crear respaldo:', error);
-            throw error;
-        }
-    }
-}
-
-// Crear y exportar una instancia única
-const databaseManager = new DatabaseManager();
-export default databaseManager; 
+// Exportar
+export default db; 

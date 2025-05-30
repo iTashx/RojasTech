@@ -8,7 +8,7 @@ import { FormatUtils } from '../utils/FormatUtils.js';
 export class ContractForm {
     constructor(contractManager) {
         this.contractManager = contractManager;
-        this.form = document.getElementById('contract-form');
+        this.form = document.getElementById('contractForm');
         this.setupEventListeners();
     }
 
@@ -33,45 +33,6 @@ export class ContractForm {
         document.getElementById('fechaFin').addEventListener('change', (e) => {
             this.validarFechas();
         });
-
-        // Gasto administrativo como partida
-        document.addEventListener('DOMContentLoaded', function () {
-            let guardado = false;
-            const checkboxGastoAdmin = document.getElementById('incluir-gasto-administrativo');
-            const modalGastoAdminEl = document.getElementById('modalGastoAdministrativo');
-            const modalGastoAdmin = new bootstrap.Modal(modalGastoAdminEl);
-            const inputPorcentaje = document.getElementById('gasto-admin-porcentaje');
-            const inputMonto = document.getElementById('gasto-admin-monto');
-
-            if (checkboxGastoAdmin) {
-                checkboxGastoAdmin.addEventListener('change', function() {
-                    guardado = false;
-                    if (this.checked) {
-                        modalGastoAdmin.show();
-                    }
-                });
-            }
-
-            document.getElementById('guardar-gasto-admin').addEventListener('click', function() {
-                const monto = parseFloat(inputMonto.value) || 0;
-                const porcentaje = parseFloat(inputPorcentaje.value) || 0;
-                if (monto <= 0 && porcentaje <= 0) {
-                    alert('Debe ingresar un monto fijo, un porcentaje, o ambos.');
-                    return;
-                }
-                window.gastoAdministrativoDatos = { monto, porcentaje };
-                guardado = true;
-                modalGastoAdmin.hide();
-            });
-
-            modalGastoAdminEl.addEventListener('hide.bs.modal', function () {
-                if (!guardado) {
-                    checkboxGastoAdmin.checked = false;
-                    inputPorcentaje.value = '';
-                    inputMonto.value = '';
-                }
-            });
-        });
     }
 
     // Manejar envío del formulario
@@ -81,49 +42,14 @@ export class ContractForm {
         try {
             const formData = this.getFormData();
             
-            // Validaciones específicas
-            if (!formData.codigo) {
-                this.mostrarError('El código del contrato es requerido');
+            if (!this.validarFormulario(formData)) {
                 return;
             }
 
-            if (!formData.ruc || !this.validarRUC(formData.ruc)) {
-                this.mostrarError('El RUC debe ser válido y contener 11 dígitos');
-                return;
-            }
-
-            if (!formData.razonSocial) {
-                this.mostrarError('La razón social es requerida');
-                return;
-            }
-
-            if (!formData.fechaInicio || !formData.fechaFin) {
-                this.mostrarError('Las fechas de inicio y fin son requeridas');
-                return;
-            }
-
-            if (new Date(formData.fechaInicio) > new Date(formData.fechaFin)) {
-                this.mostrarError('La fecha de inicio no puede ser posterior a la fecha de fin');
-                return;
-            }
-
-            // Validar que los montos sean números válidos
-            if (isNaN(formData.monto) || formData.monto <= 0) {
-                this.mostrarError('El monto debe ser un número válido mayor a 0');
-                return;
-            }
-
-            // Formatear montos antes de guardar
-            formData.monto = NumberUtils.formatNumber(formData.monto);
-            formData.subtotal = NumberUtils.formatNumber(formData.subtotal);
-            formData.igv = NumberUtils.formatNumber(formData.igv);
-            formData.total = NumberUtils.formatNumber(formData.total);
-
-            // Guardar en la base de datos
             if (formData.id) {
-                await db.contracts.update(formData.id, formData);
+                await this.actualizarContrato(formData);
             } else {
-                await db.contracts.add(formData);
+                await this.crearContrato(formData);
             }
 
             this.limpiarFormulario();
@@ -134,37 +60,11 @@ export class ContractForm {
                 `Contrato ${formData.id ? 'actualizado' : 'creado'} correctamente`,
                 'success'
             );
-
-            // Al guardar el contrato, agregar la partida #1 si corresponde
-            const formContrato = document.getElementById('contract-form');
-            if (checkboxGastoAdmin.checked && window.gastoAdministrativoDatos) {
-                let montoFinal = window.gastoAdministrativoDatos.monto;
-                if (window.gastoAdministrativoDatos.porcentaje > 0) {
-                    const montoContrato = parseFloat(document.getElementById('monto-total-contrato').value) || 0;
-                    montoFinal += (montoContrato * window.gastoAdministrativoDatos.porcentaje / 100);
-                }
-                // Verificar que PartidaManager esté disponible
-                if (window.PartidaManager) {
-                    window.PartidaManager.createPartida({
-                        contractId: formData.id,
-                        codigo: 'GA-1',
-                        descripcion: 'Gasto Administrativo',
-                        monto: montoFinal.toFixed(2)
-                    });
-                } else {
-                    console.warn('PartidaManager no está disponible para crear la partida de gasto administrativo');
-                    this.contractManager.notifications.addNotification(
-                        'Advertencia',
-                        'No se pudo crear la partida de gasto administrativo. Por favor, intente nuevamente.',
-                        'warning'
-                    );
-                }
-            }
         } catch (error) {
             console.error('Error al procesar el contrato:', error);
             this.contractManager.notifications.addNotification(
                 'Error',
-                'Error al procesar el contrato: ' + error.message,
+                'Error al procesar el contrato',
                 'error'
             );
         }
@@ -278,7 +178,11 @@ export class ContractForm {
 
     // Validar RUC
     validarRUC(ruc) {
-        return /^\d{11}$/.test(ruc);
+        if (!StringUtils.isValidRUC(ruc)) {
+            this.mostrarError('RUC inválido');
+            return false;
+        }
+        return true;
     }
 
     // Validar fechas

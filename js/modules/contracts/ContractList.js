@@ -28,27 +28,20 @@ export class ContractList {
             tr.innerHTML = `
                 <td>${contract.codigo}</td>
                 <td>${contract.razonSocial}</td>
-                <td>${FormatUtils.formatRUC(contract.ruc)}</td>
                 <td>${FormatUtils.formatAmount(contract.monto)}</td>
                 <td>${FormatUtils.formatFullDate(contract.fechaInicio)}</td>
                 <td>${FormatUtils.formatFullDate(contract.fechaFin)}</td>
+                <td>${FormatUtils.formatStatus(contract.estado)}</td>
                 <td>
-                    <span class="badge ${this.getStatusBadgeClass(contract.estado)}">
-                        ${FormatUtils.formatStatus(contract.estado)}
-                    </span>
-                </td>
-                <td>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-primary edit-contract" data-id="${contract.id}" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-info view-contract" data-id="${contract.id}" title="Ver detalles">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger delete-contract" data-id="${contract.id}" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    <button class="btn btn-sm btn-primary edit-contract" data-id="${contract.id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-info view-contract" data-id="${contract.id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-contract" data-id="${contract.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             `;
 
@@ -67,16 +60,6 @@ export class ContractList {
 
             tbody.appendChild(tr);
         });
-    }
-
-    getStatusBadgeClass(status) {
-        const statusClasses = {
-            'active': 'bg-success',
-            'pending': 'bg-warning',
-            'completed': 'bg-info',
-            'cancelled': 'bg-danger'
-        };
-        return statusClasses[status] || 'bg-secondary';
     }
 
     // Filtrar contratos

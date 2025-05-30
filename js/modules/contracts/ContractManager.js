@@ -12,21 +12,15 @@ import { ContractExport } from './ContractExport.js';
 import { Notifications } from '../utils/Notifications.js';
 import { showToast } from '../utils/ui.js';
 import { formatMonto } from '../utils/formatters.js';
-import { NotificationManager } from '../notifications/NotificationManager.js';
-import { ExportManager } from '../export/ExportManager.js';
-import { ValidationUtils } from '../utils/ValidationUtils.js';
-import ContractAlerts from './ContractAlerts.js';
 
 export class ContractManager {
     constructor() {
-        this.notifications = new NotificationManager();
-        this.exportManager = new ExportManager();
+        this.notifications = new Notifications();
         this.form = new ContractForm(this);
         this.list = new ContractList(this);
         this.partidas = new ContractPartidas(this);
         this.validation = new ContractValidation();
         this.export = new ContractExport(this);
-        this.contractAlerts = ContractAlerts;
         
         this.setupEventListeners();
         this.loadContracts();
@@ -85,78 +79,30 @@ export class ContractManager {
         // Inicializar otros event listeners
         this.initializeDateListeners();
         this.initializeAmountListeners();
-
-        // Nuevos eventos para extensiones
-        const extensionBtn = document.getElementById('extension-btn');
-        if (extensionBtn) {
-            extensionBtn.addEventListener('click', () => this.showExtensionModal());
-        }
-
-        // Eventos para cálculos de porcentajes
-        const percentageInputs = document.querySelectorAll('.percentage-input');
-        percentageInputs.forEach(input => {
-            input.addEventListener('change', (e) => this.handlePercentageChange(e));
-        });
     }
 
-    async handleContractSubmit(e) {
-        e.preventDefault();
+    async handleContractSubmit(event) {
+        event.preventDefault();
         try {
             const formData = this.getFormData();
-            
-            // Validar número SICAC duplicado
-            await ValidationUtils.validateSicacNumber(formData.numeroSicac, formData.id);
-
-            // Validar porcentajes
-            const physicalProgress = await this.calculatePhysicalProgress(formData);
-            const financialProgress = await this.calculateFinancialProgress(formData);
-
-            ValidationUtils.validateProgressPercentage(physicalProgress, 'físico');
-            ValidationUtils.validateProgressPercentage(financialProgress, 'financiero');
-
-            // Validar fechas
-            if (new Date(formData.fechaInicio) > new Date(formData.fechaTerminacion)) {
-                throw new Error('La fecha de inicio no puede ser posterior a la fecha de terminación');
+            if (this.currentContractId) {
+                await this.updateContract(formData);
+            } else {
+                await this.createContract(formData);
             }
-
-            // Validar montos
-            if (formData.montoOriginal <= 0) {
-                throw new Error('El monto original debe ser mayor a 0');
-            }
-
-            if (formData.montoModificado < formData.montoOriginal) {
-                throw new Error('El monto modificado no puede ser menor al monto original');
-            }
-
-            // Guardar contrato
-            await this.saveContract(formData);
-            
-            // Notificar éxito
-            this.notifications.createNotification(
-                'Éxito',
-                'Contrato guardado correctamente',
-                'success'
-            );
-
-            // Recargar lista de contratos
-            await this.loadContracts();
-            
+            showToast('Contrato guardado exitosamente', 'success');
         } catch (error) {
-            // Notificar error
-            this.notifications.createNotification(
-                'Error',
-                error.message,
-                'error'
-            );
+            showToast('Error al guardar el contrato: ' + error.message, 'error');
         }
     }
 
     getFormData() {
         return {
-            numeroSicac: document.getElementById('numero-sicac').value,
+            numeroProveedor: document.getElementById('numero-proveedor').value,
             fechaFirma: document.getElementById('fecha-firma-contrato').value,
             fechaInicio: document.getElementById('fecha-inicio').value,
             fechaTerminacion: document.getElementById('fecha-terminacion').value,
+            numeroSicac: document.getElementById('numero-sicac').value,
             divisionArea: document.getElementById('division-area').value,
             eemn: document.getElementById('eemn').value,
             region: document.getElementById('region').value,
@@ -646,17 +592,24 @@ export class ContractManager {
     }
 
     initializePartidaListeners(row) {
+        const cantidadInput = row.querySelector('.cantidad');
+        const precioInput = row.querySelector('.precio-unitario');
+        const totalInput = row.querySelector('.total');
+        const deleteBtn = row.querySelector('.delete-partida');
+
         const updateTotal = () => {
-            const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
-            const precio = parseFloat(row.querySelector('.precio-unitario').value) || 0;
-            const total = cantidad * precio;
-            row.querySelector('.total').value = total.toFixed(2);
+            const cantidad = parseFloat(cantidadInput.value) || 0;
+            const precio = parseFloat(precioInput.value) || 0;
+            totalInput.value = (cantidad * precio).toFixed(2);
             this.updateContractPartidaTotals();
         };
-        row.querySelector('.cantidad').addEventListener('input', updateTotal);
-        row.querySelector('.precio-unitario').addEventListener('input', updateTotal);
-        // Añadir evento para recalcular al crear una nueva fila
-        row.addEventListener('DOMNodeInserted', updateTotal);
+
+        cantidadInput.addEventListener('input', updateTotal);
+        precioInput.addEventListener('input', updateTotal);
+        deleteBtn.addEventListener('click', () => {
+            row.remove();
+            this.updateContractPartidaTotals();
+        });
     }
 
     updateContractPartidaTotals() {
@@ -702,309 +655,6 @@ export class ContractManager {
         montoModificadoInput.addEventListener('input', () => {
             montoTotalInput.value = montoModificadoInput.value;
         });
-    }
-
-    async saveContract(formData) {
-        try {
-            // Preparar datos del contrato
-            const contractData = {
-                ...formData,
-                fechaActualizacion: new Date(),
-                usuarioActualizacion: this.getCurrentUser()
-            };
-
-            // Guardar en la base de datos
-            if (formData.id) {
-                await db.contracts.update(formData.id, contractData);
-            } else {
-                contractData.fechaCreacion = new Date();
-                contractData.usuarioCreacion = this.getCurrentUser();
-                await db.contracts.add(contractData);
-            }
-
-            // Registrar en el historial
-            await this.registrarHistorial(formData.id ? 'actualización' : 'creación', contractData);
-
-        } catch (error) {
-            console.error('Error al guardar contrato:', error);
-            throw new Error('Error al guardar el contrato: ' + error.message);
-        }
-    }
-
-    async registrarHistorial(accion, contractData) {
-        try {
-            await db.contractHistory.add({
-                contractId: contractData.id,
-                accion: accion,
-                fecha: new Date(),
-                usuario: this.getCurrentUser(),
-                datos: contractData
-            });
-        } catch (error) {
-            console.error('Error al registrar historial:', error);
-        }
-    }
-
-    getCurrentUser() {
-        // Implementar lógica para obtener el usuario actual
-        return 'SISTEMA';
-    }
-
-    async extendContract(contractId, extensionDays) {
-        try {
-            const contract = await db.contracts.get(contractId);
-            if (!contract) throw new Error('Contrato no encontrado');
-
-            const newEndDate = DateUtils.addDays(contract.fechaTerminacion, extensionDays);
-            await db.contracts.update(contractId, {
-                fechaTerminacion: newEndDate
-            });
-
-            // Notificar extensión
-            await this.notifications.notifyExtensionAlert(
-                contract.numeroSicac,
-                extensionDays
-            );
-
-            return true;
-        } catch (error) {
-            console.error('Error al extender contrato:', error);
-            throw error;
-        }
-    }
-
-    async calculateContractProgress(contractId) {
-        try {
-            const contract = await db.contracts.get(contractId);
-            const hesList = await db.hes
-                .where('contratoId')
-                .equals(contractId)
-                .toArray();
-
-            const physicalProgress = this.calculatePhysicalProgress(contract, hesList);
-            const financialProgress = this.calculateFinancialProgress(contract, hesList);
-
-            // Validar que los porcentajes no excedan 100%
-            const validatedPhysicalProgress = this.validateProgressPercentage(physicalProgress, 'physical');
-            const validatedFinancialProgress = this.validateProgressPercentage(financialProgress, 'financial');
-
-            return {
-                physicalProgress: validatedPhysicalProgress,
-                financialProgress: validatedFinancialProgress
-            };
-        } catch (error) {
-            console.error('Error al calcular progreso:', error);
-            throw error;
-        }
-    }
-
-    async calculatePhysicalProgress(contract, hesList) {
-        try {
-            const partidas = await db.partidas
-                .where('contractId')
-                .equals(contract.id)
-                .toArray();
-
-            if (!partidas.length) return 0;
-
-            const totalMonto = partidas.reduce((sum, p) => sum + p.monto, 0);
-            const avancePonderado = partidas.reduce((sum, p) => {
-                return sum + (p.monto * (p.avance || 0) / 100);
-            }, 0);
-
-            const percentage = NumberUtils.round((avancePonderado / totalMonto) * 100, 2);
-            
-            // Validar porcentaje
-            ValidationUtils.validateProgressPercentage(percentage, 'físico');
-            
-            return percentage;
-        } catch (error) {
-            console.error('Error al calcular avance físico:', error);
-            throw error;
-        }
-    }
-
-    async calculateFinancialProgress(contract, hesList) {
-        try {
-            if (!hesList.length) return 0;
-
-            const totalHESAmount = hesList.reduce((sum, hes) => sum + hes.total, 0);
-            const percentage = NumberUtils.round((totalHESAmount / contract.montoTotal) * 100, 2);
-            
-            // Validar porcentaje
-            ValidationUtils.validateProgressPercentage(percentage, 'financiero');
-            
-            return percentage;
-        } catch (error) {
-            console.error('Error al calcular avance financiero:', error);
-            throw error;
-        }
-    }
-
-    validateProgressPercentage(percentage, type) {
-        const config = this.getProgressConfig();
-        const maxPercentage = config[`allow${type.charAt(0).toUpperCase() + type.slice(1)}Over100`] ? Infinity : 100;
-        
-        if (percentage > maxPercentage) {
-            this.notifications.createNotification(
-                'Alerta de Porcentaje',
-                `El avance ${type} ha excedido el 100%. Se ha ajustado al máximo permitido.`,
-                'warning'
-            );
-            return maxPercentage;
-        }
-        return percentage;
-    }
-
-    getProgressConfig() {
-        // Obtener configuración desde localStorage o usar valores por defecto
-        const defaultConfig = {
-            allowPhysicalOver100: false,
-            allowFinancialOver100: false
-        };
-
-        try {
-            const savedConfig = localStorage.getItem('progressConfig');
-            return savedConfig ? JSON.parse(savedConfig) : defaultConfig;
-        } catch (error) {
-            console.error('Error al cargar configuración de progreso:', error);
-            return defaultConfig;
-        }
-    }
-
-    saveProgressConfig(config) {
-        try {
-            localStorage.setItem('progressConfig', JSON.stringify(config));
-            this.notifications.createNotification(
-                'Configuración Guardada',
-                'La configuración de porcentajes ha sido actualizada.',
-                'success'
-            );
-        } catch (error) {
-            console.error('Error al guardar configuración de progreso:', error);
-            this.notifications.createNotification(
-                'Error',
-                'No se pudo guardar la configuración de porcentajes.',
-                'error'
-            );
-        }
-    }
-
-    showExtensionModal() {
-        const modal = document.getElementById('extensionModal');
-        if (!modal) {
-            // Crear modal si no existe
-            const modalHTML = `
-                <div class="modal fade" id="extensionModal" tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Registrar Extensión de Contrato</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="extensionForm">
-                                    <div class="mb-3">
-                                        <label for="fechaTerminacion" class="form-label">Nueva Fecha de Terminación:</label>
-                                        <input type="date" class="form-control" id="fechaTerminacion" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="motivoExtension" class="form-label">Motivo de la Extensión:</label>
-                                        <textarea class="form-control" id="motivoExtension" rows="3" required></textarea>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-primary" id="saveExtension">Guardar Extensión</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-        }
-
-        // Mostrar modal
-        const modalInstance = new bootstrap.Modal(document.getElementById('extensionModal'));
-        modalInstance.show();
-
-        // Configurar evento de guardado
-        document.getElementById('saveExtension').onclick = async () => {
-            const extensionData = {
-                fechaTerminacion: document.getElementById('fechaTerminacion').value,
-                motivo: document.getElementById('motivoExtension').value,
-                usuario: 'Usuario Actual' // Reemplazar con usuario real
-            };
-
-            await this.handleExtension(this.currentContractId, extensionData);
-            modalInstance.hide();
-        };
-    }
-
-    handlePercentageChange(event) {
-        const input = event.target;
-        const value = parseFloat(input.value);
-        const type = input.dataset.progressType; // 'physical' o 'financial'
-        
-        const config = this.getProgressConfig();
-        const maxPercentage = config[`allow${type.charAt(0).toUpperCase() + type.slice(1)}Over100`] ? Infinity : 100;
-        
-        if (value > maxPercentage) {
-            input.value = maxPercentage;
-            this.notifications.createNotification(
-                'Alerta de Porcentaje',
-                `El avance ${type} no puede exceder el 100% a menos que se habilite en la configuración.`,
-                'warning'
-            );
-        }
-    }
-
-    async handleExtension(contractId, extensionData) {
-        try {
-            const contract = await db.contracts.get(contractId);
-            if (!contract) {
-                throw new Error('Contrato no encontrado');
-            }
-
-            // Validar fechas de extensión
-            const newEndDate = new Date(extensionData.fechaTerminacion);
-            const currentEndDate = new Date(contract.fechaTerminacion);
-            
-            if (newEndDate <= currentEndDate) {
-                throw new Error('La fecha de terminación de la extensión debe ser posterior a la fecha actual de terminación');
-            }
-
-            // Actualizar contrato con la extensión
-            contract.fechaTerminacion = extensionData.fechaTerminacion;
-            contract.extensiones = contract.extensiones || [];
-            contract.extensiones.push({
-                fechaExtension: new Date(),
-                fechaTerminacionAnterior: currentEndDate,
-                fechaTerminacionNueva: newEndDate,
-                motivo: extensionData.motivo,
-                usuario: extensionData.usuario
-            });
-
-            await db.contracts.update(contractId, contract);
-
-            // Notificar éxito
-            this.notifications.createNotification(
-                'Éxito',
-                'Extensión de contrato registrada correctamente',
-                'success'
-            );
-
-            // Recargar contrato
-            await this.loadContract(contractId);
-
-        } catch (error) {
-            this.notifications.createNotification(
-                'Error',
-                error.message,
-                'error'
-            );
-        }
     }
 }
 

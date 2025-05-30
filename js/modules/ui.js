@@ -1,49 +1,93 @@
-// Módulo de UI para manejo de pestañas
+// Módulo de UI
 export class UI {
     constructor() {
         this.tabButtons = document.querySelectorAll('.tab-btn');
         this.sections = document.querySelectorAll('.content-section');
-        this.firstTab = this.tabButtons[0];
+        this.documentationBtn = document.getElementById('documentationBtn');
+        this.helpBtn = document.getElementById('helpBtn');
+        this.toastContainer = document.getElementById('toast-container');
     }
 
-    changeTab(targetId) {
-        // Ocultar todas las secciones
+    // Manejo de pestañas
+    async changeTab(targetId) {
         this.sections.forEach(section => {
             section.classList.remove('active', 'show');
             section.style.display = 'none';
         });
-        // Quitar activo a todos los botones
         this.tabButtons.forEach(btn => btn.classList.remove('active'));
 
-        // Mostrar la sección objetivo
         const targetSection = document.getElementById(targetId);
         if (targetSection) {
             targetSection.classList.add('active', 'show');
             targetSection.style.display = 'block';
-        }
-        // Activar el botón correspondiente
-        const targetButton = document.querySelector(`[data-target="${targetId}"]`);
-        if (targetButton) {
-            targetButton.classList.add('active');
+            document.querySelector(`[data-target="${targetId}"]`).classList.add('active');
         }
     }
 
+    // Sistema de notificaciones toast
+    showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+            <div class="toast-content">
+                <i class="fas ${this.getToastIcon(type)}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="toast-close">&times;</button>
+        `;
+
+        this.toastContainer.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.addEventListener('click', () => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        });
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 5000);
+    }
+
+    getToastIcon(type) {
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-times-circle',
+            warning: 'fa-exclamation-circle',
+            info: 'fa-info-circle'
+        };
+        return icons[type] || icons.info;
+    }
+
+    // Inicialización
     init() {
-        // Delegación de eventos para la barra lateral
-        const sidebar = document.querySelector('.sidebar');
-        if (sidebar) {
-            sidebar.addEventListener('click', (e) => {
-                const button = e.target.closest('.tab-btn');
-                if (button) {
-                    const targetId = button.getAttribute('data-target');
-                    this.changeTab(targetId);
-                }
+        // Event listeners para pestañas
+        this.tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-target');
+                this.changeTab(targetId);
+            });
+        });
+
+        // Event listeners para botones de documentación y ayuda
+        if (this.documentationBtn) {
+            this.documentationBtn.addEventListener('click', () => {
+                window.open('docs/documentacion.html', '_blank');
             });
         }
-        // Activar la primera pestaña por defecto
-        if (this.firstTab) {
-            const defaultId = this.firstTab.getAttribute('data-target');
-            this.changeTab(defaultId);
+
+        if (this.helpBtn) {
+            this.helpBtn.addEventListener('click', () => {
+                window.open('ayuda.html', '_blank');
+            });
+        }
+
+        // Activar primera pestaña por defecto
+        const firstTab = document.querySelector('.tab-btn');
+        if (firstTab) {
+            firstTab.click();
         }
     }
 } 

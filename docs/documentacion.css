@@ -3,6 +3,8 @@
 
 /* Variables CSS */
 :root {
+ 
+ 
     --primary-color: #2196F3;
     --secondary-color: #1976D2;
     --accent-color: #FFC107;
@@ -37,7 +39,11 @@
 }
 
 body {
+ 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ 
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
@@ -241,12 +247,16 @@ footer {
     background-color: var(--header-bg);
     color: white;
     text-align: center;
+
+ 
+ 
     padding: var(--spacing-md);
     margin-top: var(--spacing-xl);
 }
 
 .footer-text {
     margin: var(--spacing-xs) 0;
+ 
 }
 
 footer a {
@@ -312,6 +322,10 @@ footer a:hover {
 }
 
 .feature-box {
+ 
+
+ 
+ 
     background-color: var(--card-background);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
@@ -382,16 +396,64 @@ footer a:hover {
 .help-section ul, .help-section ol {
     margin-bottom: var(--spacing-md);
     padding-left: var(--spacing-lg);
+ 
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+    background-color: var(--help-background);
+    border-radius: var(--border-radius);
+}
+
+.help-section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.help-section h2 {
+    color: var(--help-primary);
+    border-bottom: 2px solid var(--help-accent);
+    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+}
+
+.help-section h3 {
+    color: var(--help-secondary);
+    margin-top: var(--spacing-md);
+}
+
+.help-section ul {
+    list-style-type: none;
+    padding-left: 0;
 }
 
 .help-section li {
     margin-bottom: var(--spacing-sm);
+ 
+
+ 
+ 
     color: var(--light-text-color);
 }
 
 .help-section li strong {
     color: var(--text-color);
     font-weight: 600;
+ HEAD
+
+
+    position: relative;
+}
+
+.help-section li:before {
+    content: "•";
+    color: var(--help-accent);
+    font-weight: bold;
+    position: absolute;
+    left: -15px;
+ 
 }
 
 .help-image {
@@ -402,6 +464,10 @@ footer a:hover {
     box-shadow: var(--box-shadow);
 }
 
+ 
+
+ 
+ 
 .help-note, .help-warning {
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
@@ -416,11 +482,23 @@ footer a:hover {
 .help-warning {
     background-color: #FFF3E0;
     border-left: 4px solid var(--warning-color);
+ 
+
+
+.help-note {
+    background-color: #e3f2fd;
+    border-left: 4px solid var(--info-color);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
 
 .help-container {
     display: flex;
     min-height: 100vh;
+ 
+
+ 
 }
 
 .help-nav {
@@ -428,6 +506,16 @@ footer a:hover {
     background-color: var(--card-background);
     padding: var(--spacing-md);
     box-shadow: var(--box-shadow);
+    background-color: var(--help-background);
+}
+
+.help-nav {
+    width: 250px;
+    background-color: var(--help-primary);
+    color: white;
+    padding: var(--spacing-md);
+ 
+ 
     position: fixed;
     height: 100vh;
     overflow-y: auto;
@@ -436,10 +524,17 @@ footer a:hover {
 .help-nav-header {
     padding-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--border-color);
+
+ 
+    border-bottom: 1px solid var(--border-color);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ 
     margin-bottom: var(--spacing-md);
 }
 
 .help-nav-header h1 {
+ 
     color: var(--primary-color);
     margin: 0;
     font-size: 1.8em;
@@ -451,6 +546,20 @@ footer a:hover {
 .help-nav-header p {
     color: var(--light-text-color);
     margin: var(--spacing-xs) 0 0;
+ 
+
+
+    font-size: 1.5em;
+    margin: 0;
+    color: white;
+}
+
+.help-nav-header p {
+    margin: var(--spacing-xs) 0 0;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+ 
+ 
 }
 
 .help-nav ul {
@@ -464,6 +573,8 @@ footer a:hover {
 }
 
 .help-nav a {
+
+ 
     display: flex;
     align-items: center;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -482,6 +593,48 @@ footer a:hover {
 .help-nav a i {
     width: 20px;
     text-align: center;
+
+
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    display: block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.help-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.help-content {
+    flex: 1;
+    padding: var(--spacing-lg);
+    margin-left: 250px;
+    max-width: calc(100% - 250px);
+}
+
+.help-section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.help-section h2 {
+    color: var(--help-primary);
+    margin-top: 0;
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--help-accent);
+}
+
+.help-section h3 {
+    color: var(--help-secondary);
+    margin-top: var(--spacing-lg);
+>>>>>>> ed1cc0dc49786953afcdb3017bd9858d7cbfaf4f
+>>>>>>> 27aa17536a5d6750bcbdabaec4bf8b768a9bc69a
 }
 
 .help-image-container {

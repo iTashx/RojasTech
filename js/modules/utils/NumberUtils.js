@@ -15,24 +15,20 @@ export class NumberUtils {
 
     // Formatear número
     static formatNumber(number, decimals = 2) {
-        if (!number && number !== 0) return '0,00';
+        if (!number && number !== 0) return '';
         return Number(number).toLocaleString('es-ES', {
             minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals,
-            useGrouping: true
-        }).replace(/\./g, '|').replace(/,/g, '.').replace(/\|/g, ',');
+            maximumFractionDigits: decimals
+        });
     }
 
     // Formatear moneda
     static formatCurrency(number, currency = 'PEN') {
-        if (!number && number !== 0) return '0,00';
-        const formattedNumber = this.formatNumber(number);
-        const currencySymbols = {
-            'PEN': 'S/.',
-            'USD': 'USD',
-            'EUR': 'EUR'
-        };
-        return `${currencySymbols[currency]} ${formattedNumber}`;
+        if (!number && number !== 0) return '';
+        return Number(number).toLocaleString('es-ES', {
+            style: 'currency',
+            currency: currency
+        });
     }
 
     // Calcular IGV

@@ -3,68 +3,34 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="SIGESCON - Sistema de Gestión de Contratos Empresariales">
-        <meta name="author" content="RojasTech">
-        <meta name="theme-color" content="#007bff">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>SIGESCON v4.0 - Gestión de Contratos Empresariales</title>
+        <title>SIGESCON - Gestión de Contratos Empresariales</title>
 
-        <!-- Precargar recursos críticos -->
-        <link rel="preload" href="css/index.css" as="style">
-        <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
-        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" as="style">
+        <link rel="stylesheet" href="css/style.css">
 
-        <!-- Estilos -->
-        <link rel="stylesheet" href="css/index.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <!-- Dependencias con carga diferida -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-        
-        <!-- Scripts de la aplicación con carga diferida -->
-        <script src="js/ui.js" defer></script>
-        <script src="js/partidas.js" defer></script>
-        <script src="js/extensiones.js" defer></script>
-        <script type="module" src="js/main.js" defer></script>
-        <script type="module" src="js/sincronizacion.js" defer></script>
 
-        <link rel="stylesheet" href="css/notificaciones.css">
+        <script src="https://unpkg.com/dexie@3.2.0/dist/dexie.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.autotable.min.js"></script>
     </head>
     <body>
-        <header class="header bg-light-blue">
-            <div class="container-fluid">
-                <div class="logo">
-                    <i class="fas fa-file-contract"></i>
-                    <h1>Gestión de Contratos Empresariales</h1>
-                </div>
-                <div class="actions">
-                    <div class="notification-container">
-                        <button id="notificationBell" class="btn">
-                            <i class="fas fa-bell"></i>
-                            <span id="notificationCount" style="display: none;">0</span>
-                        </button>
-                        <div id="notificationDropdown" class="notification-dropdown">
-                            <div class="notification-header">
-                                <h6>Notificaciones</h6>
-                                <button id="clearNotifications" class="btn-link">
-                                    <i class="fas fa-trash-alt"></i> Limpiar todo
-                                </button>
-                            </div>
-                            <ul id="notificationList" class="notification-list">
-                                <!-- Las notificaciones se cargarán dinámicamente aquí -->
-                            </ul>
-                        </div>
+        <header class="header bg-light-blue"> <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center py-3">
+                    <div class="logo d-flex align-items-center">
+                        <i class="fas fa-file-contract me-2"></i>
+                        <h1 class="mb-0">Gestión de Contratos Empresariales</h1>
                     </div>
-                    <a href="docs/ayuda.html" target="_blank" class="help-btn">
-                        <i class="fas fa-question-circle"></i> Ayuda
+                    <a href="ayuda.html" target="_blank" class="btn btn-primary help-btn">
+                        <i class="fas fa-question-circle me-2"></i> Ayuda
                     </a>
-                    <a href="docs/documentacion.html" target="_blank" class="mdp-btn">
-                        <i class="fas fa-book"></i> MDP
+                    <a href="docs/MDP.html" target="_blank" class="btn btn-secondary ms-2">
+                        <i class="fas fa-book me-2"></i> MDP
                     </a>
                 </div>
             </div>
@@ -77,9 +43,6 @@
                     </button>
                     <button class="nav-link tab-btn" data-target="new-edit-contract">
                         <i class="fas fa-file-contract me-2"></i> Nuevo/Editar Contrato
-                    </button>
-                    <button class="nav-link tab-btn" data-target="partidas-management">
-                        <i class="fas fa-tasks me-2"></i> Crear/Editar Partida
                     </button>
                     <button class="nav-link tab-btn" data-target="contract-list">
                         <i class="fas fa-list me-2"></i> Lista de Contratos
@@ -99,15 +62,7 @@
                     <button class="nav-link tab-btn" data-target="reports">
                         <i class="fas fa-file-alt me-2"></i> Informes
                     </button>
-                    <!-- Separador -->
-                    <hr class="sidebar-separator">
-                    <button class="nav-link tab-btn" data-target="trash-can">
-                        <i class="fas fa-trash-alt me-2"></i> Papelera de Reciclaje
-                    </button>
-                    <!-- Separador adicional -->
-                    <hr class="sidebar-separator">
-                    <button class="nav-link tab-btn" data-target="database-management">
-                        <i class="fas fa-database me-2"></i> Gestión de Base de Datos
+                    <button class="nav-link tab-btn" data-target="trash-can"> <i class="fas fa-trash-alt me-2"></i> Papelera de Reciclaje
                     </button>
                 </nav>
             </aside>
@@ -120,13 +75,8 @@
                         <div class="col-md-6 mb-3">
                             <div id="contracts-slider" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner" id="contracts-slider-inner">
-                                    <!-- Mensaje cuando no hay contratos -->
-                                    <div class="carousel-item active no-contracts-message">
-                                        <i class="fas fa-file-contract"></i>
-                                        <p>No hay contratos activos para mostrar</p>
-                                    </div>
+                                    <!-- Contratos se llenan dinámicamente con JS -->
                                 </div>
-                                <!-- Controles del carrusel -->
                                 <button class="carousel-control-prev" type="button" data-bs-target="#contracts-slider" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Anterior</span>
@@ -141,7 +91,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="card">
                                 <h3>Monto Total Contratado</h3>
-                                <p id="total-contract-amount">USD 0,00</p>
+                                <p id="total-contract-amount">USD 32.000,00</p>
                             </div>
                         </div>
                         <!-- Días para Vencimiento de Contratos -->
@@ -149,7 +99,9 @@
                             <div class="card">
                                 <h3>Días para Vencimiento</h3>
                                 <ul id="contracts-expiry-list" style="list-style:none; padding-left:0; margin-bottom:0;">
-                                    <li>No hay contratos próximos a vencer</li>
+                                    <li>Contrato 12345: 15 días</li>
+                                    <li>Contrato 67890: 30 días</li>
+                                    <!-- Más contratos se agregarán aquí con JS -->
                                 </ul>
                             </div>
                         </div>
@@ -160,9 +112,9 @@
                             <div class="card">
                                 <h3>Avance Financiero Global</h3>
                                 <div class="progress mb-2">
-                                    <div id="financial-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="financial-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <p id="financial-progress-label">0%</p>
+                                <p id="financial-progress-label">60%</p>
                             </div>
                         </div>
                         <!-- Avance Físico -->
@@ -170,57 +122,29 @@
                             <div class="card">
                                 <h3>Avance Físico Global</h3>
                                 <div class="progress mb-2">
-                                    <div id="physical-progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div id="physical-progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
-                                <p id="physical-progress-label">0%</p>
+                                <p id="physical-progress-label">50%</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Apartado de Extensiones en Resumen General -->
-                    <section id="extensiones-resumen" class="mt-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title"><i class="fas fa-clock me-2"></i>Extensiones</h4>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <strong>Días de extensión acumulados:</strong> <span id="dias-extension">0</span>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Nueva fecha de vencimiento:</strong> <span id="nueva-fecha-vencimiento">-</span>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Erogación adicional:</strong> <span id="erogacion-extension">No disponible</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                 </section>
 
                 <section id="new-edit-contract" class="content-section">
                     <h2><i class="fas fa-file-contract me-2"></i> Nuevo/Editar Contrato</h2>
-                    <form id="contract-form" class="g-3" novalidate>
+                    <form id="contract-form" class="g-3">
                         <div class="contract-form-grid">
                             <div class="form-group col-span-2">
-                                <label for="select-contract-to-edit" class="form-label">Seleccionar Contrato para Editar:</label>
-                                <select id="select-contract-to-edit" class="form-select" aria-describedby="contract-select-help">
-                                    <option value="">-- Seleccione un Contrato --</option>
-                                </select>
-                                <div id="contract-select-help" class="form-text">Seleccione un contrato existente para editar o deje en blanco para crear uno nuevo.</div>
+                                <label for="select-contract-to-edit">Seleccionar Contrato para Editar:</label>
+                                <select id="select-contract-to-edit" class="form-select"><option value="">-- Seleccione un Contrato --</option></select>
                             </div>
                             <div class="form-group">
-                                <label for="numero-proveedor" class="form-label">Número de Proveedor: <span class="text-danger">*</span></label>
-                                <input type="text" id="numero-proveedor" class="form-control" required 
-                                       pattern="[A-Za-z0-9-]+" 
-                                       title="Solo se permiten letras, números y guiones"
-                                       aria-describedby="numero-proveedor-help">
-                                <div id="numero-proveedor-help" class="form-text">Ingrese el número de proveedor sin espacios ni caracteres especiales.</div>
+                                <label for="numero-proveedor">Número de Proveedor:</label>
+                                <input type="text" id="numero-proveedor" class="form-control" required>
                             </div>
                             <div class="form-group">
-                                <label for="fecha-firma-contrato" class="form-label">Fecha Firma del Contrato: <span class="text-danger">*</span></label>
-                                <input type="date" id="fecha-firma-contrato" class="form-control" required
-                                       aria-describedby="fecha-firma-help">
-                                <div id="fecha-firma-help" class="form-text">Seleccione la fecha de firma del contrato.</div>
+                                <label for="fecha-firma-contrato">Fecha Firma del Contrato:</label>
+                                <input type="date" id="fecha-firma-contrato" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="fecha-creado">Fecha Creado:</label>
@@ -280,22 +204,20 @@
                                 <label for="objeto-contractual">Objeto Contractual / Descripción:</label>
                                 <textarea id="objeto-contractual" class="form-control" rows="3"></textarea>
                             </div>
-                            <div class="form-group" id="grupo-fecha-cambio-alcance" style="display:none;">
+                            <div class="form-group">
                                 <label for="fecha-cambio-alcance">Fecha Cambio Alcance:</label>
                                 <input type="date" id="fecha-cambio-alcance" class="form-control">
                             </div>
-                            <div class="form-group" id="grupo-monto-original" style="display:none;">
+                            <div class="form-group">
                                 <label for="monto-original">Monto Original:</label>
-                                <input type="number" id="monto-original" class="form-control" step="0.01" value="0.00" readonly>
-                            </div>
-                            <div class="form-group" id="grupo-monto-modificado" style="display:none;">
+                                <input type="number" id="monto-original" class="form-control" step="0.01" value="0.00" readonly> </div>
+                            <div class="form-group">
                                 <label for="monto-modificado">Monto Modificado:</label>
                                 <input type="number" id="monto-modificado" class="form-control" step="0.01" value="0.00">
                             </div>
-                            <div class="form-group" id="grupo-monto-total-contrato" style="display:none;">
+                            <div class="form-group">
                                 <label for="monto-total-contrato">Monto Total del Contrato:</label>
-                                <input type="number" id="monto-total-contrato" class="form-control" step="0.01" value="0.00" readonly>
-                            </div>
+                                <input type="number" id="monto-total-contrato" class="form-control" step="0.01" value="0.00" readonly> </div>
                             <div class="form-group">
                                 <label for="numero-contrato-interno">No. Contrato (Interno):</label>
                                 <input type="text" id="numero-contrato-interno" class="form-control">
@@ -329,54 +251,38 @@
                             </div>
                         </div>
 
-                        <!-- Gasto Administrativo movido aquí -->
-                        <div class="row mt-4 mb-4">
-                            <div class="col-md-6 offset-md-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center mb-3">Gasto Administrativo</h5>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input me-2" type="checkbox" id="incluir-gasto-administrativo">
-                                            <label class="form-check-label fw-bold" for="incluir-gasto-administrativo">
-                                                Activar gasto administrativo
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-center mt-4 button-group">
-                            <button type="submit" class="btn btn-primary" id="save-contract-btn" 
-                                    aria-label="Guardar o actualizar el contrato actual"
-                                    data-bs-toggle="tooltip" 
-                                    title="Guarda o actualiza el contrato con la información proporcionada">
-                                <i class="fas fa-save me-2" aria-hidden="true"></i> Guardar/Actualizar Contrato
+                        <h3 class="mt-4">Partidas del Contrato</h3>
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="button" class="btn btn-success" id="add-partida-btn">
+                                <i class="fas fa-plus me-2"></i> Añadir Partida
                             </button>
-                            <button type="button" class="btn btn-secondary ms-2" id="clear-contract-form-btn"
-                                    aria-label="Limpiar el formulario de contrato"
-                                    data-bs-toggle="tooltip"
-                                    title="Elimina todos los datos ingresados en el formulario">
-                                <i class="fas fa-eraser me-2" aria-hidden="true"></i> Limpiar Formulario
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="partidas-table">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>UMD</th>
+                                        <th>Precio Unitario</th>
+                                        <th>Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-4 button-group">
+                            <button type="submit" class="btn btn-primary" id="save-contract-btn">
+                                <i class="fas fa-save me-2"></i> Guardar/Actualizar Contrato
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-2" id="clear-contract-form-btn">
+                                <i class="fas fa-eraser me-2"></i> Limpiar Formulario
                             </button>
                         </div>
                     </form>
-
-                    <!-- 4. Botón para crear extensión de contrato -->
-                    <div class="text-center mt-2">
-                        <button type="button" class="btn btn-warning" id="open-extension-modal-btn"
-                                aria-label="Abrir modal para crear extensión de contrato"
-                                data-bs-toggle="tooltip"
-                                title="Crear una nueva extensión para el contrato actual">
-                            <i class="fas fa-clock me-2" aria-hidden="true"></i> Crear Extensión de Contrato
-                        </button>
-                    </div>
-
-                    <!-- 2. Feedback visual para modalidad existente -->
-                    <div id="modalidad-feedback" class="alert alert-danger mt-2" role="alert" style="display:none;">
-                        <i class="fas fa-exclamation-circle me-2" aria-hidden="true"></i>
-                        <span>La modalidad ya existe en el sistema.</span>
-                    </div>
                 </section>
 
                 <section id="contract-list" class="content-section">
@@ -399,12 +305,6 @@
                     <div class="export-buttons">
                         <button class="btn btn-info" id="export-excel-btn"><i class="fas fa-file-excel me-2"></i>Exportar Excel</button>
                         <button class="btn btn-danger" id="export-pdf-btn"><i class="fas fa-file-pdf me-2"></i>Exportar PDF</button>
-                    </div>
-
-                    <!-- Botón de importación de contratos desde Excel -->
-                    <div id="importar-contratos-excel-container" style="margin-bottom: 1em;">
-                        <button id="btnImportarExcel" class="btn btn-success">Importar contratos desde Excel</button>
-                        <input type="file" id="inputExcelContratos" accept=".xlsx,.xls" style="display:none;" />
                     </div>
 
                     <div class="table-responsive">
@@ -534,16 +434,35 @@
                                     </tr>
                                 </thead>
                                 <tbody id="hes-partidas-table-body">
-                                    <!-- Depuración de la tabla de partidas de la HES -->
-                                    <!-- Mostrar solo si hay contrato seleccionado y partidas -->
-                                </tbody>
+                                    <tr>
+                                        <td>${partidas.indexOf(partida) + 1}</td>
+                                        <td>${partida.descripcion}</td>
+                                        <td>${partida.umd}</td>
+                                        <td>${partida.precioUnitario.toFixed(2)}</td>
+                                        <td>${partida.cantidad}</td>
+                                        <td>${executedAmountForPartida.toFixed(2)}</td>
+                                        <td>${availableQuantity.toFixed(2)}</td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <button class="btn btn-outline-secondary decrement-hes-cantidad" type="button"><i class="fas fa-minus"></i></button>
+                                                <input type="number" class="form-control hes-cantidad-ejecutar text-center" min="0" max="${availableQuantity}" step="0.01" value="0.00">
+                                                <button class="btn btn-outline-secondary increment-hes-cantidad" type="button"><i class="fas fa-plus"></i></button>
+                                            </div>
+                                        </td>
+                                        <td><span class="hes-partida-total">0.00</span></td>
+                                    </tr>
+                                    </tbody>
                             </table>
                         </div>
 
-                        <div class="row g-3 mb-4">
+                        <div class="row g-3 mt-4">
                             <div class="col-md-4">
                                 <label for="hes-subtotal" class="form-label">Sub Total HES:</label>
                                 <input type="number" id="hes-subtotal" class="form-control" step="0.01" value="0.00" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="hes-gastos-administrativos" class="form-label">5% Gastos Administrativos:</label>
+                                <input type="number" id="hes-gastos-administrativos" class="form-control" step="0.01" value="0.00" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label for="hes-total" class="form-label">Total HES:</label>
@@ -660,43 +579,31 @@
                 </section>
 
                 <section id="graphic-summary" class="content-section">
-                    <div class="graficos-container">
-                        <div class="graficos-header">
-                            <h3>Selección de Contrato</h3>
-                            <select id="graficos-contrato-select" class="form-select" style="max-width: 300px;">
-                                <option value="">Seleccione un Contrato</option>
-                                <!-- Opciones dinámicas -->
-                            </select>
-                        </div>
-                        <div class="graficos-selectores">
-                            <label for="graficos-tipo-select" style="margin-right: 8px;">Tipo de gráfico:</label>
-                            <select id="graficos-tipo-select" class="form-select" style="max-width: 180px;">
-                                <option value="bar">Barras</option>
-                                <option value="line">Línea de tiempo</option>
-                                <option value="pie">Pastel</option>
-                                <option value="doughnut">Dona</option>
-                            </select>
-                            <button class="btn btn-info" id="export-chart-png"><i class="fas fa-chart-pie"></i> Exportar PNG</button>
-                            <button class="btn btn-success" id="export-chart-excel"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-                            <button class="btn btn-danger" id="export-chart-pdf"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
-                        </div>
-                        <div class="graficos-card">
-                            <h5 id="graficos-titulo-1">Contratos por Estatus</h5>
-                            <canvas id="contractStatusChart"></canvas>
-                        </div>
-                        <div class="graficos-card">
-                            <h5 id="graficos-titulo-2">Contratos por Modalidad</h5>
-                            <canvas id="contractModalityChart"></canvas>
-                        </div>
-                        <div class="graficos-card">
-                            <h5>Gráfico de Avance Financiero (Línea de Tiempo)</h5>
-                            <div class="graficos-export">
-                                <button class="btn btn-info" id="export-financial-line-png"><i class="fas fa-chart-line"></i> Exportar PNG</button>
-                                <button class="btn btn-success" id="export-financial-line-excel"><i class="fas fa-file-excel"></i> Exportar Excel</button>
-                                <button class="btn btn-danger" id="export-financial-line-pdf"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+                    <h2><i class="fas fa-chart-bar me-2"></i> Resumen Gráfico</h2>
+                    <p>Obtén visualizaciones claras del estado y distribución de tus contratos.</p>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="card p-3 mb-3">
+                                <h5>Contratos por Estatus</h5>
+                                <canvas id="contractStatusChart"></canvas>
                             </div>
-                            <canvas id="avanceFinancieroChart"></canvas>
                         </div>
+                        <div class="col-md-6">
+                            <div class="card p-3 mb-3">
+                                <h5>Contratos por Modalidad</h5>
+                                <canvas id="contractModalityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="graficos-selectores">
+                        <select id="graficos-contrato-select"></select>
+                        <select id="graficos-tipo-select">
+                            <option value="bar">Barras</option>
+                            <option value="line">Línea de tiempo</option>
+                            <option value="pie">Pastel</option>
+                            <option value="doughnut">Dona</option>
+                        </select>
+                        <button class="btn btn-info" id="export-chart-png"><i class="fas fa-chart-pie"></i> Exportar PNG</button>
                     </div>
                 </section>
 
@@ -821,239 +728,14 @@
                     </div>
                 </section>
 
-                <section id="database-management" class="content-section">
-                    <h2><i class="fas fa-database me-2"></i> Gestión de Base de Datos</h2>
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Operaciones de Base de Datos</h5>
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <button id="export-db-btn" class="btn btn-primary w-100">
-                                        <i class="fas fa-file-export me-2"></i> Exportar Base de Datos
-                                    </button>
-                                </div>
-                                <div class="col-md-6">
-                                    <button id="import-db-btn" class="btn btn-success w-100">
-                                        <i class="fas fa-file-import me-2"></i> Importar Base de Datos
-                                    </button>
-                                </div>
-                            </div>
-
-                            <h5 class="card-title mt-4">Respaldos Automáticos</h5>
-                            <div id="backups-list" class="list-group">
-                                <!-- Los respaldos se cargarán dinámicamente -->
-                            </div>
-
-                            <div class="alert alert-info mt-4">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Nota:</strong> Los respaldos automáticos se realizan cada 24 horas y se mantienen por 90 días.
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="partidas-management" class="content-section">
-                    <h2><i class="fas fa-tasks me-2"></i> Crear/Editar Partida</h2>
-                    <div class="form-group">
-                        <label for="select-contract-for-partidas">Seleccionar Contrato:</label>
-                        <select id="select-contract-for-partidas" class="form-select"></select>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="partidas-management-table">
-                            <thead>
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Descripción</th>
-                                    <th>Cantidad</th>
-                                    <th>UMD</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Total</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Las partidas se cargarán aquí -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-end mb-3">
-                        <button type="button" class="btn btn-success" id="add-partida-management-btn">
-                            <i class="fas fa-plus me-2"></i> Añadir Partida
-                        </button>
-                    </div>
-                    <div class="text-center mt-4 button-group">
-                        <button type="button" class="btn btn-primary" id="save-partidas-management-btn">
-                            <i class="fas fa-save me-2"></i> Guardar/Actualizar Partidas
-                        </button>
-                    </div>
-                </section>
             </main>
         </div>
 
-        <div id="toast-container"></div>
-        
-        <!-- Modal de Configuración de Porcentajes -->
-        <div class="modal fade" id="percentageConfigModal" tabindex="-1" aria-labelledby="percentageConfigModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="percentageConfigModalLabel">Configuración de Porcentajes</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" id="allowPhysicalOver100">
-                            <label class="form-check-label" for="allowPhysicalOver100">
-                                Permitir avance físico mayor al 100%
-                            </label>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="allowFinancialOver100">
-                            <label class="form-check-label" for="allowFinancialOver100">
-                                Permitir avance financiero mayor al 100%
-                            </label>
-                        </div>
-                        <div class="alert alert-warning mt-3">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <small>Advertencia: Permitir porcentajes mayores al 100% puede afectar la precisión de los reportes y análisis.</small>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="savePercentageConfig">Guardar Configuración</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Extensión de Contrato -->
-        <div class="modal fade" id="extensionModal" tabindex="-1" aria-labelledby="extensionModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="extensionModalLabel">Registrar Extensión de Contrato</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="extensionForm">
-                            <div class="mb-3">
-                                <label for="tipo-extension" class="form-label">Tipo de Extensión:</label>
-                                <select id="tipo-extension" class="form-select" required>
-                                    <option value="tiempo">Solo Tiempo</option>
-                                    <option value="erogacion">Solo Erogación</option>
-                                    <option value="ambos">Ambos</option>
-                                </select>
-                            </div>
-                            <div class="mb-3" id="ext-tiempo">
-                                <label for="nueva-fecha-terminacion" class="form-label">Nueva Fecha de Terminación:</label>
-                                <input type="date" class="form-control" id="nueva-fecha-terminacion">
-                            </div>
-                            <div class="mb-3" id="ext-erogacion">
-                                <label for="nuevo-monto" class="form-label">Nuevo Monto Total:</label>
-                                <input type="number" class="form-control" id="nuevo-monto" step="0.01">
-                            </div>
-                            <div class="mb-3">
-                                <label for="motivo-extension" class="form-label">Motivo de la Extensión:</label>
-                                <textarea class="form-control" id="motivo-extension" rows="3" required></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="guardar-extension">Guardar Extensión</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Gasto Administrativo -->
-        <div class="modal fade" id="modalGastoAdministrativo" tabindex="-1" aria-labelledby="modalGastoAdministrativoLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalGastoAdministrativoLabel">Configurar Gasto Administrativo</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="gasto-admin-monto" class="form-label">Monto fijo (opcional):</label>
-                            <input type="number" class="form-control" id="gasto-admin-monto" min="0" step="0.01">
-                        </div>
-                        <div class="mb-3">
-                            <label for="gasto-admin-porcentaje" class="form-label">Porcentaje del contrato (opcional, %):</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="gasto-admin-porcentaje" min="0" max="100" step="0.01" placeholder="Ej: 5">
-                                <span class="input-group-text">%</span>
-                            </div>
-                        </div>
-                        <div class="alert alert-info">
-                            Puede ingresar un monto fijo, un porcentaje, o ambos. El sistema calculará el monto automáticamente.
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="guardar-gasto-admin">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Detalle de Notificación -->
-        <div class="modal fade" id="notificationDetailModal" tabindex="-1" aria-labelledby="notificationDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="notificationDetailModalLabel">Detalle de Notificación</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="notif-detail-icon" style="font-size:2rem;"></div>
-                        <h6 id="notif-detail-title" class="mt-2"></h6>
-                        <p id="notif-detail-date" class="text-muted mb-1"></p>
-                        <div id="notif-detail-message" class="mb-2"></div>
-                        <div id="notif-detail-extra" class="alert alert-danger d-none"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer text-center py-3">
+        <div id="toast-container"></div> <footer class="footer text-center py-3">
             <p class="mb-0">&copy; 2025 SIGESCON - Gestión de Contratos Empresariales.</p>
             <p class="mb-0">Desarrollado por RojasTech - Contacto: <a href="mailto:angeljrojasm@gmail.com">Enviar Correo</a></p>
-            <span class="version-label">Versión: 4.0.0</span>
         </footer>
 
-        <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script type="module">
-            import { SystemConfig } from './js/config.js';
-            
-            document.addEventListener('DOMContentLoaded', () => {
-                // Inicializar la configuración del sistema
-                new SystemConfig();
-            });
-        </script>
-        <script src="js/notifications.js"></script>
-        <script>
-            window.notifyAction('success', 'Mensaje de éxito');
-            window.notifyAction('error', 'Mensaje de error');
-            window.notifyAction('warning', 'Mensaje de advertencia');
-            window.notifyAction('info', 'Mensaje informativo');
-        </script>
-        <script>
-            document.getElementById('miCheckbox').addEventListener('change', function() {
-                if (this.checked) {
-                    window.notifyAction('info', 'Checkbox activado');
-                } else {
-                    window.notifyAction('info', 'Checkbox desactivado');
-                }
-            });
-        </script>
-        <script>
-            window.notifyAction('error', 'Error al guardar contrato', 'Campo: Fecha de inicio. El valor es inválido.');
-        </script>
+        <script src="js/script.js" defer></script>
     </body>
     </html>

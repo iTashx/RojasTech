@@ -50,22 +50,10 @@ export class ContractPartidas {
                 return;
             }
 
-            // Validar que los montos sean números válidos
-            if (isNaN(formData.monto) || formData.monto <= 0) {
-                this.mostrarError('El monto debe ser un número válido mayor a 0');
-                return;
-            }
-
-            // Formatear montos antes de guardar
-            formData.monto = NumberUtils.formatNumber(formData.monto);
-            formData.total = NumberUtils.formatNumber(formData.total);
-            formData.avance = NumberUtils.formatNumber(formData.avance);
-
-            // Guardar en la base de datos
             if (formData.id) {
-                await db.partidas.update(formData.id, formData);
+                await this.actualizarPartida(formData);
             } else {
-                await db.partidas.add(formData);
+                await this.crearPartida(formData);
             }
 
             this.cerrarModal();
@@ -80,7 +68,7 @@ export class ContractPartidas {
             console.error('Error al guardar partida:', error);
             this.contractManager.notifications.addNotification(
                 'Error',
-                'Error al guardar la partida: ' + error.message,
+                'Error al guardar la partida',
                 'error'
             );
         }
@@ -105,18 +93,23 @@ export class ContractPartidas {
 
     // Validar partida
     validarPartida(data) {
+        if (!data.codigo) {
+            this.mostrarError('El código es requerido');
+            return false;
+        }
+
         if (!data.descripcion) {
             this.mostrarError('La descripción es requerida');
             return false;
         }
 
-        if (!data.monto || isNaN(data.monto) || data.monto <= 0) {
-            this.mostrarError('El monto debe ser un número válido mayor a 0');
+        if (!data.monto || data.monto <= 0) {
+            this.mostrarError('El monto debe ser mayor a 0');
             return false;
         }
 
-        if (!data.avance || isNaN(data.avance) || data.avance < 0 || data.avance > 100) {
-            this.mostrarError('El avance debe ser un número entre 0 y 100');
+        if (data.avance < 0 || data.avance > 100) {
+            this.mostrarError('El avance debe estar entre 0 y 100');
             return false;
         }
 
